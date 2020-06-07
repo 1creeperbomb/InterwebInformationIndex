@@ -1,0 +1,216 @@
+<?xml version="1.0"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="https://www.w3schools.com" xmlns="https://www.w3schools.com">
+
+  
+  <!-- Thank god for internet, otherwise it would have taken me several days to figure out IPv6 -->
+  <!-- Also consider adding an option to use compressed ipv6 for easier usage:-->
+  <!-- <xs:pattern value="(([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4})*)?)::(([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4})*)?)(%[^%\s]+)?"/> -->
+  <xs:simpleType name="IPv4Address">
+    <xs:annotation>
+      <xs:documentation>IPv4 address in dot-decimal notation. Equivalent to [0-255].[0-255].[0-255].[0-255]</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="((1?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.){3}(1?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="IPv6Address">
+    <xs:annotation>
+      <xs:documentation>IPv6 address in full hex notation. I'm not going to write the equivilent ranges because this is still dark magic to me.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}(%[^%\s]+)?"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="port">
+    <xs:annotation>
+      <xs:documentation></xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="1"/>
+      <xs:maxInclusive value="65535"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <!-- Create restrictions for hash, address, and salt and maybe a name size as well? -->
+  
+  
+	<xs:element name="root">
+		<xs:complexType>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+        
+				<xs:element name="master">
+					<xs:complexType>
+						<xs:sequence>
+              
+							<xs:element name="address" type="xs:base64Binary"/>
+              
+							<xs:element name="sign">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:base64Binary">
+                      <xs:attribute name ="salt" type ="xs:string" use="required"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+							</xs:element>
+
+              <xs:element name="desc">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute name="name" type="xs:string" use="required"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+
+              <xs:element name="services">
+                <xs:complexType>
+                  <xs:choice maxOccurs="unbounded">
+                    
+                    <xs:element name="service">
+                      <xs:complexType>
+                        <xs:sequence>
+                          
+                          <xs:element name="desc">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute name="name" type="xs:string" use="required"/>
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                            
+                          </xs:element>
+
+                          <xs:element name="data">
+                            <xs:complexType>
+                              <xs:sequence>
+                                
+                                <xs:element name="files">
+                                  <xs:complexType>
+                                    <xs:choice maxOccurs="unbounded">
+                                      <xs:element name="file">
+
+                                        <xs:complexType>
+                                          <xs:simpleContent>
+                                            <xs:extension base="xs:string">
+                                              <xs:attribute name="rdir" type="xs:string" use="required"/>
+                                            </xs:extension>
+                                          </xs:simpleContent>
+                                        </xs:complexType>
+                                        
+                                      </xs:element>
+                                    </xs:choice>
+                                  </xs:complexType>
+                                </xs:element>
+                                
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                          
+                        </xs:sequence>
+                        <xs:attribute name="version" type="xs:string" use="required"/>
+                      </xs:complexType>
+                    </xs:element>
+                    
+                  </xs:choice>
+                </xs:complexType>
+
+                <xs:unique name="UniqueDescName">
+                  <xs:selector xpath="service/desc"/>
+                  <xs:field xpath="@name"/>
+                </xs:unique>
+
+              </xs:element>
+              
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+
+        <xs:element name="peer">
+          <xs:complexType>
+
+            <xs:sequence>
+              <xs:element name="address" type="xs:string"/>
+
+              <xs:element name="sign">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:base64Binary">
+                      <xs:attribute name ="salt" type ="xs:string" use="required"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+
+              <xs:element name="desc">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute name="name" type="xs:string" use="required"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+
+              <xs:choice>
+                <xs:element name="ipv4" maxOccurs="1">
+                  <xs:complexType>
+                    <xs:simpleContent>
+                      <xs:extension base="IPv4Address">
+                        <xs:attribute name="port" type="port"/>
+                      </xs:extension>
+                    </xs:simpleContent>
+                  </xs:complexType>
+                </xs:element>
+
+                <xs:element name="ipv6" maxOccurs="1">
+                  <xs:complexType>
+                    <xs:simpleContent>
+                      <xs:extension base="IPv6Address">
+                        <xs:attribute name="port" type="xs:int" use="required"/>
+                      </xs:extension>
+                    </xs:simpleContent>
+                  </xs:complexType>
+                </xs:element>
+              </xs:choice>
+
+              <xs:element name="services">
+                <xs:complexType>
+                  <xs:choice maxOccurs="unbounded">
+
+                    <xs:element name="service">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="uaddress">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:base64Binary">
+                                  <xs:attribute name="name" type="xs:string" use="required"/>
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="version" type="xs:string" use="required"/>
+                      </xs:complexType>
+                    </xs:element>
+                    
+                  </xs:choice>
+                </xs:complexType>
+              </xs:element>
+              
+              
+            </xs:sequence>
+            
+          </xs:complexType>
+        </xs:element>
+        
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
