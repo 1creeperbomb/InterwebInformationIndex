@@ -1,57 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<root xmlns="https://www.w3schools.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.w3schools.com index-schema.xsd">
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.w3schools.com index-schema.xsd">
   <!-- My example data is clearly very technical-->
   
-  <master xmlns="">
-    <address>yeet</address>
-    <sign salt="fard">yeet</sign>
-    <desc name="yeetagain">lol</desc>
+  <master>
+    <address>test</address>
+    <sign salt="1234567890123456">yeet</sign>
+    <desc name="my master node">my cool master node</desc>
     <services>
-      <service version="ffff">
-        <desc name="yeetagain">lol</desc>
+      <service version="Dh4h7PEF7IU9JNcohnrXBhPCFmOkaTB0sqNhnBvTnWa1iMM3I7tGbHJCToDjymPCSQeKs0e6uUKFAOfuQwWdDQ==">
+        <desc name="woot">ya man</desc>
         <data>
           <files>
-            <file rdir="aaaaa">lllll</file>
+            <file rdir="assets/pic.img">Dh4h7PEF7IU9JNcohnrXBhPCFmOkaTB0sqNhnBvTnWa1iMM3I7tGbHJCToDjymPCSQeKs0e6uUKFAOfuQwWdDQ==</file>
           </files>
         </data>
       </service>
     </services>
   </master>
 
-  <master xmlns="">
-    <address>yeet</address>
-    <sign salt="fard">yeet</sign>
-    <desc name="yeetagain">lol</desc>
+  <peer>
+    <address>test</address>
+    <sign salt="1234567890123456"></sign>
+    <desc name="my peer">my cool peer</desc>
+    <ipv4>192.168.1.100</ipv4>
     <services>
-      <service version="ffff">
-        <desc name="yeetagain">lol</desc>
-        <data>
-          <files>
-            <file rdir="aaaaa">yaaaa</file>
-          </files>
-        </data>
-      </service>
-      <service version="ffff">
-        <desc name="yeetagain2">lol</desc>
-        <data>
-          <files>
-            <file rdir="aaaaa">yaaaa</file>
-          </files>
-        </data>
-      </service>
-    </services>
-  </master>
-
-  <peer xmlns="">
-    <address>wot</address>
-    <sign salt="wow">yeet</sign>
-    <desc name="yaaaa">mmmmmm</desc>
-    <ipv4 port="80">192.168.2.150</ipv4>
-    <services>
-      <service version="yaaa">
-        <uaddress name="lollll">fard</uaddress>
+      <service version="Dh4h7PEF7IU9JNcohnrXBhPCFmOkaTB0sqNhnBvTnWa1iMM3I7tGbHJCToDjymPCSQeKs0e6uUKFAOfuQwWdDQ==">
+        <uaddress name="woot">yeet</uaddress>
       </service>
     </services>
   </peer>
-  
+
 </root>
