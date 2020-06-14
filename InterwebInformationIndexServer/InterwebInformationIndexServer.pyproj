@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>115eb6da-aa5b-4957-964f-531b7704658d</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>InterwebInformationIndexServer.py</StartupFile>
+    <StartupFile>interwebinformationindexserver.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,11 +21,17 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="InterwebInformationIndexServer.py" />
+    <Compile Include="interwebinformationindexserver.py" />
+    <Compile Include="main_package\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="index-schema.xsd" />
     <Content Include="index.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="main_package\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
