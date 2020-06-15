@@ -19,20 +19,32 @@ class Cryptographer:
             public_key_clean = key
 
             public_key_b = base64.b64decode(public_key_clean)
-            public_key = nacl.signing.VerifyKey(public_key_b)
+            self.public_key = nacl.signing.VerifyKey(public_key_b)
 
         else:
             #private key, derive public key as well
-            __private_key_clean = key
+            private_key_clean = key
 
             #convert to bytes and generate object
-            __private_key_b = base64.b64decode(__private_key_clean)
-            __private_key = nacl.signing.SigningKey( __private_key_b)
+            private_key_b = base64.b64decode(private_key_clean)
+            self.private_key = nacl.signing.SigningKey(private_key_b)
 
             #generate public key
-            public_key = __private_key.verify_key
+            self.public_key = self.private_key.verify_key
 
     #public methods
+
+    def sign_data(self, data):
+        #convert string to bytes
+        data = data.encode('utf8')
+
+        #sign data
+        signed_raw = self.private_key.sign(data)
+
+        #convert to base64 and back to string
+        signed = base64.b64encode(signed_raw).decode('utf8')
+
+        return signed
 
     #private methods
 
@@ -151,7 +163,11 @@ keytest = Cryptographer.read_key("12345678")
 
 test = Cryptographer(keytest, False)
 
-print(Cryptographer.generate_hash('null', 'my awesome unchanging data'))
+testSign = test.sign_data(data='my data')
+
+print(testSign)
+
+#print(Cryptographer.generate_hash('null', 'my awesome unchanging data'))
 
 #print(Cryptographer.generate_hash('keystore/test.txt', 'null'))
 
