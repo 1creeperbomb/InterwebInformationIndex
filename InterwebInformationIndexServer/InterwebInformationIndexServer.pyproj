@@ -22,6 +22,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="interwebinformationindexserver.py" />
+    <Compile Include="main_package\cryptograhper.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="main_package\__init__.py">
       <SubType>Code</SubType>
     </Compile>
@@ -29,9 +32,11 @@
   <ItemGroup>
     <Content Include="index-schema.xsd" />
     <Content Include="index.xml" />
+    <Content Include="keystore\private.key" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="main_package\" />
+    <Folder Include="keystore\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
