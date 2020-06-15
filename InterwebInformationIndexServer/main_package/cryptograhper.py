@@ -5,6 +5,7 @@ import nacl.encoding
 import nacl.signing
 import nacl.utils
 import nacl.secret
+import nacl.hashlib
 from nacl.hash import blake2b
 from nacl.public import PrivateKey, Box
 from nacl.encoding import Base64Encoder
@@ -103,6 +104,27 @@ class Cryptographer:
 
         return private_key_decrypted.decode('utf8')
 
+    @staticmethod
+    def generate_hash(filepath, message):
+        hasher = nacl.hash.blake2b
+        
+        if filepath != 'null':
+            #hash file
+            with open(filepath, 'rb') as f:
+                advanced_hasher = nacl.hashlib.blake2b()
+                
+                for chunk in iter(lambda: f.read(8192), b''):
+                    advanced_hasher.update(chunk)
+            
+            advanced_hasher = base64.b64encode(advanced_hasher.digest()).decode('utf8')
+            return advanced_hasher
+
+        else:
+            #hash string
+            digest = hasher(message.encode('utf8'), encoder=nacl.encoding.Base64Encoder)
+            digest = digest.decode('utf8')
+            return digest
+
 
 
 def debug():
@@ -128,6 +150,10 @@ Cryptographer.generate_keypair("12345678")
 keytest = Cryptographer.read_key("12345678")
 
 test = Cryptographer(keytest, False)
+
+print(Cryptographer.generate_hash('null', 'my awesome unchanging data'))
+
+#print(Cryptographer.generate_hash('keystore/test.txt', 'null'))
 
 #end debug run test
 
