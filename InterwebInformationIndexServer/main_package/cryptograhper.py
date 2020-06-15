@@ -19,7 +19,7 @@ class Cryptographer:
             public_key_clean = key
 
             public_key_b = base64.b64decode(public_key_clean)
-            public_key = nacl.public.PublicKey(public_key_b)
+            public_key = nacl.signing.VerifyKey(public_key_b)
 
         else:
             #private key, derive public key as well
@@ -27,10 +27,10 @@ class Cryptographer:
 
             #convert to bytes and generate object
             __private_key_b = base64.b64decode(__private_key_clean)
-            __private_key = nacl.public.PrivateKey( __private_key_b)
+            __private_key = nacl.signing.SigningKey( __private_key_b)
 
             #generate public key
-            public_key = __private_key.public_key
+            public_key = __private_key.verify_key
 
     #public methods
 
@@ -58,7 +58,7 @@ class Cryptographer:
             salt_file.write(salt_clean)
 
         #generates a keypair 
-        private_key = PrivateKey.generate()
+        private_key = nacl.signing.SigningKey.generate()
 
         #converts key to base64 format
 
