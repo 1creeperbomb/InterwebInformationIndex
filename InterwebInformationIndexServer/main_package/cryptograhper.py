@@ -46,6 +46,21 @@ class Cryptographer:
 
         return signed
 
+    def verify_data(self, data, signed):
+        #convert string to bytes
+        signed = base64.b64decode(signed)
+        data = data.encode('utf8')
+
+        try:
+            verified_data = self.public_key.verify(signed)
+        except:
+            return False
+
+        if verified_data == data:
+            return True;
+        else:
+            return False;
+
     #private methods
 
     #static private methods
@@ -138,7 +153,7 @@ class Cryptographer:
             return digest
 
 
-
+'''
 def debug():
      master_key =  nacl.utils.random(64)
 
@@ -167,9 +182,14 @@ testSign = test.sign_data(data='my data')
 
 print(testSign)
 
+verify = test.verify_data('my data', testSign)
+
+print(verify)
+
 #print(Cryptographer.generate_hash('null', 'my awesome unchanging data'))
 
 #print(Cryptographer.generate_hash('keystore/test.txt', 'null'))
 
 #end debug run test
 
+'''
