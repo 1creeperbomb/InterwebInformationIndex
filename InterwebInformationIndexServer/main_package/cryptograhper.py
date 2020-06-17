@@ -176,6 +176,8 @@ Cryptographer.generate_keypair("12345678")
 
 keytest = Cryptographer.read_key("12345678")
 
+print(keytest)
+
 test = Cryptographer(keytest, False)
 
 testSign = test.sign_data(data='my data')
@@ -186,10 +188,10 @@ verify = test.verify_data('my data', testSign)
 
 print(verify)
 
-#print(Cryptographer.generate_hash('null', 'my awesome unchanging data'))
+print(Cryptographer.generate_hash('null', 'my awesome unchanging data'))
 
 #print(Cryptographer.generate_hash('keystore/test.txt', 'null'))
 
 #end debug run test
-
 '''
+

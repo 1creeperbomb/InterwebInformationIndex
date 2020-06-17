@@ -3,11 +3,11 @@
   <!-- My example data is clearly very technical-->
   
   <master>
-    <address>test</address>
-    <sign salt="1234567890123456">yeet</sign>
+    <address>O/iFe/g2ENRQfye0u0dmPd+cMUq7LoRfqmXnJt74X84=</address>
+    <sign salt="1234567890123456">1pAy1PnwCXIcBD4VtH/BJCChFOhYWLRdbocH+CxA3ifoNTj7IO7TbJRGVEOaFhxZRl43CkyPT+sksWxiMfBxDG15IGRhdGE=</sign>
     <desc name="my master node">my cool master node</desc>
     <services>
-      <service version="Dh4h7PEF7IU9JNcohnrXBhPCFmOkaTB0sqNhnBvTnWa1iMM3I7tGbHJCToDjymPCSQeKs0e6uUKFAOfuQwWdDQ==">
+      <service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=">
         <desc name="woot">ya man</desc>
         <data>
           <files>
@@ -19,13 +19,13 @@
   </master>
 
   <peer>
-    <address>test</address>
-    <sign salt="1234567890123456"></sign>
+    <address>O/iFe/g2ENRQfye0u0dmPd+cMUq7LoRfqmXnJt74X84=</address>
+    <sign salt="1234567890123456">1pAy1PnwCXIcBD4VtH/BJCChFOhYWLRdbocH+CxA3ifoNTj7IO7TbJRGVEOaFhxZRl43CkyPT+sksWxiMfBxDG15IGRhdGE=</sign>
     <desc name="my peer">my cool peer</desc>
     <ipv4>192.168.1.100</ipv4>
     <services>
-      <service version="Dh4h7PEF7IU9JNcohnrXBhPCFmOkaTB0sqNhnBvTnWa1iMM3I7tGbHJCToDjymPCSQeKs0e6uUKFAOfuQwWdDQ==">
-        <uaddress name="woot">yeet</uaddress>
+      <service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=">
+        <uaddress name="woot">O/iFe/g2ENRQfye0u0dmPd+cMUq7LoRfqmXnJt74X84=</uaddress>
       </service>
     </services>
   </peer>
