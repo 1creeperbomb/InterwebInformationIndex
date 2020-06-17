@@ -195,3 +195,4 @@ print(Cryptographer.generate_hash('null', 'my awesome unchanging data'))
 #end debug run test
 '''
 
+print(Cryptographer.generate_hash('null', 'my awesome unchanging data'))
