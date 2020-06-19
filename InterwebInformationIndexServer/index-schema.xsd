@@ -103,7 +103,7 @@
     </xs:restriction>
   </xs:simpleType>
   
-
+<!-- Create a limiter for file directory attribute -->
   
   
 	<xs:element name="root">

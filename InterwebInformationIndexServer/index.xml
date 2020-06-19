@@ -3,7 +3,7 @@
   <!-- My example data is clearly very technical-->
   
   <master>
-    <address>O/iFe/g2ENRQfye0u0dmPd+cMUq7LoRfqmXnJt74X84=</address>
+    <address>4O5y6PUBZD6Kziz2eWo3n1TNHVTfT7x6eKwLPPUdVls=</address>
     <sign salt="1234567890123456">1pAy1PnwCXIcBD4VtH/BJCChFOhYWLRdbocH+CxA3ifoNTj7IO7TbJRGVEOaFhxZRl43CkyPT+sksWxiMfBxDG15IGRhdGE=</sign>
     <desc name="my master node">my cool master node</desc>
     <services>
@@ -19,7 +19,7 @@
   </master>
 
   <peer>
-    <address>O/iFe/g2ENRQfye0u0dmPd+cMUq7LoRfqmXnJt74X84=</address>
+    <address>4O5y6PUBZD6Kziz2eWo3n1TNHVTfT7x6eKwLPPUdVls=</address>
     <sign salt="1234567890123456">1pAy1PnwCXIcBD4VtH/BJCChFOhYWLRdbocH+CxA3ifoNTj7IO7TbJRGVEOaFhxZRl43CkyPT+sksWxiMfBxDG15IGRhdGE=</sign>
     <desc name="my peer">my cool peer</desc>
     <ipv4>192.168.1.100</ipv4>

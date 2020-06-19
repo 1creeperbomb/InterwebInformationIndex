@@ -19,6 +19,7 @@ class Cryptographer:
             public_key_clean = key
 
             public_key_b = base64.b64decode(public_key_clean)
+            
             self.public_key = nacl.signing.VerifyKey(public_key_b)
 
         else:
@@ -31,6 +32,7 @@ class Cryptographer:
 
             #generate public key
             self.public_key = self.private_key.verify_key
+            #print(self.public_key.encode(Base64Encoder))
 
     #public methods
 
@@ -151,48 +153,3 @@ class Cryptographer:
             digest = hasher(message.encode('utf8'), encoder=nacl.encoding.Base64Encoder)
             digest = digest.decode('utf8')
             return digest
-
-
-'''
-def debug():
-     master_key =  nacl.utils.random(64)
-
-     with open('keystore/salt.txt', 'r') as salt_file:
-            salt_clean = salt_file.read()
-
-     derivation_salt = base64.b64decode(salt_clean)
-
-     password_raw = 'ya yeeet!'
-     password_raw = password_raw.encode('utf8')
-
-     derived_key = blake2b(b'', salt=derivation_salt,
-                      person=password_raw,
-                      encoder=nacl.encoding.RawEncoder)
-     print(derived_key)
-
-#debug run test
-
-Cryptographer.generate_keypair("12345678")
-
-keytest = Cryptographer.read_key("12345678")
-
-print(keytest)
-
-test = Cryptographer(keytest, False)
-
-testSign = test.sign_data(data='my data')
-
-print(testSign)
-
-verify = test.verify_data('my data', testSign)
-
-print(verify)
-
-print(Cryptographer.generate_hash('null', 'my awesome unchanging data'))
-
-#print(Cryptographer.generate_hash('keystore/test.txt', 'null'))
-
-#end debug run test
-'''
-
-print(Cryptographer.generate_hash('null', 'my awesome unchanging data'))
