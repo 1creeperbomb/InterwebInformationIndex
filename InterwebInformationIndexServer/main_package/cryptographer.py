@@ -32,7 +32,7 @@ class Cryptographer:
 
             #generate public key
             self.public_key = self.private_key.verify_key
-            #print(self.public_key.encode(Base64Encoder))
+            print(self.public_key.encode(Base64Encoder))
 
     #public methods
 
@@ -42,9 +42,12 @@ class Cryptographer:
 
         #sign data
         signed_raw = self.private_key.sign(data)
+        signed_alone = signed_raw.signature
 
         #convert to base64 and back to string
-        signed = base64.b64encode(signed_raw).decode('utf8')
+        signed = base64.b64encode(signed_alone).decode('utf8')
+
+        #NOTE: PyNaCL automagically includes the unsigned data in the .sign method. For easier seperation , use signed_raw.message and signed_raw.signature to seperate the values
 
         return signed
 
@@ -54,9 +57,11 @@ class Cryptographer:
         data = data.encode('utf8')
 
         try:
-            verified_data = self.public_key.verify(signed)
+            verified_data = self.public_key.verify(data, signed)
         except:
             return False
+
+        #iirc the below may not be needed because .verify will throw in an exception if the data does not verify
 
         if verified_data == data:
             return True;
