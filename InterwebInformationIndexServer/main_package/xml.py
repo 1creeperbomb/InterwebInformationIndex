@@ -3,14 +3,18 @@ from lxml import etree as et
 from io import StringIO, BytesIO
 from main_package.cryptographer import Cryptographer
 
-class Xml_index:
-    #global vars
-    
-    #init
-    def __init__(self):
-        pass
-
+class XMLIndex:
     #methods
+
+    @staticmethod
+    def get_xml_type(xml_data_raw):
+        try:
+            root = et.fromstring(xml_data_raw)
+            return root.tag
+        except:
+            print('XML is malformed!')
+            return None
+
 
     @staticmethod
     def parse_xml_string(xml_data_raw):
@@ -58,40 +62,22 @@ class Xml_index:
             return False;
 
         #send data to write method and socket sever
-        Xml_index.__write_xml(xml_data_raw, address, node_type)
+        XMLIndex.__write_xml(xml_data_raw, address, node_type)
 
         return True
-
-    @staticmethod
-    def __write_xml(xml_data_raw, address, node_type):
-        #read index and load elements
-        parser = et.XMLParser(remove_blank_text=True)
-        tree = et.parse('index.xml', parser)
-        root = tree.getroot()
-
-        #overwite if element already exists (check by address)
-        check = Xml_index.get_data(address, node_type, tree)
-        if check is None:
-            #node does not exist
-            pass
-        else:
-            #node exists, delete first
-            root.remove(check)
-
-        #convert xml string to element
-        data = et.fromstring(xml_data_raw)
-
-        root.append(data)
-
-        tree.write('index.xml', pretty_print=True)
 
     @staticmethod
     def get_data(address, xpath, tree):
         #tree must be passed through so .remove() will work since it bases it on direct memeory location
 
+        if tree == None:
+            parser = et.XMLParser(remove_blank_text=True)
+            tree = et.parse('index.xml', parser)
+
         #relative path format example: master/services/desc
         #first get full xpath
-        xpath = Xml_index.__get_xpath(address, xpath)
+        if address != None:
+            xpath = XMLIndex.__get_xpath(address, xpath)
 
         #retrieve the data and return
         data = tree.xpath(xpath)
@@ -103,7 +89,30 @@ class Xml_index:
         except:
             return None
 
-        return data[0];
+        return data
+
+    @staticmethod
+    def __write_xml(xml_data_raw, address, node_type):
+        #read index and load elements
+        parser = et.XMLParser(remove_blank_text=True)
+        tree = et.parse('index.xml', parser)
+        root = tree.getroot()
+
+        #overwite if element already exists (check by address)
+        check = Xml_index.get_data(address, node_type, tree)
+        if check[0] is None:
+            #node does not exist
+            pass
+        else:
+            #node exists, delete first
+            root.remove(check[0])
+
+        #convert xml string to element
+        data = et.fromstring(xml_data_raw)
+
+        root.append(data)
+
+        tree.write('index.xml', pretty_print=True)
 
     @staticmethod
     def __get_xpath(address, relativepath):
