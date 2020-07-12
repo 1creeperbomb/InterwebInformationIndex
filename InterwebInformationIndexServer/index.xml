@@ -1,5 +1,31 @@
 <root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.w3schools.com index-schema.xsd">
   <!-- My example data is clearly very technical-->
+
+  <!-- Builtin master node which contains built in services, needs to be updated with proper address and has values when program is published -->
+  <master>
+    <address>WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=</address>
+    <sign salt="1234567890123456">ptNtqdUn/MtpoHFLgcodcYaD9DAmV3xVRI9+/K7pZGYIccNd61KC4LrIZz+bEhznR+f3p/hXWK7jWD/jzPdXCw==</sign>
+    <desc name="builtin">Contains teh default services III uses</desc>
+    <services>
+      <service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=">
+        <desc name="global peer list">Keeps a list of III peers available to sync data with</desc>
+        <data>
+          <files>
+            <file rdir="assets/pic.img" type="static">+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=</file>
+          </files>
+        </data>
+      </service>
+      <service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=">
+        <desc name="open access">Optional service. Indicates that your peer will forward any data for any service to any appropriate peers in its index</desc>
+        <data>
+          <files>
+            <file rdir="null" type="static">+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=</file>
+          </files>
+        </data>
+      </service>
+    </services>
+  </master>
+  
   <peer>
     <address>4O5y6PUBZD6Kziz2eWo3n1TNHVTfT7x6eKwLPPUdVls=</address>
     <sign salt="1234567890123456">ptNtqdUn/MtpoHFLgcodcYaD9DAmV3xVRI9+/K7pZGYIccNd61KC4LrIZz+bEhznR+f3p/hXWK7jWD/jzPdXCw==</sign>
