@@ -57,6 +57,7 @@ class SocketHandler(socketserver.StreamRequestHandler):
 class SocketClient:
     port = 5001
     IP = '127.0.0.1'
+    socket_type = socket.AF_INET
 
     def __init__(self, IP, port):
 
@@ -65,10 +66,18 @@ class SocketClient:
         if port != None:
             self.port = port
 
+        is_v4 = SocketClient.is_valid_ipv4_address(IP)
+        is_v6 = SocketClient.is_valid_ipv6_address(IP)
+
+        if is_v4 == True:
+            self.socket_type = socket.AF_INET
+        elif is_v6 == True:
+             self.socket_type = socket.AF_INET6
+
     def send_data(self, data):
         data_raw = data.encode('utf8')
 
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        with socket.socket(self.socket_type, socket.SOCK_STREAM) as sock:
 
             try:
                 sock.connect((self.IP, self.port))
@@ -90,6 +99,29 @@ class SocketClient:
             pass
 
         sock.close()
+        return True
+
+    @staticmethod
+    def is_valid_ipv4_address(address):
+        try:
+            socket.inet_pton(socket.AF_INET, address)
+        except AttributeError:  # no inet_pton here, sorry
+            try:
+                socket.inet_aton(address)
+            except socket.error:
+                return False
+            return address.count('.') == 3
+        except socket.error:  # not a valid address
+            return False
+
+        return True
+
+    @staticmethod
+    def is_valid_ipv6_address(address):
+        try:
+            socket.inet_pton(socket.AF_INET6, address)
+        except socket.error:  # not a valid address
+            return False
         return True
 
 
