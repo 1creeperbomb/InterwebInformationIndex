@@ -32,7 +32,6 @@ class Cryptographer:
 
             #generate public key
             self.public_key = self.private_key.verify_key
-            print(self.public_key.encode(Base64Encoder))
 
     #public methods
 

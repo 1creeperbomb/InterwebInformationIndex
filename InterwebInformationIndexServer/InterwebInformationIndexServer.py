@@ -58,7 +58,6 @@ def main(): #this must be the main method in the main class so that it can handl
     private_key = None
     
     print('-----------------------------------------------------')
-    clear()
 
     print('Attempting to start the network service!')
     network_process = multiprocessing.Process(target=SocketServer.main)
@@ -67,7 +66,7 @@ def main(): #this must be the main method in the main class so that it can handl
     processes.append(network_process)
     time.sleep(5)
 
-    print('-----------------------------------------------------')
+    clear()
 
     browse_menu()
 
@@ -103,7 +102,7 @@ def filter_input(input, type):
         pass
     elif type == 'menu':
 
-        if input in ['0','1','2','3','4','0?','1?','2?','3?','4?',]:
+        if input in ['0','1','2','3','4','5','6','0?','1?','2?','3?','4?','5?','6?']:
             return input
         else:
             return False;
@@ -117,10 +116,12 @@ def clear():
 
 def print_menu():
     print('Select an option. To see what each option does, type the option number followed by a \"?\" (ex: 3?): ')
-    print('[1] Create a master node') #This will allow you to publish services that other peers can then help host
-    print('[2] Create a peer node') #This will allow you to help host services from a master node (NOTE: You also need to create a peer node if you have a master node so that other peers can copy the required files
-    print('[3] Start/Restart the network process')
-    print('[4] Stop the network process')
+    print('[1] Create a master node')
+    print('[2] Create a peer node') 
+    print('[3] Create a service to host')
+    print('[4] Select a service to help host')
+    print('[5] Start/Restart the network process')
+    print('[6] Stop the network process')
     print('[0] Exit III')
 
 def browse_menu():
@@ -153,19 +154,27 @@ def browse_menu():
         pause_key()
     elif selection == '1?':
         clear()
-        print('[1] This will allow you to publish services that other peers can then help host')
+        print('[1] This will allow you to publish services that other peers can then help host (use option 3 after setting this up)')
         pause_key()
     elif selection == '2?':
         clear()
-        print('[2] This will allow you to help host services from a master node (NOTE: You also need to create a peer node if you have a master node so that other peers can copy the required files')
+        print('[2] This will allow you to help host services from a master node (use option 4 after setting this up) (NOTE: You also need to create a peer node if you have a master node so that other peers can copy the required files)')
         pause_key()
     elif selection == '3?':
         clear()
-        print('[3] This will attempt to start the network process. If the process is already running, it will attempt to restart')
+        print('[3] This will create a service based off a directory and iii.xml file that will then be added to your master node')
         pause_key()
     elif selection == '4?':
         clear()
-        print('[4] This will stop the network process')
+        print('[4] This will sync the required files of the service you would like to help host')
+        pause_key()
+    elif selection == '5?':
+        clear()
+        print('[5] This will attempt to start the network process. If the process is already running, it will attempt to restart')
+        pause_key()
+    elif selection == '6?':
+        clear()
+        print('[6] This will stop the network process')
         pause_key()
 
     #after completing, menu appears again
