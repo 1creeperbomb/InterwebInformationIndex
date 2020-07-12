@@ -9,13 +9,20 @@ import socket
 
 from lxml import etree as et
 
+
+
+XMLIndex.parse_xml_string()
+
+
+
+'''
 data = XMLIndex.get_data(xpath='/root/*',address=None,tree=None)
 
 print(data)
 
 for child in data:
     print(et.tostring(child).decode('utf8'))
-
+'''
 
 '''
 if __name__ == '__main__': #this must be the main method in the main class so that it can handle the processes in a list

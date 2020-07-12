@@ -50,9 +50,13 @@ class Cryptographer:
 
         return signed
 
-    def verify_data(self, data, signed):
+    def verify_data(self, data, signed, salt):
         #convert string to bytes
         signed = base64.b64decode(signed)
+
+        #append salt to data
+        data = data + salt
+
         data = data.encode('utf8')
 
         try:
@@ -60,7 +64,7 @@ class Cryptographer:
         except:
             return False
 
-        #iirc the below may not be needed because .verify will throw in an exception if the data does not verify
+        #iirc the below may not be needed because .verify will throw an exception if the data does not verify
 
         if verified_data == data:
             return True;

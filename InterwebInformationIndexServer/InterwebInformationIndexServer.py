@@ -12,7 +12,7 @@ import os.path
 from getpass import getpass
 
 processes = []
-
+crypto_main = None
 
 def main(): #this must be the main method in the main class so that it can handle the processes in a list
     
@@ -141,6 +141,13 @@ def browse_menu():
         #shutdown
         shutdown(processes)
     elif selection == '1':
+
+        address = crypto_main.public_key
+
+
+
+
+
         pass
     elif selection == '2':
         pass

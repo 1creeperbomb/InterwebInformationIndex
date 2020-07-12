@@ -5,7 +5,7 @@
   <master>
     <address>WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=</address>
     <sign salt="1234567890123456">ptNtqdUn/MtpoHFLgcodcYaD9DAmV3xVRI9+/K7pZGYIccNd61KC4LrIZz+bEhznR+f3p/hXWK7jWD/jzPdXCw==</sign>
-    <desc name="builtin">Contains teh default services III uses</desc>
+    <desc name="builtin">Contains the default services III uses</desc>
     <services>
       <service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=">
         <desc name="global peer list">Keeps a list of III peers available to sync data with</desc>
@@ -37,6 +37,7 @@
       </service>
     </services>
   </peer>
+  
   <master>
     <address>WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=</address>
     <sign salt="1234567890123456">ptNtqdUn/MtpoHFLgcodcYaD9DAmV3xVRI9+/K7pZGYIccNd61KC4LrIZz+bEhznR+f3p/hXWK7jWD/jzPdXCw==</sign>
@@ -52,4 +53,5 @@
       </service>
     </services>
   </master>
+  
 </root>

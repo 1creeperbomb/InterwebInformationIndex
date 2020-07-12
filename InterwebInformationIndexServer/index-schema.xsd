@@ -138,7 +138,7 @@
 
               <xs:element name="services">
                 <xs:complexType>
-                  <xs:choice maxOccurs="unbounded">
+                  <xs:choice maxOccurs="unbounded" minOccurs="0">
                     
                     <xs:element name="service">
                       <xs:complexType>

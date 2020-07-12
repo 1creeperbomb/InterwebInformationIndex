@@ -1,4 +1,5 @@
 import base64
+import random
 from lxml import etree as et
 from io import StringIO, BytesIO
 from main_package.cryptographer import Cryptographer
@@ -47,12 +48,13 @@ class XMLIndex:
                 address = child.text
             elif child.tag == 'sign':
                 signature = child.text
+                salt = child.attrib['salt']
             elif child.tag == 'services':
                 data = et.tostring(child).decode('utf8')
 
         try:
             crypto = Cryptographer(address, True)
-            if crypto.verify_data(data, signature):
+            if crypto.verify_data(data, signature, salt):
                 print('Signature verified successfully!')
             else:
                 print('Signature failed to verify')
@@ -135,6 +137,29 @@ class XMLIndex:
         xpath = root_path + modified_path
 
         return xpath
+
+    @staticmethod
+    def create_node(type, address, name, description_text):
+        if type == 'master':
+            root = et.Element('master')
+        elif type == 'peer':
+            root = et.Element('peer')
+
+        address_element = et.SubElement(root, 'address')
+        address_element.text(address)
+
+        salt = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(16))
+
+        signature = et.SubElement(root, 'sign')
+        signature.set('salt', salt)
+
+        description = et.SubElement(root, 'desc')
+        description.set('name', name)
+        description.text(description_text)
+
+
+
+
 
 
 

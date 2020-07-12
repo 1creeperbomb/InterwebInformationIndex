@@ -123,6 +123,21 @@ class SocketClient:
         except socket.error:  # not a valid address
             return False
         return True
+    
+    @staticmethod
+    def get_public_ip(type):
+
+        if type == 'ipv4':
+            s_type = socket.AF_INET
+        elif type == 'ipv6':
+            s_type=socket.AF_INET6
+
+
+        s = socket.socket(s_type, socket.SOCK_STREAM)
+
+        s.connect(("google.com",80)) #update this later with somthing better than testing with a random website (maybe test with anotehr III peer?)
+
+        return s.getsockname()
 
 
 
