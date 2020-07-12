@@ -38,6 +38,7 @@
     <Content Include="index-schema.xsd" />
     <Content Include="index.xml" />
     <Content Include="keystore\private.key" />
+    <Content Include="keystore\salt.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="main_package\" />

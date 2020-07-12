@@ -9,9 +9,16 @@ class SocketServer:
     localhost = '127.0.0.1'
 
     def main():
-        with socketserver.TCPServer(('', SocketServer.port), SocketHandler) as server:
-            SocketServer.state = True
-            server.serve_forever()
+
+        try:
+
+            with socketserver.TCPServer(('', SocketServer.port), SocketHandler) as server:
+                SocketServer.state = True
+                print('Succesfully started network process!')
+                server.serve_forever()
+
+        except:
+            print('[ERROR] Failed to start socket server! Port is already in use! (check if III is already running or if another program is using port ' + str(SocketServer.port) + ')')
 
 class SocketHandler(socketserver.StreamRequestHandler):
 
