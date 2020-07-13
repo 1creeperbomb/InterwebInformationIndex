@@ -1,5 +1,6 @@
 import base64
 import random
+import string
 from lxml import etree as et
 from io import StringIO, BytesIO
 from main_package.cryptographer import Cryptographer
@@ -69,7 +70,7 @@ class XMLIndex:
         return True
 
     @staticmethod
-    def get_data(address, xpath, tree):
+    def get_data(xpath, address=None, tree=None):
         #tree must be passed through so .remove() will work since it bases it on direct memeory location
 
         if tree == None:
@@ -94,6 +95,42 @@ class XMLIndex:
         return data
 
     @staticmethod
+    def create_node(type, crypto, name, description_text):
+        if type == 'master':
+            root = et.Element('master')
+        elif type == 'peer':
+            root = et.Element('peer')
+
+        address_text = crypto.get_public_key()
+
+        address_element = et.SubElement(root, 'address')
+        address_element.text = address_text
+
+        salt = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(16))
+
+        signature = et.SubElement(root, 'sign')
+        signature.set('salt', salt)
+
+        description = et.SubElement(root, 'desc')
+        description.set('name', name)
+        description.text = description_text
+
+        services = et.SubElement(root, 'services')
+
+        #add default services if applicable
+
+        #sign services data
+        raw_data = et.tostring(services).decode('utf8')
+
+        signed_data = crypto.sign_data(raw_data)
+
+        signature.text = signed_data
+
+        print(et.tostring(root))
+
+        input('Pause')
+
+    @staticmethod
     def __write_xml(xml_data_raw, address, node_type):
         #read index and load elements
         parser = et.XMLParser(remove_blank_text=True)
@@ -101,7 +138,7 @@ class XMLIndex:
         root = tree.getroot()
 
         #overwite if element already exists (check by address)
-        check = Xml_index.get_data(address, node_type, tree)
+        check = Xml_index.get_data(node_type, address, tree)
         if check[0] is None:
             #node does not exist
             pass
@@ -137,25 +174,6 @@ class XMLIndex:
         xpath = root_path + modified_path
 
         return xpath
-
-    @staticmethod
-    def create_node(type, address, name, description_text):
-        if type == 'master':
-            root = et.Element('master')
-        elif type == 'peer':
-            root = et.Element('peer')
-
-        address_element = et.SubElement(root, 'address')
-        address_element.text(address)
-
-        salt = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(16))
-
-        signature = et.SubElement(root, 'sign')
-        signature.set('salt', salt)
-
-        description = et.SubElement(root, 'desc')
-        description.set('name', name)
-        description.text(description_text)
 
 
 

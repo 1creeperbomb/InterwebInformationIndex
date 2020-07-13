@@ -71,6 +71,11 @@ class Cryptographer:
         else:
             return False;
 
+    #special getter for easy access to base64 format
+    def get_public_key(self):
+         clean_key = self.public_key.encode(Base64Encoder).decode('utf8')
+         return clean_key
+
     #private methods
 
     #static private methods
@@ -85,9 +90,7 @@ class Cryptographer:
     
         #generates a secret key based on the password input (blake2b will hash the person data)
         derivation_salt = nacl.utils.random(16)
-        derived_key = blake2b(b'', salt=derivation_salt,
-                      person=password_raw,
-                      encoder=nacl.encoding.RawEncoder)
+        derived_key = blake2b(password_raw, salt=derivation_salt, encoder=nacl.encoding.RawEncoder)
 
         #saves the salt to the salt.txt file
         salt_clean = base64.b64encode(derivation_salt).decode('utf8')
@@ -131,9 +134,7 @@ class Cryptographer:
         private_key = base64.b64decode(private_key)
 
         #recreates blake2b key
-        derived_key = blake2b(b'', salt=derivation_salt,
-                      person=password_raw,
-                      encoder=nacl.encoding.RawEncoder)
+        derived_key = blake2b(password_raw, salt=derivation_salt, encoder=nacl.encoding.RawEncoder)
 
         #decrypts private key
         box = nacl.secret.SecretBox(derived_key)

@@ -12,7 +12,6 @@ import os.path
 from getpass import getpass
 
 processes = []
-crypto_main = None
 
 def main(): #this must be the main method in the main class so that it can handle the processes in a list
     
@@ -53,6 +52,7 @@ def main(): #this must be the main method in the main class so that it can handl
         print('Failed to decrypt!')
         shutdown(None)
 
+    global crypto_main
     crypto_main = Cryptographer(private_key, False)
     password = None
     private_key = None
@@ -95,17 +95,31 @@ def filter_input(input, type):
         else:
             return False;
 
-        pass
-    elif type == 'string':
-        pass
-    elif type == 'int':
-        pass
     elif type == 'menu':
 
         if input in ['0','1','2','3','4','5','6','0?','1?','2?','3?','4?','5?','6?']:
             return input
         else:
             return False;
+
+    elif type == 'name':
+
+        if len(input) <= 40 and len(input) > 0:
+            return input
+        else:
+            return False
+
+    elif type == 'desc':
+        if len(input) <= 500 and len(input) > 0:
+            return input
+        else:
+            return False
+    elif type == 'node_type':
+
+        if input in ['master', 'peer']:
+            return input
+        else:
+            return False
 
 def clear():
 
@@ -142,10 +156,21 @@ def browse_menu():
         shutdown(processes)
     elif selection == '1':
 
-        address = crypto_main.public_key
+        address = crypto_main.get_public_key()
 
+        name = filter_input(input('Enter a name for your node (40 characters max): '), 'name')
 
+        while name == False:
+            print('Please enter a proper name!')
+            name = filter_input(input('Enter a name for your node (40 characters max): '), 'name')
 
+        desc = filter_input(input('Enter a description for your node (500 characters max): '), 'desc')
+
+        while desc == False:
+            print('Please enter a proper description!')
+            desc = filter_input(input('Enter a description for your node (500 characters max): '), 'desc')
+
+        XMLIndex.create_node('master', crypto_main, name, desc)
 
 
         pass
@@ -196,7 +221,7 @@ def first_time_setup():
 
     password_check = getpass('Please eneter the password again to verify: ')
 
-    while password != password_check:
+    while password != password_check or len(password) == 0:
         password = getpass('Passwords did not match, try again! Please enter a strong password to encrypt your private key: ')
 
         password_check = getpass('Please eneter the password again to verify: ')

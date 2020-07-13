@@ -11,8 +11,20 @@ from lxml import etree as et
 
 
 
-XMLIndex.parse_xml_string()
+Cryptographer.generate_keypair('ctpQ7pyNmqMPer9aVkAf8YSe')
 
+
+
+'''
+#XMLIndex.parse_xml_string()
+
+#+R+zzu0IiLjR1mliwAcxTHVoWT9pzMC5ptw=
+
+crypto = Cryptographer('lxQZfMmb+R+zzu0IiLjR1mliwAcxTHVoWT9pzMC5ptw=', False)
+
+print(crypto.private_key)
+print(crypto.public_key)
+'''
 
 
 '''

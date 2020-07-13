@@ -37,12 +37,11 @@
   <ItemGroup>
     <Content Include="index-schema.xsd" />
     <Content Include="index.xml" />
-    <Content Include="keystore\private.key" />
-    <Content Include="keystore\salt.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="main_package\" />
     <Folder Include="keystore\" />
+    <Folder Include="services\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

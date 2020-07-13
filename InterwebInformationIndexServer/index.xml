@@ -1,7 +1,15 @@
 <root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.w3schools.com index-schema.xsd">
   <!-- My example data is clearly very technical-->
 
-  <!-- Builtin master node which contains built in services, needs to be updated with proper address and has values when program is published -->
+  <!-- Builtin master node which contains built in services-->
+  <master>
+    <address>RvZNupeBJVLU8iCUOBg/5+shr7urHLbau0uxUwSCd4Q=</address>
+    <sign salt="9I9MEOY2AKL9EZMZ">jkj425x6bWFdS+hIPnWn/DoQovM0AHlJaWU8G/fRGGOCFIKpz0DNUBcuWhb5sVE9jiXnnb5DDmlA0I7ef/FUDg==</sign>
+    <desc name="builtin">Contains all the builtin services III relies on to function properly</desc>
+    <services/>
+  </master>
+
+<!--
   <master>
     <address>WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=</address>
     <sign salt="1234567890123456">ptNtqdUn/MtpoHFLgcodcYaD9DAmV3xVRI9+/K7pZGYIccNd61KC4LrIZz+bEhznR+f3p/hXWK7jWD/jzPdXCw==</sign>
@@ -25,6 +33,7 @@
       </service>
     </services>
   </master>
+  -->
   
   <peer>
     <address>4O5y6PUBZD6Kziz2eWo3n1TNHVTfT7x6eKwLPPUdVls=</address>
@@ -53,5 +62,5 @@
       </service>
     </services>
   </master>
-  
+
 </root>

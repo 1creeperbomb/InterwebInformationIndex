@@ -59,7 +59,7 @@ class SocketClient:
     IP = '127.0.0.1'
     socket_type = socket.AF_INET
 
-    def __init__(self, IP, port):
+    def __init__(self, IP=None, port=None):
 
         if IP != None:
             self.IP = IP
@@ -139,7 +139,21 @@ class SocketClient:
 
         return s.getsockname()
 
+class ConnectionHandler:
 
+    connections = []
+    peer_max = 16 #maximum peers to stay active with
+
+    def main():
+        
+
+        while True:
+
+            # If peers are less than peer_max, read from peer service to add a peer (based on location)
+            pass
+
+
+        
 
 
 #old stuff for reference using socket

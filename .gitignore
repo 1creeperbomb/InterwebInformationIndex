@@ -348,3 +348,10 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+
+#Custom
+
+#ignore key and salt files
+/keystore/private.key
+/keystore/salt.txt
