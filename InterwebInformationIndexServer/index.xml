@@ -1,6 +1,5 @@
 <root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.w3schools.com index-schema.xsd">
   <!-- My example data is clearly very technical-->
-
   <!-- Builtin master node which contains built in services-->
   <master>
     <address>RvZNupeBJVLU8iCUOBg/5+shr7urHLbau0uxUwSCd4Q=</address>
@@ -8,8 +7,7 @@
     <desc name="builtin">Contains all the builtin services III relies on to function properly</desc>
     <services/>
   </master>
-
-<!--
+  <!--
   <master>
     <address>WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=</address>
     <sign salt="1234567890123456">ptNtqdUn/MtpoHFLgcodcYaD9DAmV3xVRI9+/K7pZGYIccNd61KC4LrIZz+bEhznR+f3p/hXWK7jWD/jzPdXCw==</sign>
@@ -34,7 +32,6 @@
     </services>
   </master>
   -->
-  
   <peer>
     <address>4O5y6PUBZD6Kziz2eWo3n1TNHVTfT7x6eKwLPPUdVls=</address>
     <sign salt="1234567890123456">ptNtqdUn/MtpoHFLgcodcYaD9DAmV3xVRI9+/K7pZGYIccNd61KC4LrIZz+bEhznR+f3p/hXWK7jWD/jzPdXCw==</sign>
@@ -46,7 +43,6 @@
       </service>
     </services>
   </peer>
-  
   <master>
     <address>WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=</address>
     <sign salt="1234567890123456">ptNtqdUn/MtpoHFLgcodcYaD9DAmV3xVRI9+/K7pZGYIccNd61KC4LrIZz+bEhznR+f3p/hXWK7jWD/jzPdXCw==</sign>
@@ -62,5 +58,10 @@
       </service>
     </services>
   </master>
-
+  <master>
+    <address>12URI46pikzI54c9xqvaW47IZ/SLxD8pNSXk4t/+a0Y=</address>
+    <sign salt="A039XX58E87GMOH2">QZo//WyHLg4tiK+0gWFjmIbxdlvWjnWGDtS6bFhMNGx8LESssMkmOeRV4VaK9JLFyCXShYJUhYrhImvv/I4nCg==</sign>
+    <desc name="yeet">man</desc>
+    <services/>
+  </master>
 </root>

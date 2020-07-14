@@ -122,13 +122,13 @@ class XMLIndex:
         #sign services data
         raw_data = et.tostring(services).decode('utf8')
 
-        signed_data = crypto.sign_data(raw_data)
+        signed_data = crypto.sign_data(raw_data, salt)
 
         signature.text = signed_data
 
-        print(et.tostring(root))
+        string_xml = et.tostring(root).decode('utf8')
 
-        input('Pause')
+        return string_xml
 
     @staticmethod
     def __write_xml(xml_data_raw, address, node_type):
@@ -138,8 +138,8 @@ class XMLIndex:
         root = tree.getroot()
 
         #overwite if element already exists (check by address)
-        check = Xml_index.get_data(node_type, address, tree)
-        if check[0] is None:
+        check = XMLIndex.get_data(node_type, address, tree)
+        if check is None:
             #node does not exist
             pass
         else:

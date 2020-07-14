@@ -3,6 +3,7 @@
 from main_package.cryptographer import Cryptographer
 from main_package.xml import XMLIndex
 from main_package.network import SocketServer
+from main_package.network import ConnectionHandler
 
 import multiprocessing
 import time
@@ -64,7 +65,10 @@ def main(): #this must be the main method in the main class so that it can handl
 
     network_process.start()
     processes.append(network_process)
-    time.sleep(5)
+    time.sleep(4)
+
+    #debug starts
+    ConnectionHandler.main()
 
     clear()
 
@@ -101,7 +105,18 @@ def filter_input(input, type):
             return input
         else:
             return False;
+    elif type == 'node_edit_master':
 
+        if input in ['0','1','2','3','4','0?','1?','2?','3?','4?']:
+            return input
+        else:
+            return False;
+    elif type == 'node_edit_peer':
+
+        if input in ['0','1','2','3','0?','1?','2?','3?']:
+            return input
+        else:
+            return False;
     elif type == 'name':
 
         if len(input) <= 40 and len(input) > 0:
@@ -128,23 +143,38 @@ def clear():
     else:
         _ = system('clear') 
 
-def print_menu():
-    print('Select an option. To see what each option does, type the option number followed by a \"?\" (ex: 3?): ')
-    print('[1] Create a master node')
-    print('[2] Create a peer node') 
-    print('[3] Create a service to host')
-    print('[4] Select a service to help host')
-    print('[5] Start/Restart the network process')
-    print('[6] Stop the network process')
-    print('[0] Exit III')
+def print_menu(menu_type):
+    
+    if menu_type == 'main':
+        print('Select an option. To see what each option does, type the option number followed by a \"?\" (ex: 3?): ')
+        print('[1] Create a master or peer node')
+        print('[2] Modify a master or peer node') 
+        print('[3] Delete a master or peer node')
+        print('[4] empty')
+        print('[5] Start/Restart the network process')
+        print('[6] Stop the network process')
+        print('[0] Exit III')
+    elif menu_type == 'node_edit_master':
+        print('Select an option. To see what each option does, type the option number followed by a \"?\" (ex: 3?): ')
+        print('[1] Change node name')
+        print('[2] Change node description')
+        print('[3] Define a service to publish on the index')
+        print('[4] Edit the details of a service')
+        print('[0] Back')
+    elif menu_type == 'node_edit_peer':
+        print('Select an option. To see what each option does, type the option number followed by a \"?\" (ex: 3?): ')
+        print('[1] Change node name')
+        print('[2] Change node description')
+        print('[3] Choose a service to help host')
+        print('[0] Back')
 
 def browse_menu():
-    print_menu()
+    print_menu('main')
     selection = input('Select: ')
 
     while(filter_input(selection, 'menu') == False):
         clear()
-        print_menu()
+        print_menu('main')
         print('Please enter a valid option!')
         selection = input('Select: ')
         filter_input(selection, 'menu')
@@ -158,6 +188,12 @@ def browse_menu():
 
         address = crypto_main.get_public_key()
 
+        node_type = filter_input(input('Please enter the type of node you want to create (master or peer): '), 'node_type')
+
+        while node_type == False:
+            print('Please enter a proper node type!')
+            node_type = filter_input(input('Please enter the type of node you want to create (master or peer): '), 'node_type')
+
         name = filter_input(input('Enter a name for your node (40 characters max): '), 'name')
 
         while name == False:
@@ -170,11 +206,24 @@ def browse_menu():
             print('Please enter a proper description!')
             desc = filter_input(input('Enter a description for your node (500 characters max): '), 'desc')
 
-        XMLIndex.create_node('master', crypto_main, name, desc)
+        xml_data = XMLIndex.create_node('master', crypto_main, name, desc)
 
+        ConnectionHandler.send_data(xml_data)
 
         pass
     elif selection == '2':
+
+        node_type = filter_input(input('Please enter the type of node you want to modify (master or peer): '), 'node_type')
+
+        while node_type == False:
+            print('Please enter a proper node type!')
+            node_type = filter_input(input('Please enter the type of node you want to modify (master or peer): '), 'node_type')
+
+        #browse node menu
+        clear()
+        browse_node_edit_menu(node_type)
+
+
         pass
     elif selection == '3':
         pass
@@ -186,11 +235,15 @@ def browse_menu():
         pause_key()
     elif selection == '1?':
         clear()
-        print('[1] This will allow you to publish services that other peers can then help host (use option 3 after setting this up)')
+        print('[1] Creating a master node will allow you to publish services that other peers can then help host (use option 3 after setting this up)')
+        print('Creating a peer node will allow you to help host services from a master node (use option 4 after setting this up)')
+        print('(NOTE: You also need to create a peer node if you have a master node so that other peers can copy the required files)')
         pause_key()
     elif selection == '2?':
         clear()
-        print('[2] This will allow you to help host services from a master node (use option 4 after setting this up) (NOTE: You also need to create a peer node if you have a master node so that other peers can copy the required files)')
+        print('[2] Modifying a master node will allow you to add/define services that other peers can then help host')
+        print('Modifying a peer node will allow you to select services to help host from another master node')
+        print('Modifying a node will also alow you to change the name and description')
         pause_key()
     elif selection == '3?':
         clear()
@@ -210,8 +263,49 @@ def browse_menu():
         pause_key()
 
     #after completing, menu appears again
+
+    input('Paused...')
+
     clear()
     browse_menu()
+
+
+def browse_node_edit_menu(node_type):
+
+    if node_type == 'master':
+            node_menu_type = 'node_edit_master'
+    elif node_type == 'peer':
+            node_menu_type = 'node_edit_peer'
+
+    print_menu(node_menu_type)
+
+    selection = input('Select: ')
+
+    while(filter_input(selection, node_menu_type) == False):
+        clear()
+        print_menu(node_menu_type)
+        print('Please enter a valid option!')
+        selection = input('Select: ')
+        filter_input(selection, 'menu')
+
+    if selection == '0':
+        return
+    elif selection == '1':
+        print('Heyyyyyyyooooooooooo')
+        time.sleep(5)
+        pass
+    elif selection == '2':
+        pass
+    elif selection == '3':
+        pass
+    elif selection == '4':
+        pass
+
+    clear()
+    browse_node_edit_menu(node_type)
+
+
+
 
 def pause_key():
     input("Press Enter to continue...")

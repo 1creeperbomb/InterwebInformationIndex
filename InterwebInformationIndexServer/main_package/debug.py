@@ -2,6 +2,7 @@
 from main_package.cryptographer import Cryptographer
 from main_package.xml import XMLIndex
 from main_package.network import SocketServer
+from main_package.network import SocketClient
 
 import multiprocessing
 
@@ -11,7 +12,9 @@ from lxml import etree as et
 
 
 
-Cryptographer.generate_keypair('ctpQ7pyNmqMPer9aVkAf8YSe')
+#Cryptographer.generate_keypair('ctpQ7pyNmqMPer9aVkAf8YSe')
+
+print(SocketClient.get_public_ip())
 
 
 

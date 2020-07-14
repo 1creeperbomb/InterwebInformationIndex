@@ -35,7 +35,10 @@ class Cryptographer:
 
     #public methods
 
-    def sign_data(self, data):
+    def sign_data(self, data, salt):
+        #append salt to data
+        data = data + salt
+
         #convert string to bytes
         data = data.encode('utf8')
 

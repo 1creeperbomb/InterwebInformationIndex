@@ -3,6 +3,7 @@
 import socket
 import socketserver
 from main_package.xml import XMLIndex
+import urllib.request
 
 class SocketServer:
     port = 5001 #default is 5001
@@ -14,7 +15,7 @@ class SocketServer:
 
             with socketserver.TCPServer(('', SocketServer.port), SocketHandler) as server:
                 SocketServer.state = True
-                print('Succesfully started network process!')
+                print('[OK] Succesfully started network process!')
                 server.serve_forever()
 
         except:
@@ -125,32 +126,33 @@ class SocketClient:
         return True
     
     @staticmethod
-    def get_public_ip(type):
+    def get_public_ip():
 
-        if type == 'ipv4':
-            s_type = socket.AF_INET
-        elif type == 'ipv6':
-            s_type=socket.AF_INET6
-
-
-        s = socket.socket(s_type, socket.SOCK_STREAM)
-
-        s.connect(("google.com",80)) #update this later with somthing better than testing with a random website (maybe test with anotehr III peer?)
-
-        return s.getsockname()
+        external_ip = urllib.request.urlopen('https://ident.me').read().decode('utf8') #update this in the future with a decentral solution?
+        return external_ip
 
 class ConnectionHandler:
 
     connections = []
     peer_max = 16 #maximum peers to stay active with
 
+    @staticmethod
     def main():
         
+        #debug loopback connection
+        localhost = SocketClient('127.0.0.1', 5001)
+        ConnectionHandler.connections.append(localhost)
 
-        while True:
+        #while True:
 
             # If peers are less than peer_max, read from peer service to add a peer (based on location)
-            pass
+            #pass
+    
+    @staticmethod
+    def send_data(data):
+
+        for client in ConnectionHandler.connections:
+            client.send_data(data)
 
 
         
