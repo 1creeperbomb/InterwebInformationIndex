@@ -10,8 +10,18 @@ import socket
 
 from lxml import etree as et
 
+import subprocess
+import os
+
+filename = os.path.abspath('services/service1/iiistart.bat')
+
+subprocess.call([filename])
+
+print('test')
 
 
+
+'''
 #Cryptographer.generate_keypair('ctpQ7pyNmqMPer9aVkAf8YSe')
 
 #print(SocketClient.get_public_ip())
@@ -24,7 +34,7 @@ print(address)
 print(XMLIndex.get_data('master', address))
 
 #print(XMLIndex.modify_node('master', address, 'NEW NAME'))
-
+'''
 
 '''
 #XMLIndex.parse_xml_string()

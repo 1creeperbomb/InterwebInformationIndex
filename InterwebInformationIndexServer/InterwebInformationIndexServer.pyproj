@@ -44,6 +44,7 @@
     <Content Include="services\service1\.iii\uaddress.txt" />
     <Content Include="services\service1\index.html" />
     <Content Include="services\service1\notes\a note.txt" />
+    <Content Include="services\service1\iiistart.bat" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="main_package\" />
