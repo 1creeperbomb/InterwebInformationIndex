@@ -1,13 +1,13 @@
-<iii>
+<iii xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.w3schools.com iii.xsd">
 
   <!-- database files -->
   <dbfs>
-    <dbfile></dbfile>
+    <dbfile>/folder/example.txt</dbfile>
   </dbfs>
 
   <!-- database directories -->
   <dbdrs>
-    <dbdir></dbdir>
+    <dbdir>/folder/examplefolder</dbdir>
   </dbdrs>
 
 </iii>

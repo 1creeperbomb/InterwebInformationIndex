@@ -38,6 +38,9 @@
     <Content Include="index-schema.xsd" />
     <Content Include="index.xml" />
     <Content Include="services\service1\.iii\iii.xml" />
+    <Content Include="services\service1\.iii\iii.xsd">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="services\service1\.iii\uaddress.txt" />
     <Content Include="services\service1\index.html" />
     <Content Include="services\service1\notes\a note.txt" />
