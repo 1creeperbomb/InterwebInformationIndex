@@ -88,8 +88,7 @@ def shutdown(processes):
     print('Shutting down...')
     print('Goodbye!')
     exit()
-    
-
+   
 def filter_input(input, type):
     if type == 'y/n':
             
@@ -291,15 +290,58 @@ def browse_node_edit_menu(node_type):
     if selection == '0':
         return
     elif selection == '1':
-        print('Heyyyyyyyooooooooooo')
-        time.sleep(5)
-        pass
+        
+        name = filter_input(input('Enter a new name for your node (40 characters max): '), 'name')
+
+        while name == False:
+            print('Please enter a proper name!')
+            name = filter_input(input('Enter a new name for your node (40 characters max): '), 'name')
+
+        address = crypto_main.get_public_key()
+
+        new_node = XMLIndex.modify_node(node_type, crypto_main, address, name = name)
+
+        ConnectionHandler.send_data(new_node)
+
     elif selection == '2':
+
+        desc = filter_input(input('Enter a new description for your node (500 characters max): '), 'desc')
+
+        while desc == False:
+            print('Please enter a proper description!')
+            desc = filter_input(input('Enter a new description for your node (500 characters max): '), 'desc')
+
+        address = crypto_main.get_public_key()
+
+        new_node = XMLIndex.modify_node(node_type, crypto_main, address, description_text = desc)
+
+        ConnectionHandler.send_data(new_node)
+
         pass
     elif selection == '3':
         pass
     elif selection == '4':
         pass
+    elif selection == '0?':
+        clear()
+        print('This returns to the previous menu (duh?)')
+        pause_key()
+    elif selection == '1?':
+        clear()
+        print('This changes the node name (doyee?)')
+        pause_key()
+    elif selection == '2?':
+        clear()
+        print('This changes the node description (again, duh?)')
+        pause_key()
+    elif selection == '3?':
+        clear()
+        print('This will allow you to define a service for a master node or select a service for a peer node')
+        pause_key()
+    elif selection == '4?':
+        clear()
+        print('This will allow you to edit/redefine/delete a service from your master node')
+        pause_key()
 
     clear()
     browse_node_edit_menu(node_type)
@@ -329,6 +371,7 @@ def first_time_setup():
     password = None #I have no idea if this is really necessary because Python does garbge collection anyway lol
     password_check = None
 
+#start
 if __name__ == '__main__':
     main()
 

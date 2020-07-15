@@ -14,8 +14,16 @@ from lxml import etree as et
 
 #Cryptographer.generate_keypair('ctpQ7pyNmqMPer9aVkAf8YSe')
 
-print(SocketClient.get_public_ip())
+#print(SocketClient.get_public_ip())
+key = Cryptographer.read_key('1234')
+crypto = Cryptographer(key, False)
+address = crypto.get_public_key()
 
+print(address)
+
+print(XMLIndex.get_data('master', address))
+
+#print(XMLIndex.modify_node('master', address, 'NEW NAME'))
 
 
 '''

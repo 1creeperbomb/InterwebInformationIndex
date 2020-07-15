@@ -83,6 +83,9 @@ class XMLIndex:
             xpath = XMLIndex.__get_xpath(address, xpath)
 
         #retrieve the data and return
+        print(xpath)
+        #ns = {'xmlns:xsi': "http://www.w3.org/2001/XMLSchema-instance"}
+        #namespaces=ns
         data = tree.xpath(xpath)
 
         #this will return either the data as a string or the associated data element or None if the data could not be found'
@@ -130,6 +133,38 @@ class XMLIndex:
 
         return string_xml
 
+    def modify_node(type, crypto, address, name=None, description_text=None):
+        node = XMLIndex.get_data(type, address)[0]
+        XMLIndex.get_data('master', address)
+
+        print(node)
+
+        for child in node:
+            if child.tag == 'desc':
+                if description_text != None:
+                    child.text = description_text
+                elif name != None:
+                    child.set('name', name)
+            elif child.tag == 'services':
+                services = child
+            elif child.tag == 'sign':
+                signature = child
+                salt = child.attrib['salt']
+
+        #add statement for services in the future
+
+
+        #sign services data
+
+        raw_data = et.tostring(services).decode('utf8')
+
+        signed_data = crypto.sign_data(raw_data, salt)
+
+        signature.text = signed_data
+
+        string_xml = et.tostring(node).decode('utf8')
+        return string_xml
+
     @staticmethod
     def __write_xml(xml_data_raw, address, node_type):
         #read index and load elements
@@ -154,13 +189,20 @@ class XMLIndex:
         tree.write('index.xml', pretty_print=True)
 
     @staticmethod
-    def __get_xpath(address, relativepath):
+    def __get_xpath(address, relativepath_raw):
 
         #relative path format example: master/services/desc
+        #*[local-name()='ELEMENT_NAME_GOES_HERE'] will ignores namespace 
 
         root_path = '/root/'
         address_path_1 = '[address[text()=\"'
         address_path_2 = '\"]]'
+
+        #local_path_1 = '*[name()=\"'
+        #local_path_2 = '\"]'
+
+        #relativepath = local_path_1 + relativepath_raw + local_path_2
+        relativepath = relativepath_raw
 
         address_path = address_path_1 + address + address_path_2
 
