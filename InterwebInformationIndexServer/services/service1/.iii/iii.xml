@@ -1,0 +1,13 @@
+<iii>
+
+  <!-- database files -->
+  <dbfs>
+    <dbfile></dbfile>
+  </dbfs>
+
+  <!-- database directories -->
+  <dbdrs>
+    <dbdir></dbdir>
+  </dbdrs>
+
+</iii>

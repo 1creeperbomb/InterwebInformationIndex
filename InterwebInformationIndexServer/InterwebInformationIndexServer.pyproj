@@ -37,11 +37,18 @@
   <ItemGroup>
     <Content Include="index-schema.xsd" />
     <Content Include="index.xml" />
+    <Content Include="services\service1\.iii\iii.xml" />
+    <Content Include="services\service1\.iii\uaddress.txt" />
+    <Content Include="services\service1\index.html" />
+    <Content Include="services\service1\notes\a note.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="main_package\" />
     <Folder Include="keystore\" />
     <Folder Include="services\" />
+    <Folder Include="services\service1\" />
+    <Folder Include="services\service1\.iii\" />
+    <Folder Include="services\service1\notes\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
