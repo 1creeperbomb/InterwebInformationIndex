@@ -83,7 +83,6 @@ class XMLIndex:
             xpath = XMLIndex.__get_xpath(address, xpath)
 
         #retrieve the data and return
-        print(xpath)
         #ns = {'xmlns:xsi': "http://www.w3.org/2001/XMLSchema-instance"}
         #namespaces=ns
         data = tree.xpath(xpath)

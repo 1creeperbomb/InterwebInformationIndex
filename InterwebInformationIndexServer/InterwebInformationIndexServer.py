@@ -218,6 +218,16 @@ def browse_menu():
             print('Please enter a proper node type!')
             node_type = filter_input(input('Please enter the type of node you want to modify (master or peer): '), 'node_type')
 
+        #check if node exists
+        address = crypto_main.get_public_key()
+        node_check = XMLIndex.get_data(node_type, address)
+
+        if node_check == None:
+            print('You do not have a ' + node_type + ' node published!')
+            time.sleep(3)
+            clear()
+            browse_menu()
+
         #browse node menu
         clear()
         browse_node_edit_menu(node_type)
