@@ -1,6 +1,5 @@
 @echo off
-
-echo lolll
-echo yay
-
-timeout /t 5
+color 0a
+:top
+echo %random% %random% %random% %random% %random% %random% %random% %random% %random% %random% %random% %random% %random% %random%
+goto top

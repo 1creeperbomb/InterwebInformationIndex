@@ -8,7 +8,7 @@ from main_package.network import ConnectionHandler
 import multiprocessing
 import time
 
-from os import system, name 
+from os import system, name as os_name
 import os.path
 from getpass import getpass
 
@@ -24,7 +24,7 @@ def main(): #this must be the main method in the main class so that it can handl
     print('Created by Ismaeel Mian (1creeperbomb)')
     print('-----------------------------------------------------')
     print('Check out/contribute the the project on github at https://github.com/1creeperbomb/InterwebInformationIndex')
-    print('-----------------------------------------------------')
+    print('----------------------------------------------------------------------------------------------------------')
 
     #check if private key file exists
     if os.path.isfile('keystore/private.key'):
@@ -137,7 +137,7 @@ def filter_input(input, type):
 
 def clear():
 
-    if name == 'nt':
+    if os_name == 'nt':
         _ = system('cls')
     else:
         _ = system('clear') 
@@ -149,9 +149,9 @@ def print_menu(menu_type):
         print('[1] Create a master or peer node')
         print('[2] Modify a master or peer node') 
         print('[3] Delete a master or peer node')
-        print('[4] empty')
-        print('[5] Start/Restart the network process')
-        print('[6] Stop the network process')
+        print('[4] Start/Restart/Stop an III service')
+        print('[5] Start/Restart the network processes')
+        print('[6] Stop the network processes')
         print('[0] Exit III')
     elif menu_type == 'node_edit_master':
         print('Select an option. To see what each option does, type the option number followed by a \"?\" (ex: 3?): ')

@@ -119,6 +119,7 @@ class Cryptographer:
 
         with open('keystore/private.key', 'w') as private_file:
             private_file.write(private_key_encrypted)
+            private_file.close()
 
     @staticmethod
     def read_key(password):
@@ -146,10 +147,10 @@ class Cryptographer:
         return private_key_decrypted.decode('utf8')
 
     @staticmethod
-    def generate_hash(filepath, message):
+    def generate_hash(message, filepath=None):
         hasher = nacl.hash.blake2b
         
-        if filepath != 'null':
+        if filepath != None:
             #hash file
             with open(filepath, 'rb') as f:
                 advanced_hasher = nacl.hashlib.blake2b()

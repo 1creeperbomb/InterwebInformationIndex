@@ -29,6 +29,9 @@
     <Compile Include="main_package\network.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="main_package\services.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="main_package\xml.py" />
     <Compile Include="main_package\__init__.py">
       <SubType>Code</SubType>

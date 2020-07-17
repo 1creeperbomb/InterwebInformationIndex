@@ -1,6 +1,8 @@
 import base64
 import random
 import string
+import os
+import glob
 from lxml import etree as et
 from io import StringIO, BytesIO
 from main_package.cryptographer import Cryptographer
@@ -16,7 +18,6 @@ class XMLIndex:
         except:
             print('XML is malformed!')
             return None
-
 
     @staticmethod
     def parse_xml_string(xml_data_raw):
@@ -132,6 +133,7 @@ class XMLIndex:
 
         return string_xml
 
+    @staticmethod
     def modify_node(type, crypto, address, name=None, description_text=None):
         node = XMLIndex.get_data(type, address)[0]
         XMLIndex.get_data('master', address)
@@ -188,7 +190,7 @@ class XMLIndex:
         tree.write('index.xml', pretty_print=True)
 
     @staticmethod
-    def __get_xpath(address, relativepath_raw):
+    def __get_xpath(address, relativepath_raw, uaddress=None):
 
         #relative path format example: master/services/desc
         #*[local-name()='ELEMENT_NAME_GOES_HERE'] will ignores namespace 
@@ -196,6 +198,9 @@ class XMLIndex:
         root_path = '/root/'
         address_path_1 = '[address[text()=\"'
         address_path_2 = '\"]]'
+
+        #uaddress_path_1 = '[uaddress[text()=\"'
+        #uaddress_path_2 = '\"]]'
 
         #local_path_1 = '*[name()=\"'
         #local_path_2 = '\"]'
@@ -216,10 +221,120 @@ class XMLIndex:
 
         return xpath
 
+class XMLServiceDefinition:
+
+    @staticmethod
+    def parse_xml_string(xml_data, schema_dir):
+        
+        with open(schema_dir, 'r') as schema_file:
+            schema_raw = et.XML(schema_file.read())
+            schema = et.XMLSchema(schema_raw)
+
+        parser = et.XMLParser(schema = schema, remove_comments=True)
+
+        try:
+            iii_root = et.fromstring(xml_data, parser)
+        except:
+            print('Schema validation failed!')
+            return False
+
+        #read db files and dir definitions and chekc if files exist as defined
+
+        variable_files = []
+
+        for child in iii_root:
+
+            if child.tag == 'dbfs':
+                files = child
+                for file in files:
+                    directory = file.text
+
+                    exists = os.path.isfile(directory)
+
+                    if exists:
+                        variable_files.append(directory)
+                    else:
+                        return False
+
+            elif child.tag == 'dbdir':
+                db_dir = child
+
+                for dir in db_dir:
+                    directory = dir.text
+
+                    exists = os.path.isdir(directory)
+
+                    if exists:
+                        variable_files.append(directory)
+                    else:
+                        return False
+
+            return variable_files
+
+    @staticmethod
+    def check_service(peer_address, service_address, service_name):
+        #/root/peer[address[text()="4O5y6PUBZD6Kziz2eWo3n1TNHVTfT7x6eKwLPPUdVls="]]/services/service[uaddress[text()="O/iFe/g2ENRQfye0u0dmPd+cMUq7LoRfqmXnJt74X84="] and uaddress[@name="woot"]]/...
+
+        #lol try reading this Xpath 
+        xpath = '/root/peer[address[text()=\"' + peer_address + '\"]]/services/service[uaddress[text()=\"' + service_address + '\"] and uaddress[@name=\"' + service_name + '\"]]'
+        #looking back on it, I should have just made these nice and long Xpath expressions instead of a get_xpath function
+
+        element = XMLIndex.get_data(xpath)
+        
+        if element == None:
+            return False
+
+        return True
+
+    def verify_service(service_address, service_name, service_dir):
+        #/root/master[address[text()="WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs="]]/services/service[desc[@name = "woot"]]/data/files
 
 
+        xpath = '/root/master[address[text()=\"' + service_address + '\"]]/services/service[desc[@name = \"' + service_name + '\"]]/data/files'
+
+        print(xpath)
+
+        files = XMLIndex.get_data(xpath)
+
+        root_directory_raw = glob.glob('services\\service1\\**\\*', recursive=True)
+        root_directory = []
+
+        #convert glob directories into OS friendly directories 
+
+        for path in root_directory_raw:
+            new_path = os.path.relpath(os.path.realpath(path))
+            root_directory.append(new_path)
+
+        #verify files
+        remaining_p_files = root_directory
+        remaining_i_files = files
+
+        for file in files:
+            if file.attrib['type'] == 'static':
+                file_hash = file.text
+                file_name = file.attrib['rdir']
+
+                for p_file in root_directory:
+                    p_hash = Cryptographer.generate_hash(message=None, filepath=p_file)
+
+                    if file_hash == p_hash and file_name == p_file:
+                        remaining_p_files.remove(p_file)
+                        remaining_i_files.remove(file)
 
 
+            elif file.attrib['type'] == 'variable':
+                file_name = file.attrib['rdir']
+
+                for p_file in root_directory:
+                    
+                    if file_name == p_file:
+                        remaining_p_files.remove(p_file)
+                        remaining_i_files.remove(file)
+
+        if len(remaining_i_files) != 0 or len(remainingremaining_p_files) != 0:
+            return False
+
+        return True
 
 
 
