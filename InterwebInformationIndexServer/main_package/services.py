@@ -14,20 +14,27 @@ class ServiceHanlder:
         services_dir = os.listdir('services')
 
         for service_dir in services_dir:
-            if os.path.isdir(servic_dir):
+            if os.path.isdir(service_dir):
                 #attempt to load teh service
                 try:
                     service = Service(services_dir)
 
                     #verify that service is in peer node
+                    service_pass= True
 
                     if XMLServiceDefinition.check_service(address, service.address, service.name) == False:
-                        raise Exception('Service is not in peer node')
+                        #raise Exception('Service is not in peer node')
+                        print('[WARN] The service in the folder \"' + service.directory + '\" was not found in your peer node. III will not start it!')
+                        service_pass = False
 
                     #verify service files match master node
+                    if XMLServiceDefnition.verify_service(service.address, service.name, service.iii_dir) == False:
+                        #raise Exception('Service files do not match master node')
+                        print('[WARN] The service in the folder \"' + service.directory + '\" does not match with the master node. III will not start it!')
+                        service_pass = False
 
-
-                    services.append(service)
+                    if service_pass:
+                        services.append(service)
                 except:
                     print('[WARN] The service located in ' + service_dir + ' failed to load!')
             else:
@@ -38,6 +45,7 @@ class Service:
 
    def __init__(self, directory, uaddress=None, new_service = None):
        
+       self.directory = directory
        self.iii_dir = directory + '/.iii'
        self.iii_xml_dir = directory + '/.iii/iii.xml'
        self.iii_schema_dir = directory + '/.iii/iii.xsd'
@@ -74,12 +82,15 @@ class Service:
        else:
            raise Exception('Service diretcory does not conatin proper defining files')
 
+       #check data if new service
+       if new_service == True:
+           new_service(directory)
+
        #parse iii.xml to ensure it passes schema and that all db files and directories defined exist
        with open(self.iii_xml_dir, 'r') as xml_file:
            xml_string = xml_file.read()
 
-
-       self.variable_files = XMLServiceDefinition.parse_xml_string(xml_string, self.iii_schema_dir)
+       self.variable_files = XMLServiceDefinition.parse_xml_string(xml_string, self.directory)
 
        if variable_files == False:
            raise Exception('Service defnitions do not correlate to files')
@@ -89,7 +100,7 @@ class Service:
            pass
        else:
            with open(iii_uaddress_dir, 'w') as uaddress_file:
-               uaddress_file.write(uadsress)
+               uaddress_file.write(uaddress)
                uaddress_file.close()
 
        #initialize address and name variables from uaddress
@@ -108,7 +119,12 @@ class Service:
            self.iii_service_start_path = os.path.abspath(self.iii_start_dir_windows)
        else:
             self.iii_service_start_path = os.path.abspath(self.iii_start_dir_posix)
-       
+   
+   def new_service(self, directory):
+
+
+
+       pass
 
    def start_service(self):
        self.process = subprocess.Popen([self.iii_service_start_path], creationflags=subprocess.CREATE_NEW_CONSOLE)

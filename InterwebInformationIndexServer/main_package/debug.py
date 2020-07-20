@@ -17,11 +17,15 @@ import time
 import glob
 
 
+
+XMLServiceDefinition.get_service_files('service1')
+
+'''
 #uaddress = XMLIndex.get_data('peer/services')
 
 #XMLServiceDefinition.verify_service('WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=','woot')
 
-files = glob.glob('services/service1/**/*', recursive=True)
+#files = glob.glob('services/service1/**/*', recursive=True)
 
 for file in files:
     print(file)
@@ -31,7 +35,7 @@ for file in files:
     test.replace('\\', '/')
     print(test)
     print('_________________')
-
+'''
 
 
 

@@ -224,13 +224,17 @@ class XMLIndex:
 class XMLServiceDefinition:
 
     @staticmethod
-    def parse_xml_string(xml_data, schema_dir):
+    def parse_xml_string(xml_data, folder_directory):
+
+        folder_directory = folder_directory + '/'
+
+        schema_dir='iii.xsd'
         
         with open(schema_dir, 'r') as schema_file:
             schema_raw = et.XML(schema_file.read())
-            schema = et.XMLSchema(schema_raw)
+            schema_f = et.XMLSchema(schema_raw)
 
-        parser = et.XMLParser(schema = schema, remove_comments=True)
+        parser = et.XMLParser(schema = schema_f, remove_comments=True, remove_blank_text=True)
 
         try:
             iii_root = et.fromstring(xml_data, parser)
@@ -238,16 +242,18 @@ class XMLServiceDefinition:
             print('Schema validation failed!')
             return False
 
-        #read db files and dir definitions and chekc if files exist as defined
-
+        #read db files and dir definitions and check if files exist as defined
         variable_files = []
 
         for child in iii_root:
 
+
             if child.tag == 'dbfs':
+                
                 files = child
+
                 for file in files:
-                    directory = file.text
+                    directory = folder_directory + file.text
 
                     exists = os.path.isfile(directory)
 
@@ -256,11 +262,11 @@ class XMLServiceDefinition:
                     else:
                         return False
 
-            elif child.tag == 'dbdir':
+            elif child.tag == 'dbdrs':
                 db_dir = child
 
                 for dir in db_dir:
-                    directory = dir.text
+                    directory =  folder_directory +  dir.text
 
                     exists = os.path.isdir(directory)
 
@@ -269,7 +275,7 @@ class XMLServiceDefinition:
                     else:
                         return False
 
-            return variable_files
+        return variable_files
 
     @staticmethod
     def check_service(peer_address, service_address, service_name):
@@ -286,6 +292,7 @@ class XMLServiceDefinition:
 
         return True
 
+    @staticmethod
     def verify_service(service_address, service_name, service_dir):
         #/root/master[address[text()="WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs="]]/services/service[desc[@name = "woot"]]/data/files
 
@@ -295,8 +302,9 @@ class XMLServiceDefinition:
         print(xpath)
 
         files = XMLIndex.get_data(xpath)
+        glob_path = 'services\\' + service_dir + '\\**\\*'
 
-        root_directory_raw = glob.glob('services\\service1\\**\\*', recursive=True)
+        root_directory_raw = glob.glob(glob_path, recursive=True)
         root_directory = []
 
         #convert glob directories into OS friendly directories 
@@ -315,11 +323,19 @@ class XMLServiceDefinition:
                 file_name = file.attrib['rdir']
 
                 for p_file in root_directory:
-                    p_hash = Cryptographer.generate_hash(message=None, filepath=p_file)
 
-                    if file_hash == p_hash and file_name == p_file:
-                        remaining_p_files.remove(p_file)
-                        remaining_i_files.remove(file)
+                    if os.path.isfile(p_file):
+
+                        p_hash = Cryptographer.generate_hash(message=None, filepath=p_file)
+
+                        if file_hash == p_hash and file_name == p_file:
+                            remaining_p_files.remove(p_file)
+                            remaining_i_files.remove(file)
+                    else:
+
+                        if file_name == p_file:
+                            remaining_p_files.remove(p_file)
+                            remaining_i_files.remove(file)
 
 
             elif file.attrib['type'] == 'variable':
@@ -336,6 +352,65 @@ class XMLServiceDefinition:
 
         return True
 
+    @staticmethod
+    def get_service_files(directory):
 
+        glob_path = 'services\\' + directory + '\\**\\*'
+        start_path = 'services/' + directory
+
+        root_directory_raw = glob.glob(glob_path, recursive=True)
+
+        #convert glob directories into OS friendly directories 
+
+        root_directory = []
+        for path in root_directory_raw:
+            new_path = os.path.relpath(os.path.realpath(path))
+            root_directory.append(new_path)
+
+        files = et.Element('files')
+
+        #get all variable files
+        iii_xml_dir = start_path + '/.iii/iii.xml'
+        with open(iii_xml_dir, 'r') as xml_file:
+            db_data = xml_file.read() #maybe improve to read larger files in the future?
+
+        variable_files_raw = XMLServiceDefinition.parse_xml_string(db_data, start_path)
+
+        if variable_files_raw == False:
+
+            print('[WARN] The service you have created has files that do not match')
+            raise Exception('Invalid service folder')
+
+        #normailzie paths in variable files list
+
+        variable_files = []
+        for file in variable_files_raw:
+            file = os.path.normpath(file)
+            variable_files.append(file)
+
+        for p_file in root_directory:
+            
+            p_file = os.path.normpath(p_file)
+            print(p_file)
+
+            if p_file in variable_files:
+                new_iii_path = os.path.relpath(p_file, start=start_path)
+                file = et.SubElement(files, 'file', rdir=new_iii_path, type='variable')
+                file.text = '0'
+
+            elif os.path.isfile(p_file):
+                p_hash = Cryptographer.generate_hash(message=None, filepath=p_file)
+                new_iii_path = os.path.relpath(p_file, start=start_path)
+                file = et.SubElement(files, 'file', rdir=new_iii_path, type='static')
+                file.text = p_hash
+            elif os.path.isdir(p_file):
+                new_iii_path = os.path.relpath(p_file, start=start_path)
+                file = et.SubElement(files, 'file', rdir=new_iii_path, type='static')
+                file.text = '0'
+
+        print(et.tostring(files))
+
+
+            
 
 

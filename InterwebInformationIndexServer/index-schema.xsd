@@ -35,14 +35,26 @@
   </xs:simpleType>
 
   <xs:simpleType name="blake2b">
-    <xs:annotation>
-      <xs:documentation>blake2b hash represented in Base64 format. 88 character length with == padding included.</xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:pattern value="((([A-Za-z0-9+/] ?){4})*(([A-Za-z0-9+/] ?){3}[A-Za-z0-9+/]|([A-Za-z0-9+/] ?){2}[AEIMQUYcgkosw048] ?=|[A-Za-z0-9+/] ?[AQgw] ?= ?=))?"/>
-      <xs:length value="44" fixed="true"/>
-      <!-- For some reason the built in xs:base64Binary did not like to validate the xs:length restriction properly. The pattern above was taken directly from the documentation for xs:base64Binary.-->
-    </xs:restriction>
+    <xs:union>
+      <xs:simpleType>
+        <xs:annotation>
+          <xs:documentation>blake2b hash represented in Base64 format. 88 character length with == padding included.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="((([A-Za-z0-9+/] ?){4})*(([A-Za-z0-9+/] ?){3}[A-Za-z0-9+/]|([A-Za-z0-9+/] ?){2}[AEIMQUYcgkosw048] ?=|[A-Za-z0-9+/] ?[AQgw] ?= ?=))?"/>
+          <xs:length value="44" fixed="true"/>
+          <!-- For some reason the built in xs:base64Binary did not like to validate the xs:length restriction properly. The pattern above was taken directly from the documentation for xs:base64Binary.-->
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:annotation>
+          <xs:documentation>Empty hash restriction for variable files and folders</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+          <xs:length value="0"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
   </xs:simpleType>
 
   <xs:simpleType name="name">

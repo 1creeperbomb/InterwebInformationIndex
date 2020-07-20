@@ -62,6 +62,34 @@
     <address>12URI46pikzI54c9xqvaW47IZ/SLxD8pNSXk4t/+a0Y=</address>
     <sign salt="IHMGW4OX5I8UBG1H">m1ojuKp6Mmh4yvr6rcPNT7OmIBuDScXR6YsmmImqGLyHQq66V9sp2o4PAPOeHw33gteiCuK5K+rnI+drC/TlDg==</sign>
     <desc name="LOL">MY NEW DESCRIPTION LOL</desc>
-    <services/>
+    <services>
+      <service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=">
+        <desc name="test"/>
+        <data>
+          <files>
+            <file rdir="exampleDBfile.xml" type="variable"/>
+            <file rdir="exampleDBfolder" type="variable"/>
+            <file rdir="iiistart.bat" type="static">IdM1v+AK+4RzGb8rU5nPlriJZRkAvEDJNgHP0yAL80Q=</file>
+            <file rdir="index.html" type="static">K4JnxXSA3NRCdUUNRxmg8sTTfkXXKRKeSHnYmuw9opU=</file>
+            <file rdir="notes" type="static"/>
+            <file rdir="notes\\a note.txt" type="static">0EOAjAioAcywAgMQQ26KqE6AOT2aY6d+8xNd9e+wC38=</file>
+          </files>
+        </data>
+      </service>
+    </services>
   </master>
 </root>
+
+<!--
+
+<service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=">
+        <desc name="test service">ya man</desc>
+        <data>
+          <files>
+            <file></file>
+          </files>
+        </data>
+      </service>
+
+-->
+

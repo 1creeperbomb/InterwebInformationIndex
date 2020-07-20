@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>115eb6da-aa5b-4957-964f-531b7704658d</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>interwebinformationindexserver.py</StartupFile>
+    <StartupFile>main_package\debug.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -38,6 +38,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="iii.xsd" />
     <Content Include="index-schema.xsd" />
     <Content Include="index.xml" />
     <Content Include="services\service1\.iii\iii.xml" />
@@ -45,6 +46,9 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="services\service1\.iii\uaddress.txt" />
+    <Content Include="services\service1\exampleDBfile.xml">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="services\service1\index.html" />
     <Content Include="services\service1\notes\a note.txt" />
     <Content Include="services\service1\iiistart.bat" />
@@ -55,6 +59,7 @@
     <Folder Include="services\" />
     <Folder Include="services\service1\" />
     <Folder Include="services\service1\.iii\" />
+    <Folder Include="services\service1\exampleDBfolder\" />
     <Folder Include="services\service1\notes\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />

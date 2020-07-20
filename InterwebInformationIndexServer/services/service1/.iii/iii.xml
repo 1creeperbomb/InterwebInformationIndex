@@ -2,12 +2,12 @@
 
   <!-- database files -->
   <dbfs>
-    <dbfile>/folder/example.txt</dbfile>
+    <dbfile>exampleDBfile.xml</dbfile>
   </dbfs>
 
   <!-- database directories -->
   <dbdrs>
-    <dbdir>/folder/examplefolder</dbdir>
+    <dbdir>exampleDBfolder</dbdir>
   </dbdrs>
 
 </iii>

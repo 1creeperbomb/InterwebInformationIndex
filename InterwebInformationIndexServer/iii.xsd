@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="iii">
+
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="dbfs">
+
+          <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+
+              <xs:element name="dbfile" type ="xs:anyURI"/>
+              
+            </xs:choice>
+          </xs:complexType>
+          
+        </xs:element>
+
+        <xs:element name ="dbdrs">
+
+          <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+
+              <xs:element name ="dbdir" type="xs:anyURI"/>
+              
+            </xs:choice>
+          </xs:complexType>
+          
+        </xs:element>
+        
+        
+      </xs:sequence>
+    </xs:complexType>
+    
+    
+    
+  </xs:element>
+  
+  
+  
+</xs:schema>
