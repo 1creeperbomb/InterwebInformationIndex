@@ -3,8 +3,9 @@ import os
 from os import name as os_name
 import subprocess
 from main_package.xml import XMLServiceDefinition
+from main_package.cryptographer import Cryptographer
 
-class ServiceHanlder:
+class ServiceHandler:
 
     services = []
 
@@ -15,7 +16,7 @@ class ServiceHanlder:
 
         for service_dir in services_dir:
             if os.path.isdir(service_dir):
-                #attempt to load teh service
+                #attempt to load the service
                 try:
                     service = Service(services_dir)
 
@@ -28,7 +29,7 @@ class ServiceHanlder:
                         service_pass = False
 
                     #verify service files match master node
-                    if XMLServiceDefnition.verify_service(service.address, service.name, service.iii_dir) == False:
+                    if XMLServiceDefinition.verify_service(service.address, service.name, service.iii_dir) == False:
                         #raise Exception('Service files do not match master node')
                         print('[WARN] The service in the folder \"' + service.directory + '\" does not match with the master node. III will not start it!')
                         service_pass = False
@@ -115,16 +116,21 @@ class Service:
                 self.name = uaddress_split[1]
 
        #set start file based on current os
-       if os.name == 'nt':
+       if os_name == 'nt':
            self.iii_service_start_path = os.path.abspath(self.iii_start_dir_windows)
        else:
             self.iii_service_start_path = os.path.abspath(self.iii_start_dir_posix)
    
    def new_service(self, directory):
 
+       try:
+           self.xml_data=XMLServiceDefinition.get_service_files(directory)
+       except:
+           print('[WARN] The service you tried to initilize has errors!')
+
+       self.service_version = Cryptographer.generate_hash(self.xml_data)
 
 
-       pass
 
    def start_service(self):
        self.process = subprocess.Popen([self.iii_service_start_path], creationflags=subprocess.CREATE_NEW_CONSOLE)

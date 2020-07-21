@@ -5,7 +5,24 @@
     <address>RvZNupeBJVLU8iCUOBg/5+shr7urHLbau0uxUwSCd4Q=</address>
     <sign salt="9I9MEOY2AKL9EZMZ">jkj425x6bWFdS+hIPnWn/DoQovM0AHlJaWU8G/fRGGOCFIKpz0DNUBcuWhb5sVE9jiXnnb5DDmlA0I7ef/FUDg==</sign>
     <desc name="builtin">Contains all the builtin services III relies on to function properly</desc>
-    <services/>
+    <services>
+      <service version="">
+        <desc name="peerlist">Maintains a list of available peers to connect to on the III network</desc>
+        <data>
+          <files>
+            <file rdir="null" type="static"/> <!--complete later-->
+          </files>
+        </data>
+      </service>
+      <service version="">
+        <desc name=".DELETE">Will intruct peers to delete this node from the index (use carefully!)</desc>
+        <data>
+          <files>
+            <file rdir="" type="static"/>
+          </files>
+        </data>
+      </service>
+    </services>
   </master>
   <!--
   <master>
@@ -63,19 +80,6 @@
     <sign salt="IHMGW4OX5I8UBG1H">m1ojuKp6Mmh4yvr6rcPNT7OmIBuDScXR6YsmmImqGLyHQq66V9sp2o4PAPOeHw33gteiCuK5K+rnI+drC/TlDg==</sign>
     <desc name="LOL">MY NEW DESCRIPTION LOL</desc>
     <services>
-      <service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=">
-        <desc name="test"/>
-        <data>
-          <files>
-            <file rdir="exampleDBfile.xml" type="variable"/>
-            <file rdir="exampleDBfolder" type="variable"/>
-            <file rdir="iiistart.bat" type="static">IdM1v+AK+4RzGb8rU5nPlriJZRkAvEDJNgHP0yAL80Q=</file>
-            <file rdir="index.html" type="static">K4JnxXSA3NRCdUUNRxmg8sTTfkXXKRKeSHnYmuw9opU=</file>
-            <file rdir="notes" type="static"/>
-            <file rdir="notes\\a note.txt" type="static">0EOAjAioAcywAgMQQ26KqE6AOT2aY6d+8xNd9e+wC38=</file>
-          </files>
-        </data>
-      </service>
     </services>
   </master>
 </root>
@@ -87,6 +91,20 @@
         <data>
           <files>
             <file></file>
+          </files>
+        </data>
+      </service>
+      
+       <service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=">
+        <desc name="test"/>
+        <data>
+          <files>
+            <file rdir="exampleDBfile.xml" type="variable"/>
+            <file rdir="exampleDBfolder" type="variable"/>
+            <file rdir="iiistart.bat" type="static">IdM1v+AK+4RzGb8rU5nPlriJZRkAvEDJNgHP0yAL80Q=</file>
+            <file rdir="index.html" type="static">K4JnxXSA3NRCdUUNRxmg8sTTfkXXKRKeSHnYmuw9opU=</file>
+            <file rdir="notes" type="static"/>
+            <file rdir="notes\\a note.txt" type="static">0EOAjAioAcywAgMQQ26KqE6AOT2aY6d+8xNd9e+wC38=</file>
           </files>
         </data>
       </service>

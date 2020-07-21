@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>115eb6da-aa5b-4957-964f-531b7704658d</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>main_package\debug.py</StartupFile>
+    <StartupFile>interwebinformationindexserver.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>

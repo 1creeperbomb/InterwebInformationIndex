@@ -18,7 +18,9 @@ import glob
 
 
 
-XMLServiceDefinition.get_service_files('service1')
+#XMLServiceDefinition.get_service_files('service1')
+
+print(XMLIndex.get_data('/root/master[address[text()="WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs="]]/services/service[desc[@name = "woot"]]/@version')[0])
 
 '''
 #uaddress = XMLIndex.get_data('peer/services')

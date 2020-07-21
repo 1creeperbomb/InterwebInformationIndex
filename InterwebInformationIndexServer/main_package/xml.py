@@ -350,6 +350,14 @@ class XMLServiceDefinition:
         if len(remaining_i_files) != 0 or len(remainingremaining_p_files) != 0:
             return False
 
+        #(Double check) Verify service version hash
+        version_hash = Cryptographer.generate_hash(et.tostring(files))
+
+        iii_version = xpath = '/root/master[address[text()=\"' + service_address + '\"]]/services/service[desc[@name = \"' + service_name + '\"]]/@version'
+
+        if version_hash != iii_version[0]:
+            return False
+
         return True
 
     @staticmethod
@@ -408,7 +416,7 @@ class XMLServiceDefinition:
                 file = et.SubElement(files, 'file', rdir=new_iii_path, type='static')
                 file.text = '0'
 
-        print(et.tostring(files))
+        return et.tostring(files)
 
 
             

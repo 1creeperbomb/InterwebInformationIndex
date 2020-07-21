@@ -4,6 +4,7 @@ from main_package.cryptographer import Cryptographer
 from main_package.xml import XMLIndex
 from main_package.network import SocketServer
 from main_package.network import ConnectionHandler
+from main_package.services import ServiceHandler, Service
 
 import multiprocessing
 import time
@@ -327,9 +328,20 @@ def browse_node_edit_menu(node_type):
 
         ConnectionHandler.send_data(new_node)
 
-        pass
     elif selection == '3':
-        pass
+
+        if node_type == 'master':
+
+
+
+
+            pass
+        elif node_type == 'peer':
+
+            uaddress = input('Please enter the uaddress of the service you would liek to help host (format is \"address.service-name\"): ')
+            uaddress_split = uaddress_text.split('.', 1)
+            
+
     elif selection == '4':
         pass
     elif selection == '0?':
