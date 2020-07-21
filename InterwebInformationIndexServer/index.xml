@@ -10,7 +10,8 @@
         <desc name="peerlist">Maintains a list of available peers to connect to on the III network</desc>
         <data>
           <files>
-            <file rdir="null" type="static"/> <!--complete later-->
+            <file rdir="null" type="static"/>
+            <!--complete later-->
           </files>
         </data>
       </service>
@@ -50,13 +51,16 @@
   </master>
   -->
   <peer>
-    <address>4O5y6PUBZD6Kziz2eWo3n1TNHVTfT7x6eKwLPPUdVls=</address>
+    <address>12URI46pikzI54c9xqvaW47IZ/SLxD8pNSXk4t/+a0Y=</address>
     <sign salt="1234567890123456">ptNtqdUn/MtpoHFLgcodcYaD9DAmV3xVRI9+/K7pZGYIccNd61KC4LrIZz+bEhznR+f3p/hXWK7jWD/jzPdXCw==</sign>
     <desc name="my peer">my cool peer</desc>
     <ipv4>192.168.1.100</ipv4>
     <services>
       <service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=">
         <uaddress name="woot">O/iFe/g2ENRQfye0u0dmPd+cMUq7LoRfqmXnJt74X84=</uaddress>
+      </service>
+      <service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=">
+        <uaddress name="woot">WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=</uaddress>
       </service>
     </services>
   </peer>
@@ -77,13 +81,11 @@
   </master>
   <master>
     <address>12URI46pikzI54c9xqvaW47IZ/SLxD8pNSXk4t/+a0Y=</address>
-    <sign salt="IHMGW4OX5I8UBG1H">m1ojuKp6Mmh4yvr6rcPNT7OmIBuDScXR6YsmmImqGLyHQq66V9sp2o4PAPOeHw33gteiCuK5K+rnI+drC/TlDg==</sign>
-    <desc name="LOL">MY NEW DESCRIPTION LOL</desc>
-    <services>
-    </services>
+    <sign salt="KXTMIXLSONUGQ7GP">lIj0f43GGk1DvcY35TkGhxTs0NhkVcYsaLqG6hLIxwwIS+ho9RQRF3I92qZt2Y+Q67irsDbavMMpSJESHvrXBg==</sign>
+    <desc name="TESTNODE">yeeee</desc>
+    <services/>
   </master>
 </root>
-
 <!--
 
 <service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=">
@@ -108,6 +110,20 @@
           </files>
         </data>
       </service>
+      
+        <peer>
+    <address>12URI46pikzI54c9xqvaW47IZ/SLxD8pNSXk4t/+a0Y=</address>
+    <sign salt="1234567890123456">ptNtqdUn/MtpoHFLgcodcYaD9DAmV3xVRI9+/K7pZGYIccNd61KC4LrIZz+bEhznR+f3p/hXWK7jWD/jzPdXCw==</sign>
+    <desc name="my peer">my cool peer</desc>
+    <ipv4>192.168.1.100</ipv4>
+    <services>
+      <service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=">
+        <uaddress name="woot">O/iFe/g2ENRQfye0u0dmPd+cMUq7LoRfqmXnJt74X84=</uaddress>
+      </service>
+      <service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=">
+        <uaddress name="woot">WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=</uaddress>
+      </service>
+    </services>
+  </peer>
 
 -->
-

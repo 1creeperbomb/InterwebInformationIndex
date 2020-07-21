@@ -86,7 +86,10 @@ class XMLIndex:
         #retrieve the data and return
         #ns = {'xmlns:xsi': "http://www.w3.org/2001/XMLSchema-instance"}
         #namespaces=ns
-        data = tree.xpath(xpath)
+        try:
+            data = tree.xpath(xpath)
+        except:
+            return None
 
         #this will return either the data as a string or the associated data element or None if the data could not be found'
 
@@ -134,7 +137,7 @@ class XMLIndex:
         return string_xml
 
     @staticmethod
-    def modify_node(type, crypto, address, name=None, description_text=None):
+    def modify_node(type, crypto, address, name=None, description_text=None, services_n=None):
         node = XMLIndex.get_data(type, address)[0]
         XMLIndex.get_data('master', address)
 
@@ -152,8 +155,10 @@ class XMLIndex:
                 signature = child
                 salt = child.attrib['salt']
 
-        #add statement for services in the future
-
+        #add any services directly from service object
+        if services_n != None:
+            for service in services_n:
+                services.append(service)
 
         #sign services data
 
@@ -220,6 +225,28 @@ class XMLIndex:
         xpath = root_path + modified_path
 
         return xpath
+
+    @staticmethod
+    def get_from_uaddress(uaddress):
+        uaddress_split = uaddress.split('.', 1)
+
+        if len(uaddress_split) != 2:
+            return False
+
+        #check if node exists
+        xpath = '/root/master[address[text()=\"' + uaddress_split[0] + '\"]]/services/service[desc[@name = \"' + uaddress_split[1] + '\"]]/@version'
+
+        version_hash = XMLIndex.get_data(xpath)
+
+        if version_hash == None:
+            return False
+
+        #create peer service node
+        service = et.Element('service', version = version_hash[0])
+        uaddress_el = et.SubElement(service, 'uaddress', name=uaddress_split[1])
+        uaddress_el.text = uaddress_split[0]
+
+        return service
 
 class XMLServiceDefinition:
 
@@ -299,7 +326,7 @@ class XMLServiceDefinition:
 
         xpath = '/root/master[address[text()=\"' + service_address + '\"]]/services/service[desc[@name = \"' + service_name + '\"]]/data/files'
 
-        print(xpath)
+        #print(xpath)
 
         files = XMLIndex.get_data(xpath)
         glob_path = 'services\\' + service_dir + '\\**\\*'
@@ -417,6 +444,7 @@ class XMLServiceDefinition:
                 file.text = '0'
 
         return et.tostring(files)
+
 
 
             

@@ -284,6 +284,12 @@
                     
                   </xs:choice>
                 </xs:complexType>
+
+                <xs:unique name="UniqueVersion">
+                  <xs:selector xpath="service/uaddress"/>
+                  <xs:field xpath="."/>
+                </xs:unique>
+
               </xs:element>
               
               

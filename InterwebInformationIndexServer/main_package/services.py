@@ -86,6 +86,14 @@ class Service:
        #check data if new service
        if new_service == True:
            new_service(directory)
+       else:
+           try:
+                temp_xml_data=XMLServiceDefinition.get_service_files(directory)
+           except:
+                print('[WARN] The service III tried to initilize has errors!')
+                raise Exception('Service files incorretcly configured')
+
+       self.service_version = Cryptographer.generate_hash(self.xml_data)
 
        #parse iii.xml to ensure it passes schema and that all db files and directories defined exist
        with open(self.iii_xml_dir, 'r') as xml_file:
@@ -127,6 +135,7 @@ class Service:
            self.xml_data=XMLServiceDefinition.get_service_files(directory)
        except:
            print('[WARN] The service you tried to initilize has errors!')
+           raise Exception('New service files incorretcly configured')
 
        self.service_version = Cryptographer.generate_hash(self.xml_data)
 

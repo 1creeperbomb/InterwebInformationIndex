@@ -206,7 +206,7 @@ def browse_menu():
             print('Please enter a proper description!')
             desc = filter_input(input('Enter a description for your node (500 characters max): '), 'desc')
 
-        xml_data = XMLIndex.create_node('master', crypto_main, name, desc)
+        xml_data = XMLIndex.create_node(node_type, crypto_main, name, desc)
 
         ConnectionHandler.send_data(xml_data)
 
@@ -338,8 +338,25 @@ def browse_node_edit_menu(node_type):
             pass
         elif node_type == 'peer':
 
-            uaddress = input('Please enter the uaddress of the service you would liek to help host (format is \"address.service-name\"): ')
-            uaddress_split = uaddress_text.split('.', 1)
+            uaddress = input('Please enter the uaddress of the service you would like to help host (format is \"address.service-name\"): ')
+            peer_service_data = XMLIndex.get_from_uaddress(uaddress)
+
+            #ensure service exists
+            while peer_service_data == False:
+                print('Service does not exist! Please enter a valid uaddress or enter 0 to exit')
+                uaddress = input('Please enter the uaddress of the service you would like to help host (format is \"address.service-name\"): ')
+
+                if uaddress == '0':
+                    return
+
+            peer_service_data = XMLIndex.get_from_uaddress(uaddress)
+            services = []
+            services.append(peer_service_data)
+
+            address = crypto_main.get_public_key()
+            new_node = XMLIndex.modify_node(node_type, crypto_main, address, services_n=services)
+
+            ConnectionHandler.send_data(new_node)
             
 
     elif selection == '4':
