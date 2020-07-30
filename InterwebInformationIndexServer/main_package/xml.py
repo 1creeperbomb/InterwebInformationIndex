@@ -153,7 +153,6 @@ class XMLIndex:
                 services = child
             elif child.tag == 'sign':
                 signature = child
-                salt = child.attrib['salt']
 
         #add any services directly from service object
         if services_n != None:
@@ -161,12 +160,14 @@ class XMLIndex:
                 services.append(service)
 
         #sign services data
+        salt = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(16))
 
         raw_data = et.tostring(services).decode('utf8')
 
         signed_data = crypto.sign_data(raw_data, salt)
 
         signature.text = signed_data
+        signature.set('salt', salt)
 
         string_xml = et.tostring(node).decode('utf8')
         return string_xml
@@ -255,7 +256,7 @@ class XMLServiceDefinition:
 
         folder_directory = folder_directory + '/'
 
-        schema_dir='iii.xsd'
+        schema_dir= folder_directory + '.iii/iii.xsd'
         
         with open(schema_dir, 'r') as schema_file:
             schema_raw = et.XML(schema_file.read())
@@ -329,6 +330,7 @@ class XMLServiceDefinition:
         #print(xpath)
 
         files = XMLIndex.get_data(xpath)
+        service_dir = service_dir.replace('services/', '')
         glob_path = 'services\\' + service_dir + '\\**\\*'
 
         root_directory_raw = glob.glob(glob_path, recursive=True)
@@ -378,7 +380,7 @@ class XMLServiceDefinition:
             return False
 
         #(Double check) Verify service version hash
-        version_hash = Cryptographer.generate_hash(et.tostring(files))
+        version_hash = Cryptographer.generate_hash(et.tostring(files).decode('utf8'))
 
         iii_version = xpath = '/root/master[address[text()=\"' + service_address + '\"]]/services/service[desc[@name = \"' + service_name + '\"]]/@version'
 
@@ -389,7 +391,7 @@ class XMLServiceDefinition:
 
     @staticmethod
     def get_service_files(directory):
-
+        directory = directory.replace('services/', '')
         glob_path = 'services\\' + directory + '\\**\\*'
         start_path = 'services/' + directory
 
@@ -413,7 +415,7 @@ class XMLServiceDefinition:
 
         if variable_files_raw == False:
 
-            print('[WARN] The service you have created has files that do not match')
+            print('[WARN] The service you have created has files that do not match with the iii.xml record')
             raise Exception('Invalid service folder')
 
         #normailzie paths in variable files list
@@ -443,7 +445,23 @@ class XMLServiceDefinition:
                 file = et.SubElement(files, 'file', rdir=new_iii_path, type='static')
                 file.text = '0'
 
-        return et.tostring(files)
+        return files
+
+    @staticmethod
+    def create_new_service(files, name , desc):
+
+        version_hash = Cryptographer.generate_hash(et.tostring(files).decode('utf8'))
+
+        service = et.Element('service', version=version_hash)
+        description = et.SubElement(service, 'desc', name=name)
+        description.text = desc
+
+        data = et.SubElement(service, 'data')
+
+        data.append(files)
+
+        return service
+
 
 
 

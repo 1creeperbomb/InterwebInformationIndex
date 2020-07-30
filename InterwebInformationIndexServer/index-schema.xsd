@@ -46,12 +46,13 @@
           <!-- For some reason the built in xs:base64Binary did not like to validate the xs:length restriction properly. The pattern above was taken directly from the documentation for xs:base64Binary.-->
         </xs:restriction>
       </xs:simpleType>
+      
       <xs:simpleType>
         <xs:annotation>
           <xs:documentation>Empty hash restriction for variable files and folders</xs:documentation>
         </xs:annotation>
         <xs:restriction base="xs:string">
-          <xs:length value="0"/>
+          <xs:enumeration value="0"/>
         </xs:restriction>
       </xs:simpleType>
     </xs:union>
@@ -68,16 +69,16 @@
 
   <xs:simpleType name="description">
     <xs:annotation>
-      <xs:documentation>Restrcists the size of any description fields to 500 characters</xs:documentation>
+      <xs:documentation>Restrcists the size of any description fields to 1000 characters</xs:documentation>
     </xs:annotation>
     <xs:restriction base="xs:string">
-      <xs:maxLength value="500"/>
+      <xs:maxLength value="1000"/>
     </xs:restriction>
   </xs:simpleType>
 
   <xs:simpleType name="salt">
     <xs:annotation>
-      <xs:documentation>Creates a format for required salt data to be used in calculating verification (sign) data. Prevents whitespace and requires 8 characters</xs:documentation>
+      <xs:documentation>Creates a format for required salt data to be used in calculating verification (sign) data. Prevents whitespace and requires 16 characters</xs:documentation>
     </xs:annotation>
     <xs:restriction base="xs:string">
       <xs:whiteSpace value="replace"/>

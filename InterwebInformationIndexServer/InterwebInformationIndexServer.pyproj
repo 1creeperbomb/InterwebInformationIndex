@@ -41,26 +41,27 @@
     <Content Include="iii.xsd" />
     <Content Include="index-schema.xsd" />
     <Content Include="index.xml" />
-    <Content Include="services\service1\.iii\iii.xml" />
-    <Content Include="services\service1\.iii\iii.xsd">
+    <Content Include="services\service.1\.iii\iii.xml" />
+    <Content Include="services\service.1\.iii\iii.xsd">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="services\service1\.iii\uaddress.txt" />
-    <Content Include="services\service1\exampleDBfile.xml">
+    <Content Include="services\service.1\.iii\uaddress.txt" />
+    <Content Include="services\service.1\exampleDBfile.xml">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="services\service1\index.html" />
-    <Content Include="services\service1\notes\a note.txt" />
-    <Content Include="services\service1\iiistart.bat" />
+    <Content Include="services\service.1\index.html" />
+    <Content Include="services\service.1\notes\a note.txt" />
+    <Content Include="services\service.1\iiistart.bat" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="main_package\" />
     <Folder Include="keystore\" />
     <Folder Include="services\" />
-    <Folder Include="services\service1\" />
-    <Folder Include="services\service1\.iii\" />
-    <Folder Include="services\service1\exampleDBfolder\" />
-    <Folder Include="services\service1\notes\" />
+    <Folder Include="services\service.temp\" />
+    <Folder Include="services\service.1\" />
+    <Folder Include="services\service.1\.iii\" />
+    <Folder Include="services\service.1\exampleDBfolder\" />
+    <Folder Include="services\service.1\notes\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

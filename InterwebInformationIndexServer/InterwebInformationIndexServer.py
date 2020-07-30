@@ -8,6 +8,7 @@ from main_package.services import ServiceHandler, Service
 
 import multiprocessing
 import time
+import shutil
 
 from os import system, name as os_name
 import os.path
@@ -125,7 +126,7 @@ def filter_input(input, type):
             return False
 
     elif type == 'desc':
-        if len(input) <= 500 and len(input) > 0:
+        if len(input) <= 1000 and len(input) > 0:
             return input
         else:
             return False
@@ -200,11 +201,11 @@ def browse_menu():
             print('Please enter a proper name!')
             name = filter_input(input('Enter a name for your node (40 characters max): '), 'name')
 
-        desc = filter_input(input('Enter a description for your node (500 characters max): '), 'desc')
+        desc = filter_input(input('Enter a description for your node (1000 characters max): '), 'desc')
 
         while desc == False:
             print('Please enter a proper description!')
-            desc = filter_input(input('Enter a description for your node (500 characters max): '), 'desc')
+            desc = filter_input(input('Enter a description for your node (1000 characters max): '), 'desc')
 
         xml_data = XMLIndex.create_node(node_type, crypto_main, name, desc)
 
@@ -332,10 +333,65 @@ def browse_node_edit_menu(node_type):
 
         if node_type == 'master':
 
+            name = filter_input(input('Enter a name for your service (40 characters max): '), 'name')
 
+            while name == False:
+                print('Please enter a proper name!')
+                name = filter_input(input('Enter a name for your service (40 characters max): '), 'name')
 
+            desc = filter_input(input('Enter a description for your service (1000 characters max): '), 'desc')
 
-            pass
+            while desc == False:
+                print('Please enter a proper description!')
+                desc = filter_input(input('Enter a description for your service (1000 characters max): '), 'desc')
+
+            new_service_directory = input('Enter the root directory of your service files: ')
+
+            if os.path.exists(new_service_directory) and os.path.isdir(new_service_directory): #redundant?
+                #uaddress
+                address = crypto_main.get_public_key()
+                uaddress = address + '.' + name
+
+                try:
+
+                    #copy to service.temp to verify .iii stuff 
+                    new_service_directory = os.path.realpath(new_service_directory)
+                    temp_service = os.path.realpath('services/service.temp') 
+
+                    try:
+                        deletetree(temp_service)
+                        copytree(new_service_directory, temp_service) 
+                        #shutil.copytree(new_service_directory, temp_service) Will fail if dest diretcory already exists
+                    except:
+                        print('[ERROR] III was unable to copy the service files to it own directory (check folder permissions)')
+                        input('Press Enter to return to the menu...')
+                        return
+
+                    new_service = Service('services/service.temp', uaddress, True, name, desc)
+                    
+                    #modify master node to add service data
+                    service_xml_data = [new_service.service_xml_object]
+
+                    new_node = XMLIndex.modify_node('master', crypto_main, address, name=None, description_text=None, services_n = service_xml_data)
+
+                    #create new diretcory and copy files over
+                    service_directory = ServiceHandler.create_new_directory()
+                    copytree(temp_service, os.path.realpath(service_directory))
+                    deletetree(temp_service)
+
+                    del new_service #gets rid of temp service
+                    #ServiceHandler.add_new_service(service_directory, address)
+                    ConnectionHandler.send_data(new_node)
+                    input('PAUSE')
+
+                except:
+                    print('[WARN] The service you tried to define does not conform to III standards (see warning above)')
+                    input('Press Enter to return to the menu...')
+
+            else:
+                print('[WARN] The directory you entered was not valid!')
+                input('Press Enter to return to the menu...')
+
         elif node_type == 'peer':
 
             uaddress = input('Please enter the uaddress of the service you would like to help host (format is \"address.service-name\"): ')
@@ -409,6 +465,27 @@ def first_time_setup():
 
     password = None #I have no idea if this is really necessary because Python does garbge collection anyway lol
     password_check = None
+
+#apparently shutil.copytree() is wack for exisiting directories, so here is an alt method
+def copytree(src, dst, symlinks=False, ignore=None):
+    for item in os.listdir(src):
+        s = os.path.join(src, item)
+        d = os.path.join(dst, item)
+        if os.path.isdir(s):
+            shutil.copytree(s, d, symlinks, ignore)
+        else:
+            shutil.copy2(s, d)
+
+def deletetree(folder):
+    for filename in os.listdir(folder):
+        file_path = os.path.join(folder, filename)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)
+        except Exception as e:
+            print('Failed to delete %s. Reason: %s' % (file_path, e))
 
 #start
 if __name__ == '__main__':

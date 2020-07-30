@@ -3,6 +3,7 @@ from main_package.cryptographer import Cryptographer
 from main_package.xml import XMLIndex, XMLServiceDefinition
 from main_package.network import SocketServer
 from main_package.network import SocketClient
+from main_package.services import Service
 
 import multiprocessing
 
@@ -20,7 +21,15 @@ import glob
 
 #XMLServiceDefinition.get_service_files('service1')
 
-print(XMLIndex.get_data('/root/master[address[text()="WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs="]]/services/service[desc[@name = "woot"]]/@version')[0])
+#print(XMLIndex.get_data('/root/master[address[text()="WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs="]]/services/service[desc[@name = "woot"]]/@version')[0])
+
+#print(os.path.relpath('C:\\Users\\ismae\\Desktop\\lolz.pub'))
+
+test = XMLServiceDefinition.get_service_files('services/service.1')
+
+for thing in test:
+    print(thing)
+
 
 '''
 #uaddress = XMLIndex.get_data('peer/services')
