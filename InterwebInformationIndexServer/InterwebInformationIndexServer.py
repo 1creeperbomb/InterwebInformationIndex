@@ -382,7 +382,6 @@ def browse_node_edit_menu(node_type):
                     del new_service #gets rid of temp service
                     #ServiceHandler.add_new_service(service_directory, address)
                     ConnectionHandler.send_data(new_node)
-                    input('PAUSE')
 
                 except:
                     print('[WARN] The service you tried to define does not conform to III standards (see warning above)')
@@ -414,7 +413,6 @@ def browse_node_edit_menu(node_type):
 
             ConnectionHandler.send_data(new_node)
             
-
     elif selection == '4':
         pass
     elif selection == '0?':
@@ -431,18 +429,19 @@ def browse_node_edit_menu(node_type):
         pause_key()
     elif selection == '3?':
         clear()
-        print('This will allow you to define a service for a master node or select a service for a peer node')
+        if node_type == 'master':
+            print('This will allow you to define a service for your master node')
+        elif node_type == 'peer':
+            print('This will allow you to select a service for your peer node to help host')
         pause_key()
     elif selection == '4?':
         clear()
         print('This will allow you to edit/redefine/delete a service from your master node')
         pause_key()
 
+    input('PAUSE')
     clear()
     browse_node_edit_menu(node_type)
-
-
-
 
 def pause_key():
     input("Press Enter to continue...")
@@ -466,7 +465,7 @@ def first_time_setup():
     password = None #I have no idea if this is really necessary because Python does garbge collection anyway lol
     password_check = None
 
-#apparently shutil.copytree() is wack for exisiting directories, so here is an alt method
+#apparently shutil.copytree() is wack for exisiting directories, so here is an alt method from the internet
 def copytree(src, dst, symlinks=False, ignore=None):
     for item in os.listdir(src):
         s = os.path.join(src, item)

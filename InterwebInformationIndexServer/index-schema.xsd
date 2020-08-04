@@ -115,6 +115,15 @@
       <xs:enumeration value="variable"/>
     </xs:restriction>
   </xs:simpleType>
+
+  <xs:simpleType name="indexVersion">
+    <xs:annotation>
+      <xs:documentation>Restricts node version types for different versions of III</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:int">
+      <xs:enumeration value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
   
 <!-- Create a limiter for file directory attribute -->
   
@@ -190,13 +199,26 @@
                                     </xs:choice>
                                   </xs:complexType>
                                 </xs:element>
-                                
+
                               </xs:sequence>
                             </xs:complexType>
                           </xs:element>
                           
+                          <xs:element name="tags">
+                                 
+                                  <xs:complexType>
+                                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                                      
+                                      <xs:element name="DELETE"/>
+                                      
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                  
+                           </xs:element>
+                          
                         </xs:sequence>
                         <xs:attribute name="version" type="blake2b" use="required"/>
+                        <xs:attribute name="counter" type="xs:integer" use="required"/>
                       </xs:complexType>
                     </xs:element>
                     
@@ -211,6 +233,7 @@
               </xs:element>
               
 						</xs:sequence>
+            <xs:attribute name ="iiiVersion" type ="indexVersion" use="required"/>
 					</xs:complexType>
 				</xs:element>
 
@@ -280,6 +303,7 @@
                           </xs:element>
                         </xs:sequence>
                         <xs:attribute name="version" type="blake2b" use="required"/>
+                        <xs:attribute name="counter" type="xs:integer" use="required"/>
                       </xs:complexType>
                     </xs:element>
                     
@@ -295,7 +319,7 @@
               
               
             </xs:sequence>
-            
+            <xs:attribute name ="iiiVersion" type ="indexVersion" use="required"/>
           </xs:complexType>
         </xs:element>
         

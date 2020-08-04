@@ -56,6 +56,10 @@ class ServiceHandler:
 
     @staticmethod
     def create_new_directory():
+        #DEBUG
+        global reusable_names
+        reusable_names = []
+
 
         if len(reusable_names) != 0:
             new_dir_number = reusable_names[0]

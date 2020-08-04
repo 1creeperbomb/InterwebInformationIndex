@@ -4,6 +4,7 @@ from main_package.xml import XMLIndex, XMLServiceDefinition
 from main_package.network import SocketServer
 from main_package.network import SocketClient
 from main_package.services import Service
+from main_package.network import ConnectionHandler
 
 import multiprocessing
 
@@ -25,10 +26,43 @@ import glob
 
 #print(os.path.relpath('C:\\Users\\ismae\\Desktop\\lolz.pub'))
 
-test = XMLServiceDefinition.get_service_files('services/service.1')
+#test = XMLServiceDefinition.get_service_files('services/service.1')
 
-for thing in test:
-    print(thing)
+#for thing in test:
+ #   print(thing)
+
+#xml = input('XML: ')
+
+#ConnectionHandler.main()
+#ConnectionHandler.send_data(xml)
+
+xml = '''<master iiiVersion="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <address>12URI46pikzI54c9xqvaW47IZ/SLxD8pNSXk4t/+a0Y=</address>
+    <sign salt="TB8UP9FU8K904BQ0">T631m658ZXg7fHneyVqBJTZ9qP0PrcCHo0Z4qAukpRKF4DIo+EXUV7gF3oFlw7kQMS3VP7CqeRTw04XN2LiVBA==</sign>
+    <desc name="lolzzzzzz">yeeee</desc>
+    <services>
+      <service version="XPt5QZbvqZOV87a0FginOrumyhOAFsJAWNxrFpC+REE=" counter="2">
+        <desc name="lolz">pub</desc>
+        <data>
+          <files>
+            <file rdir="assets" type="static">0</file>
+            <file rdir="example.txt" type="static">AniFF4QEUV8v1/swgxj2pD7/gQr/5bEwLvkledBvE8c=</file>
+            <file rdir="iiistart.bat" type="static">AniFF4QEUV8v1/swgxj2pD7/gQr/5bEwLvkledBvE8c=</file>
+            <file rdir="index.html" type="static">3UEMMYL31Zf9RMMxcPTcJlOExOvJZ1OsmKsG9YnNJ+Q=</file>
+            <file rdir="lol" type="variable">0</file>
+            <file rdir="test.xml" type="variable">0</file>
+            <file rdir="yeet.txt" type="static">lMWbJZM5FzgGgIVLsq0YV/CpQsJYFCeLl0AWcLVICyU=</file>
+            <file rdir="assets/urmum.txt" type="static">DldRwCblQ7Loqy6wYJnaodHl30d3j3eH+qtFzfEv46g=</file>
+          </files>
+        </data>
+        <tags>
+            <DELETE/>
+        </tags>
+      </service>
+    </services>
+  </master> '''
+
+XMLIndex.parse_xml_string(xml)
 
 
 '''

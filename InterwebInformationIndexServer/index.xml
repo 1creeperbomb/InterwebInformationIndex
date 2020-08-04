@@ -1,7 +1,7 @@
 <root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.w3schools.com index-schema.xsd">
   <!-- My example data is clearly very technical-->
   <!-- Builtin master node which contains built in services-->
-  <master>
+  <master iiiVersion="1">
     <address>RvZNupeBJVLU8iCUOBg/5+shr7urHLbau0uxUwSCd4Q=</address>
     <sign salt="9I9MEOY2AKL9EZMZ">jkj425x6bWFdS+hIPnWn/DoQovM0AHlJaWU8G/fRGGOCFIKpz0DNUBcuWhb5sVE9jiXnnb5DDmlA0I7ef/FUDg==</sign>
     <desc name="builtin">Contains all the builtin services III relies on to function properly</desc>
@@ -10,7 +10,7 @@
         <desc name="peerlist">Maintains a list of available peers to connect to on the III network</desc>
         <data>
           <files>
-            <file rdir="null" type="static"/>
+            <file rdir="null" type="static">0</file>
             <!--complete later-->
           </files>
         </data>
@@ -19,7 +19,7 @@
         <desc name=".DELETE">Will intruct peers to delete this node from the index (use carefully!)</desc>
         <data>
           <files>
-            <file rdir="" type="static"/>
+            <file rdir="" type="static">0</file>
           </files>
         </data>
       </service>
@@ -50,41 +50,42 @@
     </services>
   </master>
   -->
-  <master>
+  <master iiiVersion="1">
     <address>WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=</address>
     <sign salt="1234567890123456">ptNtqdUn/MtpoHFLgcodcYaD9DAmV3xVRI9+/K7pZGYIccNd61KC4LrIZz+bEhznR+f3p/hXWK7jWD/jzPdXCw==</sign>
     <desc name="my master node">my EVEN cool master node</desc>
     <services>
-      <service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=">
+      <service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=" counter="1">
         <desc name="woot">ya man</desc>
         <data>
           <files>
             <file rdir="assets/pic.img" type="static">+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=</file>
           </files>
         </data>
+        <tags/>
       </service>
     </services>
   </master>
-  <peer>
+  <peer iiiVersion="1">
     <address>12URI46pikzI54c9xqvaW47IZ/SLxD8pNSXk4t/+a0Y=</address>
     <sign salt="1234567890123456">HsqMl81S/kDa6ps0pcUWCdu0VDbv5ZueXJvJw0KL/oFEYVVrvVsn5csYvrRthzqBBhNqBw8vsSKuoKCMOD+KAA==</sign>
     <desc name="my peer">my cool peer</desc>
     <ipv4>192.168.1.100</ipv4>
     <services>
-      <service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=">
+      <service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=" counter="1">
         <uaddress name="woot">O/iFe/g2ENRQfye0u0dmPd+cMUq7LoRfqmXnJt74X84=</uaddress>
       </service>
-      <service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=">
+      <service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=" counter="1">
         <uaddress name="woot">WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=</uaddress>
       </service>
     </services>
   </peer>
-  <master>
+  <master iiiVersion="1">
     <address>12URI46pikzI54c9xqvaW47IZ/SLxD8pNSXk4t/+a0Y=</address>
-    <sign salt="CY2XXJA2S9GY3G1Q">BOoCdobu83cZB5gUNqDqnVXek3rT4qIZ/MI2DRpLCl2pR6twnN+DjbrRXEIPO0GBJLNCO0jxevCpDaC1gZH6Bw==</sign>
-    <desc name="TESTNODE">yeeee</desc>
+    <sign salt="TB8UP9FU8K904BQ0">T631m658ZXg7fHneyVqBJTZ9qP0PrcCHo0Z4qAukpRKF4DIo+EXUV7gF3oFlw7kQMS3VP7CqeRTw04XN2LiVBA==</sign>
+    <desc name="lolzzzzzz">yeeee</desc>
     <services>
-      <service version="XPt5QZbvqZOV87a0FginOrumyhOAFsJAWNxrFpC+REE=">
+      <service version="XPt5QZbvqZOV87a0FginOrumyhOAFsJAWNxrFpC+REE=" counter="1">
         <desc name="lolz">pub</desc>
         <data>
           <files>
@@ -98,6 +99,7 @@
             <file rdir="assets\urmum.txt" type="static">DldRwCblQ7Loqy6wYJnaodHl30d3j3eH+qtFzfEv46g=</file>
           </files>
         </data>
+        <tags/>
       </service>
     </services>
   </master>

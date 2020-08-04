@@ -1,0 +1,13 @@
+<iii xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.w3schools.com iii.xsd">
+
+  <!-- database files -->
+  <dbfs>
+	<dbfile>test.xml</dbfile>
+  </dbfs>
+
+  <!-- database directories -->
+  <dbdrs>
+	<dbdir>lol</dbdir>
+  </dbdrs>
+
+</iii>

@@ -21,6 +21,7 @@ class XMLIndex:
 
     @staticmethod
     def parse_xml_string(xml_data_raw):
+        #all elements must have xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance in the root for the signature verification to work
 
         #read the xml schema and create a schema object
         with open('index-schema.xsd', 'r') as schema_file:
@@ -43,7 +44,13 @@ class XMLIndex:
         #verify address
         root = et.fromstring(xml_data_raw)
 
+        #check iii data version
+        if root.attrib['iiiVersion'] != '1':
+            print('Node is not from this version and not supported')
+            return False;
+
         node_type = root.tag
+        services =[]
 
         for child in root:
             if child.tag == 'address':
@@ -54,19 +61,56 @@ class XMLIndex:
             elif child.tag == 'services':
                 data = et.tostring(child).decode('utf8')
 
+                for service in child:
+                    services.append(service)
+
         try:
             crypto = Cryptographer(address, True)
             if crypto.verify_data(data, signature, salt):
                 print('Signature verified successfully!')
             else:
                 print('Signature failed to verify')
-                return False;
+                return False
         except:
             print('Invalid key / key is corrupt')
-            return False;
+            return False
+
+        services_copy = services.copy()
+
+        #verify counter is latest
+        check = XMLIndex.get_data(node_type, address)[0]
+        if check != None:
+            for child in check:
+                if child.tag == 'services':
+
+                    for check_service in child:
+                        check_version = check_service.attrib['version']
+                        check_counter = int(check_service.attrib['counter'])
+
+                        for service in services_copy:
+                            version = check_service.attrib['version']
+                            counter = int(service.attrib['counter'])
+
+                            if check_version == version:
+                                if counter > check_counter:
+                                    services_copy.remove(service)
+
+        if len(services_copy) != 0:
+            print('Service counters do not match!')
+            return False
+
+        #parse any special tags
+        for service in services:
+            for child in service:
+                if child.tag == 'tags':
+                    for tag in child:
+                        
+                        if tag.tag == 'DELETE':
+
+                            service.getparent().remove(service)
 
         #send data to write method and socket sever
-        XMLIndex.__write_xml(xml_data_raw, address, node_type)
+        XMLIndex.__write_xml(et.tostring(root).decode('utf8'), address, node_type)
 
         return True
 
@@ -125,6 +169,8 @@ class XMLIndex:
 
         #add default services if applicable
 
+        #add default tags if applicaple 
+
         #sign services data
         raw_data = et.tostring(services).decode('utf8')
 
@@ -157,10 +203,17 @@ class XMLIndex:
         #add any services directly from service object
         if services_n != None:
             for service in services_n:
+
+                #DEBUG until a modify/update service method is created!
+                counter = int(service.attrib['counter'])
+                counter += 1
+                counter = str(counter)
+                services.set('counter', counter)
+
                 services.append(service)
 
         #sign services data
-        salt = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(16))
+        salt = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(16))
 
         raw_data = et.tostring(services).decode('utf8')
 
@@ -448,17 +501,19 @@ class XMLServiceDefinition:
         return files
 
     @staticmethod
-    def create_new_service(files, name , desc):
+    def create_new_service(files, name, desc):
 
         version_hash = Cryptographer.generate_hash(et.tostring(files).decode('utf8'))
 
-        service = et.Element('service', version=version_hash)
+        service = et.Element('service', version=version_hash, counter='0')
         description = et.SubElement(service, 'desc', name=name)
         description.text = desc
 
         data = et.SubElement(service, 'data')
 
         data.append(files)
+
+        tags = et.SubElement(service, 'tags')
 
         return service
 
