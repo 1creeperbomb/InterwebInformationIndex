@@ -26,6 +26,15 @@
     <Compile Include="main_package\debug.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="main_package\ftp.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="main_package\main.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="main_package\menu.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="main_package\network.py">
       <SubType>Code</SubType>
     </Compile>
@@ -56,6 +65,7 @@
   <ItemGroup>
     <Folder Include="main_package\" />
     <Folder Include="keystore\" />
+    <Folder Include="iii_logs\" />
     <Folder Include="services\" />
     <Folder Include="services\service.temp\" />
     <Folder Include="services\service.1\" />

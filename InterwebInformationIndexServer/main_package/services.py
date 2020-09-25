@@ -5,10 +5,15 @@ import subprocess
 from main_package.xml import XMLServiceDefinition
 from main_package.cryptographer import Cryptographer
 from lxml import etree as et
+import time
 
 class ServiceHandler:
 
+    @staticmethod
     def main(address):
+
+        #global handler_status
+        #handler_status = True
         
         global services
         services = []
@@ -17,10 +22,36 @@ class ServiceHandler:
         reusable_names = []
 
         #init all services in folder
-        ServiceHandler.load_all()
+        ServiceHandler.load_all
 
+        #start all services
+        for service in services:
+            service.start_service()
 
+        #poll for status every interval
+        while True:
+            for service in services:
+                raw_status = service.process.poll()
 
+                if (raw_status == 1):
+                    name = service.name
+                    uaddress = service.uaddress
+                    print('[WARN] Service ' + name + ' at uaddress ' + uaddress + ' exited with code 1 (error), III will attempt to restart it')
+                    service.restart_service()
+
+                    time.sleep(5)
+                    raw_status = service.process.poll()
+
+                    if (raw_status == 1 or raw_status == 0):
+                        print('[WARN] Service ' + name + ' at uaddress ' + uaddress + ' exited with code ' + raw_status + ' (error), III failed to restart it')
+                    else:
+                        print('[INFO] Service ' + name + ' at uaddress ' + uaddress + ' was successfully restarted')
+
+                elif (raw_status == 0):
+                    print('[INFO] Service ' + name + ' at uaddress ' + uaddress + ' exited with code 0 (normal), III will not restart it')
+
+                time.sleep(15)
+    
     @staticmethod
     def load_all():
         #initilize services from service folder
@@ -173,6 +204,25 @@ class ServiceHandler:
             except Exception as e:
                 print('Failed to delete %s. Reason: %s' % (file_path, e))
 
+    @staticmethod
+    def list_services():
+        service_list = ['Services running:', '\n']
+
+        for service in services:
+            name = service.name
+            uaddress = service.uaddress
+            raw_status = service.process.poll()
+
+            if (raw_status == None):
+                status = "Alive"
+            else:
+                status = "Dead"
+
+            item = '\nName: ' + name + ' uaddress: ' + uaddress + ' Status: ' + status
+            service_list.append(item)
+
+        return service_list
+
 
         
 
@@ -180,6 +230,10 @@ class Service:
 
    def __init__(self, directory, uaddress=None, new_service = False, name=None, desc=None):
        
+       self.buffer = []
+       self.status = False;
+       self.display = False;
+
        self.directory = directory
        self.iii_dir = directory + '/.iii'
        self.iii_xml_dir = directory + '/.iii/iii.xml'
@@ -264,6 +318,7 @@ class Service:
             else:
                 self.address = uaddress_split[0]
                 self.name = uaddress_split[1]
+                self.uaddress = uaddress_text
 
        #set start file based on current os
        if os_name == 'nt':
@@ -283,9 +338,22 @@ class Service:
        self.service_xml_object = XMLServiceDefinition.create_new_service(xml_data_object, name, desc)
 
    def start_service(self):
-       self.process = subprocess.Popen([self.iii_service_start_path], creationflags=subprocess.CREATE_NEW_CONSOLE)
+       self.process = subprocess.Popen([self.iii_service_start_path], shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+       self.status = True;
+
+       while(self.status):
+           line = test_process.stdout.readline().decode('utf8')
+           
+           if self.display:
+               print(line)
+           else:
+               self.buffer.append(line)
+
+           if len(self.buffer) > 500:
+               self.buffer.pop(0)
 
    def stop_service(self):
+       self.status = False;
        self.process.kill()
 
    def restart_service(self): #Was this really neccesarry? Yes. Yes it was. Did I spell necessary incorrectly? Yes. Yes I did. Am I wasting time making useless comments? No! Of course not!

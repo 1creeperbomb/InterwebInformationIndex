@@ -5,6 +5,7 @@ from main_package.network import SocketServer
 from main_package.network import SocketClient
 from main_package.services import Service
 from main_package.network import ConnectionHandler
+from main_package.ftp import FTPService
 
 import multiprocessing
 
@@ -17,6 +18,45 @@ import os, signal
 from os import system, name as os_name
 import time
 import glob
+
+
+
+test = FTPService()
+
+test.main()
+
+
+'''
+
+buffer = []
+
+test_process = subprocess.Popen(['C:/Users/ismae/Desktop/lolz.pub/iiistart.bat'], shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+#outs, errs = test_process.communicate()
+
+#print(outs.decode('utf8'))
+while True:
+    print(test_process.poll())
+    line = test_process.stdout.readline().decode('utf8')
+    print(line)
+    buffer.append(line)
+
+    if test_process.poll() == 0:
+        print('YEAHHHHHHHH')
+
+    if len(buffer) > 100:
+        buffer.pop(0)
+        test = input('Enter data:').encode('utf8')
+        test_process.stdin.write(test)
+
+
+
+print(test_process.poll())
+
+
+'''
+
+
 
 
 
@@ -62,7 +102,7 @@ xml = '''<master iiiVersion="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-inst
     </services>
   </master> '''
 
-XMLIndex.parse_xml_string(xml)
+#XMLIndex.parse_xml_string(xml)
 
 
 '''

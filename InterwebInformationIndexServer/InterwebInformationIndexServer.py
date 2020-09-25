@@ -1,5 +1,11 @@
 #oh yeahhhhhh
 
+from main_package.main import Main
+
+def main():
+    Main.start()
+
+'''
 from main_package.cryptographer import Cryptographer
 from main_package.xml import XMLIndex
 from main_package.network import SocketServer
@@ -13,6 +19,10 @@ import shutil
 from os import system, name as os_name
 import os.path
 from getpass import getpass
+'''
+
+
+'''
 
 processes = []
 
@@ -75,8 +85,6 @@ def main(): #this must be the main method in the main class so that it can handl
     clear()
 
     browse_menu()
-
-
 
 def shutdown(processes):
 
@@ -152,8 +160,8 @@ def print_menu(menu_type):
         print('[2] Modify a master or peer node') 
         print('[3] Delete a master or peer node')
         print('[4] Start/Restart/Stop an III service')
-        print('[5] Start/Restart the network processes')
-        print('[6] Stop the network processes')
+        print('[5] Connect to an III service')
+        print('[6] Start/Restart/Stop an III process (ADVANCED)')
         print('[0] Exit III')
     elif menu_type == 'node_edit_master':
         print('Select an option. To see what each option does, type the option number followed by a \"?\" (ex: 3?): ')
@@ -262,15 +270,17 @@ def browse_menu():
         pause_key()
     elif selection == '4?':
         clear()
-        print('[4] This will sync the required files of the service you would like to help host')
+        print('[4] This will allows you to start, restart, or stop a specefic III service you are helping to host')
         pause_key()
     elif selection == '5?':
         clear()
-        print('[5] This will attempt to start the network process. If the process is already running, it will attempt to restart')
+        print('[5] This will connect you to a specefic III service so you can directly interact with it through the console (useful for setup, configuration, or sending commands)')
         pause_key()
     elif selection == '6?':
         clear()
-        print('[6] This will stop the network process')
+        print('[6] This will allows you to start, restart, or stop an III process such as the Netowrk Process, Service Handler, or Connection Handler.')
+        print('Note that this is mostly useful for debugging or to restart a certain process without the need to completly restart III')
+        print('Use with caution as stopping certain services will prevent certain functions in the menu from working!')
         pause_key()
 
     #after completing, menu appears again
@@ -279,7 +289,6 @@ def browse_menu():
 
     clear()
     browse_menu()
-
 
 def browse_node_edit_menu(node_type):
 
@@ -485,6 +494,11 @@ def deletetree(folder):
                 shutil.rmtree(file_path)
         except Exception as e:
             print('Failed to delete %s. Reason: %s' % (file_path, e))
+
+
+'''
+
+
 
 #start
 if __name__ == '__main__':
