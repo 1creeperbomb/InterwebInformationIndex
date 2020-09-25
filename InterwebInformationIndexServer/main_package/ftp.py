@@ -19,9 +19,7 @@ class FTPService:
         # Instantiate a dummy authorizer for managing 'virtual' users
         authorizer = DummyAuthorizer()
 
-        # Define a new user having full r/w permissions and a read-only
         # anonymous user
-        #authorizer.add_user('user', '12345', '.', perm='elradfmwMT')
         authorizer.add_anonymous('services')
 
         # Instantiate FTP handler class
@@ -43,10 +41,15 @@ class FTPService:
         #handler.passive_ports = range(60000, 65535)
 
         # Instantiate FTP server class and listen on 0.0.0.0:2121
-        address = ('127.0.0.1', self.port)
-        server = FTPServer(address, handler)
+        address = ('127.0.0.1', self.port) #local address is debug, change to epmty and enable masquerade settings later
 
-        logging.basicConfig(filename='/iii_logs/ftp.log', level=logging.INFO)
+        try:
+            server = FTPServer(address, handler)
+        except:
+            print('[WARN] FTP Service failed to start. Port ' + str(self.port) + ' for iii FTP server is already in use!')
+            return
+
+        logging.basicConfig(filename='iii_logs/ftp.log', level=logging.INFO)
 
         # set a limit for connections
         server.max_cons = 256

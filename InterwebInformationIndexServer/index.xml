@@ -6,7 +6,7 @@
     <sign salt="9I9MEOY2AKL9EZMZ">jkj425x6bWFdS+hIPnWn/DoQovM0AHlJaWU8G/fRGGOCFIKpz0DNUBcuWhb5sVE9jiXnnb5DDmlA0I7ef/FUDg==</sign>
     <desc name="builtin">Contains all the builtin services III relies on to function properly</desc>
     <services>
-      <service version="">
+      <service version="" counter = "1">
         <desc name="peerlist">Maintains a list of available peers to connect to on the III network</desc>
         <data>
           <files>
@@ -14,14 +14,16 @@
             <!--complete later-->
           </files>
         </data>
+        <tags></tags>
       </service>
-      <service version="">
+      <service version="" counter="">
         <desc name=".DELETE">Will intruct peers to delete this node from the index (use carefully!)</desc>
         <data>
           <files>
             <file rdir="" type="static">0</file>
           </files>
         </data>
+        <tags></tags>
       </service>
     </services>
   </master>
@@ -70,7 +72,7 @@
     <address>12URI46pikzI54c9xqvaW47IZ/SLxD8pNSXk4t/+a0Y=</address>
     <sign salt="1234567890123456">HsqMl81S/kDa6ps0pcUWCdu0VDbv5ZueXJvJw0KL/oFEYVVrvVsn5csYvrRthzqBBhNqBw8vsSKuoKCMOD+KAA==</sign>
     <desc name="my peer">my cool peer</desc>
-    <ipv4>192.168.1.100</ipv4>
+    <ipv4 port="5001">192.168.1.100</ipv4>
     <services>
       <service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=" counter="1">
         <uaddress name="woot">O/iFe/g2ENRQfye0u0dmPd+cMUq7LoRfqmXnJt74X84=</uaddress>
