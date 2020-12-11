@@ -1,73 +1,4 @@
 <root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.w3schools.com index-schema.xsd">
-  <!-- My example data is clearly very technical-->
-  <!-- Builtin master node which contains built in services-->
-  <master iiiVersion="1">
-    <address>RvZNupeBJVLU8iCUOBg/5+shr7urHLbau0uxUwSCd4Q=</address>
-    <sign salt="9I9MEOY2AKL9EZMZ">jkj425x6bWFdS+hIPnWn/DoQovM0AHlJaWU8G/fRGGOCFIKpz0DNUBcuWhb5sVE9jiXnnb5DDmlA0I7ef/FUDg==</sign>
-    <desc name="builtin">Contains all the builtin services III relies on to function properly</desc>
-    <services>
-      <service version="" counter = "1">
-        <desc name="peerlist">Maintains a list of available peers to connect to on the III network</desc>
-        <data>
-          <files>
-            <file rdir="null" type="static">0</file>
-            <!--complete later-->
-          </files>
-        </data>
-        <tags></tags>
-      </service>
-      <service version="" counter="">
-        <desc name=".DELETE">Will intruct peers to delete this node from the index (use carefully!)</desc>
-        <data>
-          <files>
-            <file rdir="" type="static">0</file>
-          </files>
-        </data>
-        <tags></tags>
-      </service>
-    </services>
-  </master>
-  <!--
-  <master>
-    <address>WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=</address>
-    <sign salt="1234567890123456">ptNtqdUn/MtpoHFLgcodcYaD9DAmV3xVRI9+/K7pZGYIccNd61KC4LrIZz+bEhznR+f3p/hXWK7jWD/jzPdXCw==</sign>
-    <desc name="builtin">Contains the default services III uses</desc>
-    <services>
-      <service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=">
-        <desc name="global peer list">Keeps a list of III peers available to sync data with</desc>
-        <data>
-          <files>
-            <file rdir="assets/pic.img" type="static">+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=</file>
-          </files>
-        </data>
-      </service>
-      <service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=">
-        <desc name="open access">Optional service. Indicates that your peer will forward any data for any service to any appropriate peers in its index</desc>
-        <data>
-          <files>
-            <file rdir="null" type="static">+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=</file>
-          </files>
-        </data>
-      </service>
-    </services>
-  </master>
-  -->
-  <master iiiVersion="1">
-    <address>WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=</address>
-    <sign salt="1234567890123456">ptNtqdUn/MtpoHFLgcodcYaD9DAmV3xVRI9+/K7pZGYIccNd61KC4LrIZz+bEhznR+f3p/hXWK7jWD/jzPdXCw==</sign>
-    <desc name="my master node">my EVEN cool master node</desc>
-    <services>
-      <service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=" counter="1">
-        <desc name="woot">ya man</desc>
-        <data>
-          <files>
-            <file rdir="assets/pic.img" type="static">+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=</file>
-          </files>
-        </data>
-        <tags/>
-      </service>
-    </services>
-  </master>
   <peer iiiVersion="1">
     <address>12URI46pikzI54c9xqvaW47IZ/SLxD8pNSXk4t/+a0Y=</address>
     <sign salt="1234567890123456">HsqMl81S/kDa6ps0pcUWCdu0VDbv5ZueXJvJw0KL/oFEYVVrvVsn5csYvrRthzqBBhNqBw8vsSKuoKCMOD+KAA==</sign>
@@ -101,49 +32,16 @@
             <file rdir="assets\urmum.txt" type="static">DldRwCblQ7Loqy6wYJnaodHl30d3j3eH+qtFzfEv46g=</file>
           </files>
         </data>
-        <tags/>
+        <tags>
+          
+          <dependencies>
+            <source type="required" name="woot">WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=</source>
+            <source type="recommended" name="woot">WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=</source>
+            <source type="optional" name="woot">WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=</source>
+          </dependencies>
+          
+        </tags>
       </service>
     </services>
   </master>
 </root>
-<!--
-
-<service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=">
-        <desc name="test service">ya man</desc>
-        <data>
-          <files>
-            <file></file>
-          </files>
-        </data>
-      </service>
-      
-       <service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=">
-        <desc name="test"/>
-        <data>
-          <files>
-            <file rdir="exampleDBfile.xml" type="variable"/>
-            <file rdir="exampleDBfolder" type="variable"/>
-            <file rdir="iiistart.bat" type="static">IdM1v+AK+4RzGb8rU5nPlriJZRkAvEDJNgHP0yAL80Q=</file>
-            <file rdir="index.html" type="static">K4JnxXSA3NRCdUUNRxmg8sTTfkXXKRKeSHnYmuw9opU=</file>
-            <file rdir="notes" type="static"/>
-            <file rdir="notes\\a note.txt" type="static">0EOAjAioAcywAgMQQ26KqE6AOT2aY6d+8xNd9e+wC38=</file>
-          </files>
-        </data>
-      </service>
-      
-        <peer>
-    <address>12URI46pikzI54c9xqvaW47IZ/SLxD8pNSXk4t/+a0Y=</address>
-    <sign salt="1234567890123456">ptNtqdUn/MtpoHFLgcodcYaD9DAmV3xVRI9+/K7pZGYIccNd61KC4LrIZz+bEhznR+f3p/hXWK7jWD/jzPdXCw==</sign>
-    <desc name="my peer">my cool peer</desc>
-    <ipv4>192.168.1.100</ipv4>
-    <services>
-      <service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=">
-        <uaddress name="woot">O/iFe/g2ENRQfye0u0dmPd+cMUq7LoRfqmXnJt74X84=</uaddress>
-      </service>
-      <service version="+/R0wiWAKlUmwqA2XjdYfspZ8Gu7StXKSc1u+C2naAs=">
-        <uaddress name="woot">WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=</uaddress>
-      </service>
-    </services>
-  </peer>
-
--->

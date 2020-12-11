@@ -124,6 +124,17 @@
       <xs:enumeration value="1"/>
     </xs:restriction>
   </xs:simpleType>
+
+  <xs:simpleType name="dtype">
+    <xs:annotation>
+      <xs:documentation>Restricts types of dependencies to certain options</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="required"/>
+      <xs:enumeration value="recommended"/>
+      <xs:enumeration value="optional"/>
+    </xs:restriction>
+  </xs:simpleType>
   
 <!-- Create a limiter for file directory attribute -->
   
@@ -207,9 +218,30 @@
                           <xs:element name="tags">
                                  
                                   <xs:complexType>
-                                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                                    <xs:sequence>
                                       
-                                      <xs:element name="DELETE"/>
+                                      <xs:element name="dependencies">
+                                        <xs:complexType>
+                                          <xs:choice minOccurs="0" maxOccurs="unbounded">
+
+                                            <xs:element name="source">
+
+                                              <xs:complexType>
+                                                <xs:simpleContent>
+                                                  <xs:extension base="keyAddress">
+                                                    <xs:attribute name="name" type="name" use="required"/>
+                                                    <xs:attribute name="type" type="dtype" use="required"/>
+                                                  </xs:extension>
+                                                </xs:simpleContent>
+                                              </xs:complexType>
+                                              
+                                            </xs:element>
+
+                                          </xs:choice>
+                                        </xs:complexType>
+                                      </xs:element>
+                                      
+                                      <xs:element name="DELETE" minOccurs="0" maxOccurs="1"/>
                                       
                                     </xs:sequence>
                                   </xs:complexType>
