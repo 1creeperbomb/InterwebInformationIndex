@@ -22,7 +22,7 @@ class ServiceHandler:
         reusable_names = []
 
         #init all services in folder
-        ServiceHandler.load_all
+        ServiceHandler.load_all()
 
         #start all services
         for service in services:
@@ -206,7 +206,7 @@ class ServiceHandler:
 
     @staticmethod
     def list_services():
-        service_list = ['Services running:', '\n']
+        service_list = ['Services installed:', '\n']
 
         for service in services:
             name = service.name

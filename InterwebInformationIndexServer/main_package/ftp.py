@@ -49,7 +49,7 @@ class FTPService:
             print('[WARN] FTP Service failed to start. Port ' + str(self.port) + ' for iii FTP server is already in use!')
             return
 
-        logging.basicConfig(filename='iii_logs/ftp.log', level=logging.INFO)
+        logging.basicConfig(filename='iii_logs/ftp_server.log', level=logging.INFO)
 
         # set a limit for connections
         server.max_cons = 256
@@ -59,4 +59,26 @@ class FTPService:
         server.serve_forever()
 
 class FTP:
-    pass
+
+    def __init__(self, address, port):
+        self.address = address
+        self.port = port
+
+        #logging.basicConfig(filename='iii_logs/ftp.log', level=logging.INFO)
+
+    def sync(self, dir):
+        self.ftp.cwd(dir);
+
+        filenames = ftp.nlst()
+        for filename in filenames:
+            with open(filename, 'rb') as fp:
+                self.ftp.retrbinary(filename, ftp.write)
+
+    def connect(self):
+
+        self.ftp = FTP(self.address)
+        self.ftp.login()
+
+    def disconnect(self):
+        ftp.quit()
+

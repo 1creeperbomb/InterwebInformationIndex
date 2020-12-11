@@ -54,6 +54,9 @@ class SocketHandler(socketserver.StreamRequestHandler):
         elif(type == 'request'):
             #send requested data
             pass
+        elif(type == 'uaddress_location'):
+            #return dir of service requested (for ftp)
+            pass
 
 class SocketClient:
     port = 5001

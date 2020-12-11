@@ -11,6 +11,11 @@
     <OutputPath>.</OutputPath>
     <Name>InterwebInformationIndexServer</Name>
     <RootNamespace>InterwebInformationIndexServer</RootNamespace>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
+    <Environment>
+    </Environment>
+    <InterpreterId>Global|PythonCore|3.8</InterpreterId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,6 +41,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="main_package\network.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="main_package\processes.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="main_package\services.py">
@@ -66,12 +74,16 @@
     <Folder Include="main_package\" />
     <Folder Include="keystore\" />
     <Folder Include="iii_logs\" />
+    <Folder Include="ftp_temp\" />
     <Folder Include="services\" />
     <Folder Include="services\service.temp\" />
     <Folder Include="services\service.1\" />
     <Folder Include="services\service.1\.iii\" />
     <Folder Include="services\service.1\exampleDBfolder\" />
     <Folder Include="services\service.1\notes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="Global|PythonCore|3.8" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

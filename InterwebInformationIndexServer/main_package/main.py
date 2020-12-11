@@ -1,9 +1,12 @@
 #handles multiprocessing and takes input from CLI and Menu
 from main_package.cryptographer import Cryptographer
-from main_package.network import SocketServer
-from main_package.network import ConnectionHandler
-from main_package.services import ServiceHandler, Service
+#from main_package.network import SocketServer
+#from main_package.network import ConnectionHandler
+from main_package.services import Service
+from main_package.ftp import FTP
 from main_package.menu import Menu, CLI
+from main_package.xml import XMLIndex
+from main_package.processes import ProcessHandler
 
 import multiprocessing
 import time
@@ -17,6 +20,9 @@ class Main:
     @staticmethod
     def start():
         
+        global process_handler
+        process_handler =  multiprocessing.Process(target=ProcessHandler.main)
+
         global processes
         processes = []
 
@@ -63,18 +69,26 @@ class Main:
 
         #start services
 
-        print('Attempting to start the network service!')
-        network_process = multiprocessing.Process(target=SocketServer.main)
-
-        network_process.start()
-        processes.append(network_process)
+        print('[INFO] Attempting to start iii sub processes...')
+        process_handler.start()
+        #processes.append(process_handler)
         time.sleep(4)
 
-        print('Attempting to start the service handler!')
-        service_handler = multiprocessing.Process(target=ServiceHandler.main)
+        #print('Attempting to start the network service!')
+        #network_process = multiprocessing.Process(target=SocketServer.main)
+
+        #network_process.start()
+        #processes.append(network_process)
+        #time.sleep(4)
+        #print(network_process.is_alive())
+
+        #print('Attempting to start the service handler!')
+        #service_handler = multiprocessing.Process(target=ServiceHandler.main("test"))
+        #processes.append(service_handler)
+        #time.sleep(4)
 
         #debug starts
-        ConnectionHandler.main()
+        #ConnectionHandler.main()
 
         Menu.clear()
 
@@ -204,7 +218,9 @@ class Main:
 
             service_id = input('Enter a service name or uaddress from the list: ')
 
-
+        elif selection == '5':
+            #print(ServiceHandler.list_services())
+            pass
         elif selection == '7':
             Main.shutdown(processes)
             pass
@@ -255,13 +271,13 @@ class Main:
         elif node_type == 'peer':
                 node_menu_type = 'node_edit_peer'
 
-        print_menu(node_menu_type)
+        Menu.print_menu(node_menu_type)
 
         selection = input('Select: ')
 
         while(Menu.filter_input(selection, node_menu_type) == False):
             Menu.clear()
-            print_menu(node_menu_type)
+            Menu.print_menu(node_menu_type)
             print('Please enter a valid option!')
             selection = input('Select: ')
             Menu.filter_input(selection, 'menu')
