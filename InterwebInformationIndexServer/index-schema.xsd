@@ -243,12 +243,8 @@
                                   </xs:complexType>
                                 </xs:element>
 
-                              </xs:sequence>
-                            </xs:complexType>
-                          </xs:element>
-                          
-                          <xs:element name="tags">
-                                 
+                                <xs:element name="tags">
+
                                   <xs:complexType>
                                     <xs:sequence>
 
@@ -260,13 +256,19 @@
                                         </xs:element>
                                         <xs:element name="resource"/>
                                       </xs:choice>
-                                      
+
                                       <xs:element name="DELETE" minOccurs="0" maxOccurs="1"/>
-                                      
+
                                     </xs:sequence>
                                   </xs:complexType>
-                                  
-                           </xs:element>
+
+                                </xs:element>
+
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                          
+                          
                           
                         </xs:sequence>
                         <xs:attribute name="version" type="blake2b" use="required"/>

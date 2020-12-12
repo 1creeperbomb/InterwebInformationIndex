@@ -23,7 +23,7 @@ import glob
 
 
 
-XMLService.generate_new_definition('lol', 'lol', 'debug', 'yee')
+XMLService.generate_new_definition('lol', 'lol', 'debug', 'all', 'WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=')
 
 
 

@@ -522,18 +522,78 @@ class XMLServiceDefinition:
 class XMLService:
 
     @staticmethod
-    def generate_new_definition(name, desc, dir, type):
-
-        folder = os.path.join(dir, '.iii')
-        os.mkdir(folder, 777)
-        copyfile('iii.xsd', os.path.join(folder, 'iii.xsd'));
-
-        def_file = os.path.join(folder, 'iii.xml')
+    def generate_new_definition(name, desc, dir, type, addr):
 
         #create xml
         root = et.Element('def')
+        
+        #xml data
+        service = et.SubElement(root, 'service')
+        description = et.SubElement(service, 'desc')
+        description.text = desc
+        description.set('name', name)
+        address = et.SubElement(service, 'address')
+        address.text = addr
+        data = et.SubElement(service, 'data')
+        files = et.SubElement(data, 'files')
 
-        print(root)
+        #setup default files list
+        root_directory = glob.glob(dir + '\\**\\*', recursive=True)
+
+        file_list = []
+        for file in root_directory:
+            new_path = os.path.relpath(os.path.realpath(file))
+            file_list.append(new_path)
+
+        for file in file_list:
+            file_el = et.SubElement(files, 'file')
+            file_el.set('rdir', os.path.relpath(file, start=dir))
+            file_el.set('type', 'static')
+
+            file_hash = Cryptographer.generate_hash(message=None, filepath=file)
+
+            file_el.text = file_hash
+
+        depend = et.SubElement(data, 'dependencies')
+        tags = et.SubElement(data, 'tags')
+
+        if type == 'resource':
+            resource = et.SubElement(tags, 'resource')
+        else:
+            application = et.SubElement(tags, 'application')
+            application.set('os', type)
+        
+        version_hash = Cryptographer.generate_hash(et.tostring(data).decode('utf8'))
+        service.set('version', version_hash)
+        service.set('counter', '1')
+
+        #create files
+
+        folder = os.path.join(dir, '.iii')
+        os.mkdir(folder)
+        copyfile('debug/iii2.xsd', os.path.join(folder, 'iii.xsd'));
+
+
+        with open(os.path.join(dir, '.iii', 'iii.xsd'), 'r') as schema_file:
+            schema_raw = et.XML(schema_file.read())
+            schema = et.XMLSchema(schema_raw)
+
+        parser = et.XMLParser(schema = schema)
+
+        print(et.tostring(root))
+
+        try:
+            root_check = et.fromstring(et.tostring(root).decode('utf8'), parser)
+        except:
+            print('Schema validation failed!')
+        
+        tree = et.ElementTree(root)
+        tree.write(os.path.join(dir, '.iii', 'iii.xml'), pretty_print=True)
+
+
+
+
+
 
         
 

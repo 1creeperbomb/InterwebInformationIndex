@@ -37,14 +37,16 @@
             <source type="recommended" name="woot">WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=</source>
             <source type="optional" name="woot">WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=</source>
           </dependencies>
+
+          <tags>
+
+            <application os="all"/>
+
+
+          </tags>
           
         </data>
-        <tags>
-
-          <application os="all"/>
-          
-          
-        </tags>
+        
       </service>
     </services>
   </master>

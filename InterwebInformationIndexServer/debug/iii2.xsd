@@ -104,15 +104,7 @@
 
               </xs:element>
 
-              <xs:element name="uaddress">
-                <xs:complexType>
-                  <xs:simpleContent>
-                    <xs:extension base="keyAddress">
-                      <xs:attribute name="name" type="name" use="required"/>
-                    </xs:extension>
-                  </xs:simpleContent>
-                </xs:complexType>
-              </xs:element>
+              <xs:element name="address" type="keyAddress"/>
 
               <xs:element name="data">
                 <xs:complexType>
@@ -158,30 +150,32 @@
                       </xs:complexType>
                     </xs:element>
 
+                    <xs:element name="tags">
+
+                      <xs:complexType>
+                        <xs:sequence>
+
+                          <xs:choice>
+                            <xs:element name="application">
+                              <xs:complexType>
+                                <xs:attribute name="os" type="os" use="required"/>
+                              </xs:complexType>
+                            </xs:element>
+                            <xs:element name="resource"/>
+                          </xs:choice>
+
+                          <xs:element name="DELETE" minOccurs="0" maxOccurs="1"/>
+
+                        </xs:sequence>
+                      </xs:complexType>
+
+                    </xs:element>
+                    
                   </xs:sequence>
                 </xs:complexType>
               </xs:element>
 
-              <xs:element name="tags">
-
-                <xs:complexType>
-                  <xs:sequence>
-
-                    <xs:choice>
-                      <xs:element name="application">
-                        <xs:complexType>
-                          <xs:attribute name="os" type="os" use="required"/>
-                        </xs:complexType>
-                      </xs:element>
-                      <xs:element name="resource"/>
-                    </xs:choice>
-
-                    <xs:element name="DELETE" minOccurs="0" maxOccurs="1"/>
-
-                  </xs:sequence>
-                </xs:complexType>
-
-              </xs:element>
+              
 
             </xs:sequence>
             <xs:attribute name="version" type="blake2b" use="required"/>
