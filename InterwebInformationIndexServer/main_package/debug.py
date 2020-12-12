@@ -1,6 +1,6 @@
 #debug file to test classes and import
 from main_package.cryptographer import Cryptographer
-from main_package.xml import XMLIndex, XMLServiceDefinition
+from main_package.xml import XMLIndex, XMLServiceDefinition, XMLService
 from main_package.network import SocketServer
 from main_package.network import SocketClient
 from main_package.services import Service
@@ -21,9 +21,27 @@ import glob
 
 
 
-test = FTPService()
 
-test.main()
+
+XMLService.generate_new_definition('lol', 'lol', 'debug', 'yee')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#test = FTPService()
+
+#test.main()
 
 
 '''

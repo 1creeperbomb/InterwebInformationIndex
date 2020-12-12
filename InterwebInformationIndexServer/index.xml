@@ -31,14 +31,18 @@
             <file rdir="yeet.txt" type="static">lMWbJZM5FzgGgIVLsq0YV/CpQsJYFCeLl0AWcLVICyU=</file>
             <file rdir="assets\urmum.txt" type="static">DldRwCblQ7Loqy6wYJnaodHl30d3j3eH+qtFzfEv46g=</file>
           </files>
-        </data>
-        <tags>
-          
+
           <dependencies>
             <source type="required" name="woot">WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=</source>
             <source type="recommended" name="woot">WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=</source>
             <source type="optional" name="woot">WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=</source>
           </dependencies>
+          
+        </data>
+        <tags>
+
+          <application os="all"/>
+          
           
         </tags>
       </service>

@@ -55,6 +55,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="debug\iii2.xml" />
+    <Content Include="debug\iii2.xsd" />
     <Content Include="iii.xsd" />
     <Content Include="index-schema.xsd" />
     <Content Include="index.xml" />
@@ -75,6 +77,7 @@
     <Folder Include="keystore\" />
     <Folder Include="iii_logs\" />
     <Folder Include="ftp_temp\" />
+    <Folder Include="debug\" />
     <Folder Include="services\" />
     <Folder Include="services\service.temp\" />
     <Folder Include="services\service.1\" />

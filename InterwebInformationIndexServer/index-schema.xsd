@@ -135,6 +135,17 @@
       <xs:enumeration value="optional"/>
     </xs:restriction>
   </xs:simpleType>
+
+  <xs:simpleType name="os">
+    <xs:annotation>
+      <xs:documentation>Restricts types of application os to linux windows or both</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="linux"/>
+      <xs:enumeration value="nt"/>
+      <xs:enumeration value="all"/>
+    </xs:restriction>
+  </xs:simpleType>
   
 <!-- Create a limiter for file directory attribute -->
   
@@ -211,6 +222,27 @@
                                   </xs:complexType>
                                 </xs:element>
 
+                                <xs:element name="dependencies">
+                                  <xs:complexType>
+                                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+
+                                      <xs:element name="source">
+
+                                        <xs:complexType>
+                                          <xs:simpleContent>
+                                            <xs:extension base="keyAddress">
+                                              <xs:attribute name="name" type="name" use="required"/>
+                                              <xs:attribute name="type" type="dtype" use="required"/>
+                                            </xs:extension>
+                                          </xs:simpleContent>
+                                        </xs:complexType>
+
+                                      </xs:element>
+
+                                    </xs:choice>
+                                  </xs:complexType>
+                                </xs:element>
+
                               </xs:sequence>
                             </xs:complexType>
                           </xs:element>
@@ -219,27 +251,15 @@
                                  
                                   <xs:complexType>
                                     <xs:sequence>
-                                      
-                                      <xs:element name="dependencies">
-                                        <xs:complexType>
-                                          <xs:choice minOccurs="0" maxOccurs="unbounded">
 
-                                            <xs:element name="source">
-
-                                              <xs:complexType>
-                                                <xs:simpleContent>
-                                                  <xs:extension base="keyAddress">
-                                                    <xs:attribute name="name" type="name" use="required"/>
-                                                    <xs:attribute name="type" type="dtype" use="required"/>
-                                                  </xs:extension>
-                                                </xs:simpleContent>
-                                              </xs:complexType>
-                                              
-                                            </xs:element>
-
-                                          </xs:choice>
-                                        </xs:complexType>
-                                      </xs:element>
+                                      <xs:choice>
+                                        <xs:element name="application">
+                                          <xs:complexType>
+                                            <xs:attribute name="os" type="os" use="required"/>
+                                          </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="resource"/>
+                                      </xs:choice>
                                       
                                       <xs:element name="DELETE" minOccurs="0" maxOccurs="1"/>
                                       

@@ -5,6 +5,7 @@ import os
 import glob
 from lxml import etree as et
 from io import StringIO, BytesIO
+from shutil import copyfile
 from main_package.cryptographer import Cryptographer
 
 class XMLIndex:
@@ -516,6 +517,25 @@ class XMLServiceDefinition:
         tags = et.SubElement(service, 'tags')
 
         return service
+
+
+class XMLService:
+
+    @staticmethod
+    def generate_new_definition(name, desc, dir, type):
+
+        folder = os.path.join(dir, '.iii')
+        os.mkdir(folder, 777)
+        copyfile('iii.xsd', os.path.join(folder, 'iii.xsd'));
+
+        def_file = os.path.join(folder, 'iii.xml')
+
+        #create xml
+        root = et.Element('def')
+
+        print(root)
+
+        
 
 
 
