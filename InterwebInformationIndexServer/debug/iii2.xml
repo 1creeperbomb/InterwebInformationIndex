@@ -1,0 +1,30 @@
+<def xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.w3schools.com iii2.xsd">
+
+  <service version="XPt5QZbvqZOV87a0FginOrumyhOAFsJAWNxrFpC+REE=" counter="1">
+        <desc name="lolz">pub</desc>
+        <uaddress name="woot">WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=</uaddress>
+        <data>
+          <files>
+            <file rdir="assets" type="static">0</file>
+            <file rdir="example.txt" type="static">AniFF4QEUV8v1/swgxj2pD7/gQr/5bEwLvkledBvE8c=</file>
+            <file rdir="iiistart.bat" type="static">AniFF4QEUV8v1/swgxj2pD7/gQr/5bEwLvkledBvE8c=</file>
+            <file rdir="index.html" type="static">3UEMMYL31Zf9RMMxcPTcJlOExOvJZ1OsmKsG9YnNJ+Q=</file>
+            <file rdir="lol" type="variable">0</file>
+            <file rdir="test.xml" type="variable">0</file>
+            <file rdir="yeet.txt" type="static">lMWbJZM5FzgGgIVLsq0YV/CpQsJYFCeLl0AWcLVICyU=</file>
+            <file rdir="assets\urmum.txt" type="static">DldRwCblQ7Loqy6wYJnaodHl30d3j3eH+qtFzfEv46g=</file>
+          </files>
+
+          <dependencies>
+            <source type="required" name="woot">WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=</source>
+            <source type="recommended" name="woot">WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=</source>
+            <source type="optional" name="woot">WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=</source>
+          </dependencies>
+          
+        </data>
+        <tags>
+          <application os="all"/>
+        </tags>
+      </service>
+
+</def>

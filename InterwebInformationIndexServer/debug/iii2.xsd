@@ -1,0 +1,195 @@
+<?xml version="1.0"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:simpleType name="blake2b">
+    <xs:union>
+      <xs:simpleType>
+        <xs:annotation>
+          <xs:documentation>blake2b hash represented in Base64 format. 88 character length with == padding included.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="((([A-Za-z0-9+/] ?){4})*(([A-Za-z0-9+/] ?){3}[A-Za-z0-9+/]|([A-Za-z0-9+/] ?){2}[AEIMQUYcgkosw048] ?=|[A-Za-z0-9+/] ?[AQgw] ?= ?=))?"/>
+          <xs:length value="44" fixed="true"/>
+          <!-- For some reason the built in xs:base64Binary did not like to validate the xs:length restriction properly. The pattern above was taken directly from the documentation for xs:base64Binary.-->
+        </xs:restriction>
+      </xs:simpleType>
+
+      <xs:simpleType>
+        <xs:annotation>
+          <xs:documentation>Empty hash restriction for variable files and folders</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="0"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+
+  <xs:simpleType name="fileType">
+    <xs:annotation>
+      <xs:documentation>Restricts file type attribute to static or variable</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="static"/>
+      <xs:enumeration value="variable"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="name">
+    <xs:annotation>
+      <xs:documentation>Restricts the size of any name fields to 40 characters</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="40"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="description">
+    <xs:annotation>
+      <xs:documentation>Restrcists the size of any description fields to 1000 characters</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="1000"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="keyAddress">
+    <xs:annotation>
+      <xs:documentation>public/verify key in Base64 format</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="((([A-Za-z0-9+/] ?){4})*(([A-Za-z0-9+/] ?){3}[A-Za-z0-9+/]|([A-Za-z0-9+/] ?){2}[AEIMQUYcgkosw048] ?=|[A-Za-z0-9+/] ?[AQgw] ?= ?=))?"/>
+      <xs:length value="44" fixed="true"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="os">
+    <xs:annotation>
+      <xs:documentation>Restricts types of application os to linux windows or both</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="linux"/>
+      <xs:enumeration value="nt"/>
+      <xs:enumeration value="all"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="dtype">
+    <xs:annotation>
+      <xs:documentation>Restricts types of dependencies to certain options</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="required"/>
+      <xs:enumeration value="recommended"/>
+      <xs:enumeration value="optional"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:element name="def">
+    <xs:complexType>
+      <xs:choice minOccurs="1" maxOccurs="1">
+        <xs:element name="service">
+          <xs:complexType>
+            <xs:sequence>
+
+              <xs:element name="desc">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="description">
+                      <xs:attribute name="name" type="name" use="required"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+
+              </xs:element>
+
+              <xs:element name="uaddress">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="keyAddress">
+                      <xs:attribute name="name" type="name" use="required"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+
+              <xs:element name="data">
+                <xs:complexType>
+                  <xs:sequence>
+
+                    <xs:element name="files">
+                      <xs:complexType>
+                        <xs:choice maxOccurs="unbounded">
+                          <xs:element name="file">
+
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="blake2b">
+                                  <xs:attribute name="rdir" type="xs:string" use="required"/>
+                                  <xs:attribute name="type" type="fileType" use="required"/>
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+
+                          </xs:element>
+                        </xs:choice>
+                      </xs:complexType>
+                    </xs:element>
+
+                    <xs:element name="dependencies">
+                      <xs:complexType>
+                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+
+                          <xs:element name="source">
+
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="keyAddress">
+                                  <xs:attribute name="name" type="name" use="required"/>
+                                  <xs:attribute name="type" type="dtype" use="required"/>
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+
+                          </xs:element>
+
+                        </xs:choice>
+                      </xs:complexType>
+                    </xs:element>
+
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+
+              <xs:element name="tags">
+
+                <xs:complexType>
+                  <xs:sequence>
+
+                    <xs:choice>
+                      <xs:element name="application">
+                        <xs:complexType>
+                          <xs:attribute name="os" type="os" use="required"/>
+                        </xs:complexType>
+                      </xs:element>
+                      <xs:element name="resource"/>
+                    </xs:choice>
+
+                    <xs:element name="DELETE" minOccurs="0" maxOccurs="1"/>
+
+                  </xs:sequence>
+                </xs:complexType>
+
+              </xs:element>
+
+            </xs:sequence>
+            <xs:attribute name="version" type="blake2b" use="required"/>
+            <xs:attribute name="counter" type="xs:integer" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>  
+  
+</xs:schema>
