@@ -375,9 +375,10 @@ class Service2:
        self.counter = data[2]
        self.name = data[3]
        self.desc = data[4]
-       self.dependencies = data[5]
-       self.tags = data[6]
-       delete = data[7]
+       self.address = data[5]
+       self.dependencies = data[6]
+       self.tags = data[7]
+       delete = data[8]
 
        #parse tags
        for tag in tags:

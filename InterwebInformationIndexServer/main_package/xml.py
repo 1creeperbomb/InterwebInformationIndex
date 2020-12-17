@@ -6,6 +6,7 @@ import glob
 from lxml import etree as et
 from io import StringIO, BytesIO
 from shutil import copyfile
+from pathlib import Path
 from main_package.cryptographer import Cryptographer
 
 class XMLIndex:
@@ -675,16 +676,27 @@ class XMLService:
                 if file[0] in file_list:
                     if os.path.isfile(file):
                         if file[1] == Cryptographer.generate_hash(message=None, filepath=file):
-                            static_files.remove(file)
+                            file_list.remove(file)
                     if os.path.isdir(file):
-                            static_files.remove(file)
+                            file_list.remove(file)
+            var_dirs = []
 
             for file in var_files:
                 if file in file_list:
                     if os.path.isfile(file):
-                        var_files.remove(file)
+                        file_list.remove(file)
                     if os.path.isdir(file):
-                        var_files.remove(file)  #need to add somthing that ignores files in var directory!
+                        var_dirs.append(file)
+                        file_list.remove(file)
+
+             #check/ignore any files in variable directory
+            for file in file_list:
+                for var_dir in var_dirs:
+                    var_dir_path = Path(var_dir)
+                    dir_path = Path(file)
+
+                    if var_dir_path in dir_path.parents:
+                        file_list.remove(file)
 
             if len(static_files != 0 and var_files != 0):
                 print('[ERROR] Files in service do not match service definition')
@@ -698,8 +710,8 @@ class XMLService:
             counter = service.get('counter')
 
             #return service data in a list
-            #dir, version, count, name, description, dependencies, tags [OS, type, etc], delete command
-            return [dir, version_hash, counter, name, description, dependencies, tags, delete]
+            #dir, version, count, name, description, address, dependencies, tags [OS, type, etc], delete command
+            return [dir, version_hash, counter, name, description, address, dependencies, tags, delete]
 
         except:
             print('[ERROR] Service defnition failed to parse (are .iii files ok?)')
@@ -711,9 +723,11 @@ class XMLService:
         xpath = '/root/master[address[text()=\"' + address + '\"]]/services/service[desc[@name = \"' + name + '\"]]/data/files'
         files = XMLIndex.get_data(xpath)
 
-        iii_dir = dir + '/.iii'
-        iii_xml_dir = dir + '/.iii/iii.xml'
-        iii_schema_dir = dir + 'debug/iii2.xsd'
+        for file in files:
+            if file.get('type') == 'static':
+
+
+
         
              
             
