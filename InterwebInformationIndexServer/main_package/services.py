@@ -379,45 +379,17 @@ class Service2:
        self.tags = data[6]
        delete = data[7]
 
-       self.directory = directory
-       self.iii_dir = directory + '/.iii'
-       self.iii_xml_dir = directory + '/.iii/iii.xml'
-       self.iii_schema_dir = directory + '/.iii/iii.xsd'
-       self.iii_start_dir_windows = directory + '/iiistart.bat'
-       self.iii_start_dir_posix = directory + '/iiistart.sh'
-           
-       #check if required files and diretcories exist
-       iii_exists = os.path.isdir(self.iii_dir)
-       iii_xml_exists = os.path.isfile(self.iii_xml_dir)
-       iii_schema_exists = os.path.isfile(self.iii_schema_dir)
-       iii_uaddress_exists = os.path.isfile(self.iii_uaddress_dir)
-       iii_start_windows_exists = os.path.isfile(self.iii_start_dir_windows)
-       iii_start_posix_exists = os.path.isfile(self.iii_start_dir_posix)
+       #parse tags
+       for tag in tags:
+           if tag[0] == 'application':
+               self.type = tag[0]
+               self.os_type = tag[1]
+           elif tag[0] == 'resource':
+               self.type = tag[0]
 
-       if (iii_exists and iii_xml_exists and iii_schema_exists):
-           if (iii_start_windows_exists and iii_start_posix_exists):
-               self.os_type = 'all'
-           elif (iii_start_posix_exists or iii_start_windows_exists):
-               if iii_start_posix_exists:
+       #check/verify against index 
 
-                   if os_name == 'nt':
-                       print('[ERROR] No POSIX start file found (you are running on a GNU/Linux or Unix machine)')
-                       raise Exception('No POSIX start file found')
-
-                   self.os_type = 'posix'
-               elif iii_start_windows_exists:
-
-                   if os_name != 'nt':
-                       print('[ERROR] No Windows start file found (you are running on a Windows machine)')
-                       raise Exception('No Windows start file found')
-
-                   self.os_type = 'nt'
-           else:
-               print('[ERROR] Service directory does not contain any start files!')
-               raise Exception('Service directory does not contain any start files')
-       else:
-           print('[ERROR] Service directory does not contain proper defining files (check .iii folder)')
-           raise Exception('Service directory does not conatin proper defining files')
+       #verify start files if required
 
        #check data if new service
        if new_service == True:

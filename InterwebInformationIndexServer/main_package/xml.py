@@ -684,7 +684,7 @@ class XMLService:
                     if os.path.isfile(file):
                         var_files.remove(file)
                     if os.path.isdir(file):
-                        var_files.remove(file)
+                        var_files.remove(file)  #need to add somthing that ignores files in var directory!
 
             if len(static_files != 0 and var_files != 0):
                 print('[ERROR] Files in service do not match service definition')
@@ -703,6 +703,18 @@ class XMLService:
 
         except:
             print('[ERROR] Service defnition failed to parse (are .iii files ok?)')
+            return False
+
+    @staticmethod
+    def verify_definition(dir, name, address):
+        
+        xpath = '/root/master[address[text()=\"' + address + '\"]]/services/service[desc[@name = \"' + name + '\"]]/data/files'
+        files = XMLIndex.get_data(xpath)
+
+        iii_dir = dir + '/.iii'
+        iii_xml_dir = dir + '/.iii/iii.xml'
+        iii_schema_dir = dir + 'debug/iii2.xsd'
+        
              
             
 
