@@ -23,7 +23,7 @@ import glob
 
 
 
-XMLService.generate_new_definition('lol', 'lol', 'debug', 'all', 'WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=')
+XMLService.generate_new_definition('lol', 'lol', 'debug/mysite', 'all', 'WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs=')
 
 
 
@@ -66,7 +66,7 @@ while True:
         buffer.pop(0)
         test = input('Enter data:').encode('utf8')
         test_process.stdin.write(test)
-
+        
 
 
 print(test_process.poll())

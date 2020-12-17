@@ -546,13 +546,20 @@ class XMLService:
             file_list.append(new_path)
 
         for file in file_list:
-            file_el = et.SubElement(files, 'file')
-            file_el.set('rdir', os.path.relpath(file, start=dir))
-            file_el.set('type', 'static')
+            if os.path.isfile(file):
+            
+                file_el = et.SubElement(files, 'file')
+                file_el.set('rdir', os.path.relpath(file, start=dir))
+                file_el.set('type', 'static')
 
-            file_hash = Cryptographer.generate_hash(message=None, filepath=file)
+                file_hash = Cryptographer.generate_hash(message=None, filepath=file)
 
-            file_el.text = file_hash
+                file_el.text = file_hash
+            else:
+                file_el = et.SubElement(files, 'file')
+                file_el.set('rdir', os.path.relpath(file, start=dir))
+                file_el.set('type', 'static')
+                file_el.text = '0'
 
         depend = et.SubElement(data, 'dependencies')
         tags = et.SubElement(data, 'tags')
@@ -571,7 +578,7 @@ class XMLService:
 
         folder = os.path.join(dir, '.iii')
         os.mkdir(folder)
-        copyfile('debug/iii2.xsd', os.path.join(folder, 'iii.xsd'));
+        copyfile('debug/iii2.xsd', os.path.join(folder, 'iii.xsd')); #change and replace iii.xsd with iii2.xsd later
 
 
         with open(os.path.join(dir, '.iii', 'iii.xsd'), 'r') as schema_file:
@@ -580,7 +587,7 @@ class XMLService:
 
         parser = et.XMLParser(schema = schema)
 
-        print(et.tostring(root))
+        #print(et.tostring(root))
 
         try:
             root_check = et.fromstring(et.tostring(root).decode('utf8'), parser)
@@ -589,6 +596,126 @@ class XMLService:
         
         tree = et.ElementTree(root)
         tree.write(os.path.join(dir, '.iii', 'iii.xml'), pretty_print=True)
+
+    @staticmethod
+    def load_definition(dir):
+        iii_dir = dir + '/.iii'
+        iii_xml_dir = dir + '/.iii/iii.xml'
+        iii_schema_dir = dir + 'debug/iii2.xsd'
+
+        try:
+            #try opening definition and verify against schema
+            
+            with open(iii_schema_dir, 'r') as schema_file:
+                schema_raw = et.XML(schema_file.read())
+                schema_f = et.XMLSchema(schema_raw)
+
+            parser = et.XMLParser(schema = schema_f, remove_comments=True, remove_blank_text=True)
+
+            with open(iii_dir, 'r') as service_def:
+                iii_root = et.XML(service_def.read(), parser)
+            
+            #get vars
+            service = iii_root[0]
+
+            static_files = []
+            var_files = []
+
+            for child in service:
+                if child.tag == 'desc':
+                    description = child.text
+                    name = child.get('name')
+                elif child.tag == 'address':
+                    address = child.text
+                elif child.tag == 'data':
+                    version_hash = Cryptographer.generate_hash(et.tostring(child).decode('utf8'))
+                    for schild in child:
+                        if schild.tag == 'files':
+                            xml_files = schild
+                        elif schild.tag == 'dependencies':
+                            dependencies = []
+
+                            for source in schild:
+                                depend = [source.get('type'), source.get('name'), source.text]
+                                dependencies.append(depend)
+                        elif schild.tag == 'tags':
+                            tags = []
+
+                            for tag in schild:                                
+                                if tag.tag == 'application':
+                                    service_type = [tag.tag, tag.get('os')]
+                                    tags.append(service_type)
+                                elif tag.tag == 'resource':
+                                    service_type = [tag.tag]
+                                    tags.append(service_type)
+                                elif tag.tag == 'DELETE':
+                                    delete = True
+                            
+
+            #add files to lists
+            for file in xml_files:
+                if file.get('type') == 'static':
+                    s_file = [file.get('rdir'), file.text]
+                    static_files.append(s_file)
+                elif file.get('type') == 'variable':
+                    v_file = file.get('rdir')
+                    var_files.append(v_file)
+            
+
+            #verify file hashes and matches
+
+            root_directory = glob.glob(iii_dir + '\\**\\*', recursive=True)
+
+            file_list = []
+            for file in root_directory:
+                new_path = os.path.relpath(os.path.realpath(file))
+                file_list.append(new_path)
+
+            for file in static_files:
+                if file[0] in file_list:
+                    if os.path.isfile(file):
+                        if file[1] == Cryptographer.generate_hash(message=None, filepath=file):
+                            static_files.remove(file)
+                    if os.path.isdir(file):
+                            static_files.remove(file)
+
+            for file in var_files:
+                if file in file_list:
+                    if os.path.isfile(file):
+                        var_files.remove(file)
+                    if os.path.isdir(file):
+                        var_files.remove(file)
+
+            if len(static_files != 0 and var_files != 0):
+                print('[ERROR] Files in service do not match service definition')
+                return False
+
+            #verify version hash
+            if version_hash != service.get('version'):
+                print('[ERROR] Definition version does not match data hash')
+                return False
+
+            counter = service.get('counter')
+
+            #return service data in a list
+            #dir, version, count, name, description, dependencies, tags [OS, type, etc], delete command
+            return [dir, version_hash, counter, name, description, dependencies, tags, delete]
+
+        except:
+            print('[ERROR] Service defnition failed to parse (are .iii files ok?)')
+             
+            
+
+                
+
+
+
+
+
+
+            
+
+
 
 
 

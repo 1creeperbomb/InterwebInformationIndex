@@ -362,11 +362,22 @@ class Service:
 
 class Service2:
 
-   def __init__(self, directory, uaddress=None, name=None, desc=None):
+   def __init__(self, data):
        
        self.buffer = []
        self.status = False;
        self.display = False;
+
+       #setup service data
+
+       self.dir = data[0]
+       self.version = data[1]
+       self.counter = data[2]
+       self.name = data[3]
+       self.desc = data[4]
+       self.dependencies = data[5]
+       self.tags = data[6]
+       delete = data[7]
 
        self.directory = directory
        self.iii_dir = directory + '/.iii'
