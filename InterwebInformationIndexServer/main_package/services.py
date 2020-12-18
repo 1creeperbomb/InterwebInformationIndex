@@ -2,7 +2,7 @@
 import os
 from os import name as os_name
 import subprocess
-from main_package.xml import XMLServiceDefinition
+from main_package.xml import XMLServiceDefinition, XMLService
 from main_package.cryptographer import Cryptographer
 from lxml import etree as et
 import time
@@ -363,7 +363,8 @@ class Service:
 class Service2:
 
    def __init__(self, data):
-       
+       #assumption data has been succesfully initilized and loaded from local definition first
+
        self.buffer = []
        self.status = False;
        self.display = False;
@@ -389,73 +390,33 @@ class Service2:
                self.type = tag[0]
 
        #check/verify against index 
+       if XMLService.verify_definition(self.dir, self.version, self.counter, self.name, self.address) == False:
+           print['[WARN] Sevrice does not match index definition (is there an update?)']
+           raise Exception('Index mismatch')
 
        #verify start files if required
+       if self.type == 'application':
+           iii_start_dir_windows = os.path.join(dir, 'iiistart.bat')
+           iii_start_dir_posix = os.path.join(dir, 'iiistart.sh')
 
-       #check data if new service
-       if new_service == True:
-           self.new_service(directory, name, desc)
-       else:
-           try:
-                temp_xml_data=XMLServiceDefinition.get_service_files(directory)
-                self.service_version = Cryptographer.generate_hash(et.tostring(temp_xml_data).decode('utf8'))
-           except:
-                print('[WARN] The service III tried to initilize has errors!')
-                raise Exception('Service files incorretcly configured')
- 
-
-       #parse iii.xml to ensure it passes schema and that all db files and directories defined exist
-       with open(self.iii_xml_dir, 'r') as xml_file:
-           xml_string = xml_file.read()
-
-       self.variable_files = XMLServiceDefinition.parse_xml_string(xml_string, self.directory)
-
-       if self.variable_files == False:
-           print('[ERROR] Service definitions do not correlate to files (check iii.xml)')
-           raise Exception('Service definitions do not correlate to files')
-
-       #check if uaddress file needs to be created
-       if iii_uaddress_exists:
-           pass
-       else:
-           with open(self.iii_uaddress_dir, 'w') as uaddress_file:
-               uaddress_file.write(uaddress)
-               uaddress_file.close()
-
-       #initialize address and name variables from uaddress
-       with open(self.iii_uaddress_dir, 'r') as uaddress_file:
-            uaddress_text = uaddress_file.read()
-            uaddress_split = uaddress_text.split('.', 1)
-
-            #add a thing to verify address follows correct format
-
-            if len(uaddress_split) != 2:
-                print('[ERROR] Service uaddress file is malformed!')
-                raise Exception('Uaddress file is malformed')
-            else:
-                self.address = uaddress_split[0]
-                self.name = uaddress_split[1]
-                self.uaddress = uaddress_text
+           if self.os_type == 'all':
+               if not os.path.isfile(iii_start_dir_windows) and os.path.isfile(iii_start_dir_posix):
+                   raise Exception('Missing start files for OS type all')
+           elif self.os_type == 'nt':
+               if not os.path.isfile(iii_start_dir_windows):
+                   raise Exception('Missing start files for OS type Windows NT')
+           elif self.os_type == 'linux':
+               if not os.path.isfile(iii_start_dir_posix):
+                   raise Exception('Missing start files for OS type Windows NT')
 
        #set start file based on current os
        if os_name == 'nt':
-           self.iii_service_start_path = os.path.abspath(self.iii_start_dir_windows)
+           self.start_file = os.path.abspath(self.iii_start_dir_windows)
        else:
-            self.iii_service_start_path = os.path.abspath(self.iii_start_dir_posix)
-   
-   def new_service(self, directory, name, desc):
-
-       try:
-           xml_data_object=XMLServiceDefinition.get_service_files(directory)
-       except:
-           print('[WARN] The service you tried to initilize has errors (check iii.xml)!')
-           raise Exception('New service files incorretcly configured')
-
-       self.service_version = Cryptographer.generate_hash(et.tostring(xml_data_object).decode('utf8'))
-       self.service_xml_object = XMLServiceDefinition.create_new_service(xml_data_object, name, desc)
+           self.start_file = os.path.abspath(self.iii_start_dir_posix)   
 
    def start_service(self):
-       self.process = subprocess.Popen([self.iii_service_start_path], shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+       self.process = subprocess.Popen([self.start_file], shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
        self.status = True;
 
        while(self.status):

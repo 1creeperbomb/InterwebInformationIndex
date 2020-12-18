@@ -698,7 +698,7 @@ class XMLService:
                     if var_dir_path in dir_path.parents:
                         file_list.remove(file)
 
-            if len(static_files != 0 and var_files != 0):
+            if len(file_list) != 0:
                 print('[ERROR] Files in service do not match service definition')
                 return False
 
@@ -718,13 +718,69 @@ class XMLService:
             return False
 
     @staticmethod
-    def verify_definition(dir, name, address):
+    def verify_definition(dir, version, counter, name, address):
         
-        xpath = '/root/master[address[text()=\"' + address + '\"]]/services/service[desc[@name = \"' + name + '\"]]/data/files'
-        files = XMLIndex.get_data(xpath)
+        version_xpath = '/root/master[address[text()=\"' + address + '\"]]/services/service[desc[@name = \"' + name + '\"]]/@version'
+        counter_xpath = '/root/master[address[text()=\"' + address + '\"]]/services/service[desc[@name = \"' + name + '\"]]/@counter'
+        data_xpath = '/root/master[address[text()=\"' + address + '\"]]/services/service[desc[@name = \"' + name + '\"]]/data/files'
+        files = XMLIndex.get_data(data_xpath)
+        index_version = XMLIndex.get_data(version_xpath)
+        index_counter = XMLIndex.get_data(counter_xpath)
+
+        if index_version[0] != version or index_counter != counter:
+            return False
+
+
+        static_files = []
+        var_files = []
 
         for file in files:
             if file.get('type') == 'static':
+                    s_file = [file.get('rdir'), file.text]
+                    static_files.append(s_file)
+            elif file.get('type') == 'variable':
+                    v_file = file.get('rdir')
+                    var_files.append(v_file)
+
+        #verify file hashes and matches
+
+        root_directory = glob.glob(dir + '\\**\\*', recursive=True)
+
+        file_list = []
+        for file in root_directory:
+            new_path = os.path.relpath(os.path.realpath(file))
+            file_list.append(new_path)
+
+        for file in static_files:
+            if file[0] in file_list:
+                if os.path.isfile(file):
+                    if file[1] == Cryptographer.generate_hash(message=None, filepath=file):
+                        file_list.remove(file)
+                if os.path.isdir(file):
+                        file_list.remove(file)
+        var_dirs = []
+
+        for file in var_files:
+            if file in file_list:
+                if os.path.isfile(file):
+                    file_list.remove(file)
+                if os.path.isdir(file):
+                    var_dirs.append(file)
+                    file_list.remove(file)
+
+        #check/ignore any files in variable directory
+        for file in file_list:
+            for var_dir in var_dirs:
+                var_dir_path = Path(var_dir)
+                dir_path = Path(file)
+
+                if var_dir_path in dir_path.parents:
+                    file_list.remove(file)
+
+        if len(file_list) != 0:
+            print('[ERROR] Files in service do not match service definition')
+            return False
+
 
 
 
