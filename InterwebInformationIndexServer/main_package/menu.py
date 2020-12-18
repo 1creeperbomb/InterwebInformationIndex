@@ -1,5 +1,6 @@
 #Menu and CLI classes
 from os import system, name as os_name
+import argparse
 
 menu_open = False;
 
@@ -97,4 +98,7 @@ class CLI:
     buffer = []
 
     def main():
-        pass
+        parser = argparse.ArgumentParser()
+        parser.parse_args()
+
+

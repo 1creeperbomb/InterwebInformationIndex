@@ -1,9 +1,10 @@
 #oh yeahhhhhh - test 
 
 from main_package.main import Main
+from main_package.menu import CLI
 
 def main():
-    Main.start()
+    CLI.main()
 
 '''
 from main_package.cryptographer import Cryptographer
