@@ -4,7 +4,7 @@ from main_package.cryptographer import Cryptographer
 #from main_package.network import ConnectionHandler
 from main_package.services import Service
 from main_package.ftp import FTP
-from main_package.menu import Menu, CLI
+from main_package.menu import Menu
 from main_package.xml import XMLIndex
 from main_package.processes import ProcessHandler
 
@@ -14,6 +14,7 @@ import shutil
 import os.path
 from os import system, name as os_name
 from getpass import getpass
+import argparse
 
 class Main:
 
@@ -475,3 +476,16 @@ class Main:
                     shutil.rmtree(file_path)
             except Exception as e:
                 print('Failed to delete %s. Reason: %s' % (file_path, e))
+
+class CLI:
+
+    buffer = []
+
+    def main():
+        parser = argparse.ArgumentParser(prog='Interweb Information Index', description='Framework for using iii services and resourcess')
+        
+        #args
+        parser.add_argument('-start', action='store_true')
+        
+        args = parser.parse_args()
+        print(args.start)

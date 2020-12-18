@@ -1,7 +1,6 @@
 #oh yeahhhhhh - test 
 
-from main_package.main import Main
-from main_package.menu import CLI
+from main_package.main import Main, CLI
 
 def main():
     CLI.main()
