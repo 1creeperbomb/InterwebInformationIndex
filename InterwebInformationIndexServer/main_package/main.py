@@ -485,7 +485,38 @@ class CLI:
         parser = argparse.ArgumentParser(prog='Interweb Information Index', description='Framework for using iii services and resourcess')
         
         #args
-        parser.add_argument('-start', action='store_true')
+        parser.add_argument(
+            "command",
+            choices=['node', 'server', 'service', 'service-def', 'status']
+        )
         
         args = parser.parse_args()
-        print(args.start)
+        print(args.command)
+
+
+
+#Options:
+#   -server 
+#       start, stop, restart
+#   -node
+#       add, edit, delete
+#       type
+#           :master
+#               name, description
+#           :peer
+#               name, description, ip, port
+#   -service-def
+#       directory 
+#   -service
+#       add, delete
+#           uaddress
+#           directory
+#       -start, -stop, -restart, -connect, -status
+#           name
+#           uaddress
+#   status
+#       name
+#       uaddress
+#
+#
+#
