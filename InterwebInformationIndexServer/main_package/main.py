@@ -15,6 +15,8 @@ import os.path
 from os import system, name as os_name
 from getpass import getpass
 import argparse
+import re
+import sys
 
 class Main:
 
@@ -481,36 +483,83 @@ class CLI:
 
     buffer = []
 
+    @staticmethod
     def main():
-        parser = argparse.ArgumentParser(prog='Interweb Information Index', description='Framework for using iii services and resourcess')
+        parser = argparse.ArgumentParser(prog='Interweb Information Index', description='Framework for using iii services and resources')
+        subparsers = parser.add_subparsers(help='sub-command help')
         
         #args
-        parser.add_argument(
-            "command",
-            choices=['node', 'server', 'service', 'service-def', 'status']
+        
+        #node
+        parser_node = subparsers.add_parser('node', help='Allows you to add, edit, and delete iii nodes')
+        parser_node.add_argument(
+            "action",
+            choices=['add', 'edit', 'delete'],
+            help="Choose node action - add, edit, or delete"
         )
+        parser_node.add_argument(
+            "type",
+            choices=['master', 'peer'],
+            help="Choose node type"
+        )
+        parser_node.add_argument(
+            "name",
+            type=CLI.max_length(40),
+            help="Node name"
+        )
+        parser_node.add_argument(
+            "description",
+            type=CLI.max_length(1000),
+            help="Node description"
+        )
+        parser_node.add_argument(
+            "ip",
+            required='peer' in sys.argv,
+            default='public',
+            type=CLI.regex_match(r'((1?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.){3}(1?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])'),
+            help="Node name"
+        )
+
         
         args = parser.parse_args()
-        print(args.command)
+        print(args)
+
+
+    @staticmethod
+    def max_length(max_length):
+        def validate(s):
+            if len(s) <= max_length:
+                return s
+            raise argparse.ArgumentTypeError
+        return validate
+
+    @staticmethod
+    def regex_match(pattern):
+        def regex_type(arg_value):
+            pat=re.compile(pattern)
+            if not pat.match(arg_value):
+                raise argparse.ArgumentTypeError
+            return arg_value
+        return regex_type 
 
 
 
 #Options:
-#   -server 
-#       start, stop, restart
-#   -node
-#       add, edit, delete
+#   server 
+#       :start, stop, restart
+#   node
+#       :add, edit, delete
 #       type
 #           :master
-#               name, description
+#               :name, description
 #           :peer
-#               name, description, ip, port
-#   -service-def
-#       directory 
-#   -service
-#       add, delete
-#           uaddress
-#           directory
+#               :name, description, ip, port
+#   service-def
+#       :directory 
+#   service
+#       :add, delete
+#           :uaddress
+#           :directory
 #       -start, -stop, -restart, -connect, -status
 #           name
 #           uaddress

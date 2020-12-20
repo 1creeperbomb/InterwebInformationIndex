@@ -16,8 +16,7 @@
     <Environment>
     </Environment>
     <InterpreterId>Global|PythonCore|3.8</InterpreterId>
-    <CommandLineArguments>
-    </CommandLineArguments>
+    <CommandLineArguments>node add peer lol zee 192.168.2.1</CommandLineArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
