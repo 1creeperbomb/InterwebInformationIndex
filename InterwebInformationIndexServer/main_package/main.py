@@ -541,10 +541,20 @@ class CLI:
 
         #service
         parser_service = subparsers.add_parser('service', help='Handle all service functions such as adding or starting')
+        pointer = parser_service.add_mutually_exclusive_group(required=True)
 
-        parser_service.add_argument(
-            'pointer',
-            help='Choose a uaddress or directory of a service to work with' #change to mutually exlusive
+
+        pointer.add_argument(
+            '-uaddress',
+            help='Choose a uaddress of a service to work with'
+        )
+        pointer.add_argument(
+            '-dir',
+            help='Choose a directory of a service to work with'
+        )
+        pointer.add_argument(
+            '-name',
+            help='Choose a name of a service to work with'
         )
         
         #parse args
