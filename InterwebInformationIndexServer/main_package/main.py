@@ -497,38 +497,38 @@ class CLI:
             "action",
             choices=['add', 'edit', 'delete'],
             help="Choose node action - add, edit, or delete"
-        )
+            )
         parser_node.add_argument(
             "type",
             choices=['master', 'peer'],
             help="Choose node type"
-        )
+            )
         parser_node.add_argument(
             "-name",
             required=CLI.required_arg([['add'],['delete']]),
             type=CLI.max_length(40),
             help="Node name"
-        )
+            )
         parser_node.add_argument(
             "-description",
             required=CLI.required_arg([['add']]),
             type=CLI.max_length(1000),
             help="Node description"
-        )
+            )
         parser_node.add_argument(
             "-ip",
             required=CLI.required_arg([['add', 'peer']]),
             #default='0.0.0.0',
             type=CLI.regex_match(r'((1?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.){3}(1?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])'),
             help="Node name"
-        )
+            )
         parser_node.add_argument(
             "-port",
             required=CLI.required_arg([['add', 'peer']]),
             #default='5001',
             type=CLI.port_length,
             help="Node name"
-        )
+            )
 
         #server
         parser_server = subparsers.add_parser('server', help='Allows you to start, stop, restart, or check status of the iii server')
@@ -537,25 +537,31 @@ class CLI:
             "action",
             choices=['start', 'stop', 'restart', 'status'],
             help="Choose action"
-        )
+            )
 
         #service
         parser_service = subparsers.add_parser('service', help='Handle all service functions such as adding or starting')
+        #action = parser_service.add_mutually_exclusive_group(required=True)
         pointer = parser_service.add_mutually_exclusive_group(required=True)
-
 
         pointer.add_argument(
             '-uaddress',
             help='Choose a uaddress of a service to work with'
-        )
+            )
         pointer.add_argument(
             '-dir',
             help='Choose a directory of a service to work with'
-        )
+            )
         pointer.add_argument(
             '-name',
             help='Choose a name of a service to work with'
-        )
+            )
+
+        parser_service.add_argument(
+            'action',
+            choices=['add','update','delete','start','stop','restart','status',],
+            help='Choose an action for a service'
+            )
         
         #parse args
         args = parser.parse_args()
