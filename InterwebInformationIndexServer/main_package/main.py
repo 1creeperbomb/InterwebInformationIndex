@@ -492,6 +492,7 @@ class CLI:
         
         #node
         parser_node = subparsers.add_parser('node', help='Allows you to add, edit, and delete iii nodes')
+
         parser_node.add_argument(
             "action",
             choices=['add', 'edit', 'delete'],
@@ -503,27 +504,60 @@ class CLI:
             help="Choose node type"
         )
         parser_node.add_argument(
-            "name",
+            "-name",
+            required=CLI.required_arg([['add'],['delete']]),
             type=CLI.max_length(40),
             help="Node name"
         )
         parser_node.add_argument(
-            "description",
+            "-description",
+            required=CLI.required_arg([['add']]),
             type=CLI.max_length(1000),
             help="Node description"
         )
         parser_node.add_argument(
-            "ip",
-            required='peer' in sys.argv,
-            default='public',
+            "-ip",
+            required=CLI.required_arg([['add', 'peer']]),
+            #default='0.0.0.0',
             type=CLI.regex_match(r'((1?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.){3}(1?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])'),
             help="Node name"
         )
+        parser_node.add_argument(
+            "-port",
+            required=CLI.required_arg([['add', 'peer']]),
+            #default='5001',
+            type=CLI.port_length,
+            help="Node name"
+        )
 
+        #server
+        parser_server = subparsers.add_parser('server', help='Allows you to start, stop, restart, or check status of the iii server')
+
+        parser_server.add_argument(
+            "action",
+            choices=['start', 'stop', 'restart', 'status'],
+            help="Choose action"
+        )
+
+        #service
+        parser_service = subparsers.add_parser('service', help='Handle all service functions such as adding or starting')
+
+        parser_service.add_argument(
+            'pointer',
+            help='Choose a uaddress or directory of a service to work with' #change to mutually exlusive
+        )
         
+        #parse args
         args = parser.parse_args()
         print(args)
 
+
+    @staticmethod
+    def port_length(port):
+        p = int(port)
+        if p > 0 and p < 65536:
+            return p
+        raise argparse.ArgumentTypeError
 
     @staticmethod
     def max_length(max_length):
@@ -541,6 +575,21 @@ class CLI:
                 raise argparse.ArgumentTypeError
             return arg_value
         return regex_type 
+
+    @staticmethod
+    def required_arg(args2):
+        for args in args2:
+
+            req = True
+            for arg in args:
+                if arg not in sys.argv:
+                    req = False
+            
+            if req == True:
+                return req
+
+        return False
+        
 
 
 
