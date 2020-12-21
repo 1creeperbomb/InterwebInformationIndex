@@ -16,7 +16,7 @@
     <Environment>
     </Environment>
     <InterpreterId>Global|PythonCore|3.8</InterpreterId>
-    <CommandLineArguments>service -name lolll delete</CommandLineArguments>
+    <CommandLineArguments>status -n lol</CommandLineArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>

@@ -562,7 +562,29 @@ class CLI:
             choices=['add','update','delete','start','stop','restart','status',],
             help='Choose an action for a service'
             )
+
+        #service-def
+        parser_service_def = subparsers.add_parser('service-def', help='Generate a service defnition for a directory')
+
+        parser_service_def.add_argument(
+            'dir',
+            help='Directory of service'
+            )
         
+        #status
+        parser_status = subparsers.add_parser('status', help='Get status of a service, shows all if none is specified')
+        pointer_status = parser_status.add_mutually_exclusive_group()
+
+        pointer_status.add_argument(
+            '-uaddress',
+            help='Choose a uaddress of a service to work with'
+            )
+        pointer_status.add_argument(
+            '-name',
+            help='Choose a name of a service to work with'
+            )
+
+
         #parse args
         args = parser.parse_args()
         print(args)
