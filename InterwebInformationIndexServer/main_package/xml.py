@@ -148,10 +148,7 @@ class XMLIndex:
 
     @staticmethod
     def create_node(type, crypto, name, description_text):
-        if type == 'master':
-            root = et.Element('master')
-        elif type == 'peer':
-            root = et.Element('peer')
+        root = et.Element(type)
 
         address_text = crypto.get_public_key()
 
@@ -187,7 +184,7 @@ class XMLIndex:
     @staticmethod
     def modify_node(type, crypto, address, name=None, description_text=None, services_n=None):
         node = XMLIndex.get_data(type, address)[0]
-        XMLIndex.get_data('master', address)
+        XMLIndex.get_data(type, address)
 
         print(node)
 
@@ -206,11 +203,10 @@ class XMLIndex:
         if services_n != None:
             for service in services_n:
 
-                #DEBUG until a modify/update service method is created!
-                counter = int(service.attrib['counter'])
-                counter += 1
-                counter = str(counter)
-                services.set('counter', counter)
+                for child in service:
+                    if child.tag == 'address':
+                        service.remove(child)
+                        break
 
                 services.append(service)
 
