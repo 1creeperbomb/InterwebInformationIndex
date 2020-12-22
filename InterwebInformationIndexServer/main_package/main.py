@@ -485,8 +485,19 @@ class CLI:
 
     @staticmethod
     def main():
+        args = CLI.init_args()
+        print(args)
+    
+    @staticmethod
+    def handle(args):
+        
+        if args.command == 'node':
+            pass
+
+    @staticmethod
+    def init_args():
         parser = argparse.ArgumentParser(prog='Interweb Information Index', description='Framework for using iii services and resources')
-        subparsers = parser.add_subparsers(help='sub-command help')
+        subparsers = parser.add_subparsers(help='sub-command help', dest="command")
         
         #args
         
@@ -587,8 +598,7 @@ class CLI:
 
         #parse args
         args = parser.parse_args()
-        print(args)
-
+        return args
 
     @staticmethod
     def port_length(port):
