@@ -495,6 +495,63 @@ class CLI:
             pass
 
     @staticmethod
+    def start():
+        
+        global process_handler
+        process_handler =  multiprocessing.Process(target=ProcessHandler.main)
+
+        global processes
+        processes = []
+
+        print('Starting the Interweb Information Index Server (III)!')
+        print('-----------------------------------------------------')
+        print('Created by Ismaeel Mian (1creeperbomb)')
+        print('-----------------------------------------------------')
+        print('Check out/contribute the the project on github at https://github.com/1creeperbomb/InterwebInformationIndex')
+        print('----------------------------------------------------------------------------------------------------------')
+
+        #check if private key file exists
+        if os.path.isfile('keystore/private.key'):
+            print('Private key found! Starting normal operation!')
+        else:
+            print('No private key files was found. If you are importing a key, make sure the file is named \"private.key\" and is located directly in the \"keystore\" folder')
+            start_setup = filter_input(input('Would you like to setup a new keypair? (Y/N): '), 'y/n')
+
+            while filter_input(start_setup, 'y/n') == False:
+                print('Please enter a valid choice')
+                start_setup == input('Would you like to setup a new keypair? (Y/N): ')
+
+            if start_setup == 'y':
+                first_time_setup()
+            elif start_setup == 'n':
+                print('You chose no')
+                shutdown(None)
+
+        password = getpass('Please enter your password to start: ')
+
+        try:
+            print('Attempting to decrypt...')
+            private_key = Cryptographer.read_key(password)
+            print('Succesfully decrypted!')
+        except:
+            print('Failed to decrypt!')
+            shutdown(None)
+
+        global crypto_main
+        crypto_main = Cryptographer(private_key, False)
+        password = None
+        private_key = None
+    
+        print('-----------------------------------------------------')
+
+        #start services
+
+        print('[INFO] Attempting to start iii sub processes...')
+        process_handler.start()
+        #processes.append(process_handler)
+        time.sleep(4)
+
+    @staticmethod
     def init_args():
         parser = argparse.ArgumentParser(prog='Interweb Information Index', description='Framework for using iii services and resources')
         subparsers = parser.add_subparsers(help='sub-command help', dest="command")
