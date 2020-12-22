@@ -510,7 +510,7 @@ class CLI:
         print('Check out/contribute the the project on github at https://github.com/1creeperbomb/InterwebInformationIndex')
         print('----------------------------------------------------------------------------------------------------------')
 
-        #check if private key file exists
+        #check if private key file exists.
         if os.path.isfile('keystore/private.key'):
             print('Private key found! Starting normal operation!')
         else:
