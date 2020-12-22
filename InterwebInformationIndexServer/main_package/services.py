@@ -86,14 +86,10 @@ class ServiceHandler:
 
     @staticmethod
     def create_new_directory():
-        #DEBUG
-        global reusable_names
-        reusable_names = []
-
 
         if len(reusable_names) != 0:
             new_dir_number = reusable_names[0]
-            reusable_names.pop(new_dir_number)
+            reusable_names.remove(new_dir_number)
             new_dir = 'services/service' + str(new_dir_number)
             os.mkdir(new_dir)
             return new_dir
@@ -149,31 +145,24 @@ class ServiceHandler:
             services.append(service)
 
     @staticmethod
-    def delete_service(directory, name=None):
+    def delete_service(dir, uaddress=None):
         
         for service in services:
-            s_directory = service.directory
-            s_name = service.name
+            if dir == service.dir:
+                service.stop_service()
+                deletetree(dir)
+                services.remove(service)
+                return
+            
+            s_address = uaddress.split('.', 1)
 
-            if directory != None:
-                if s_directory == directory:
-                    dir_split = s_directory.split('.', 1)
-                    service_number = dir_split[1]
+            if s_address[0] == service.address and s_address[1] == service.name:
+                service.stop_service()
+                deletetree(dir)
+                services.remove(service)
+                return
 
-                    service.stop_service()
-                    deletetree(directory)
-                    services.pop(service)
-
-                    reusable_names.append(service_number)
-            elif name != None:
-                if s_name == name:
-                    dir_split = s_directory.split('.', 1)
-                    service_number = dir_split[1]
-
-                    service.stop_service()
-                    deletetree(directory)
-                    services.pop(service)
-                    reusable_names.append(service_number)
+        print('The service specified was not found')
 
     @staticmethod
     def copytree(src, dst, symlinks=False, ignore=None):
@@ -216,9 +205,6 @@ class ServiceHandler:
 
         return service_list
 
-    @staticmethod
-    def parse_uaddress(uaddres):
-        return uaddres.split('.', 1)
 
 class Service:
 
