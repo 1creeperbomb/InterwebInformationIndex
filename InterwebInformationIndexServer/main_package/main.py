@@ -487,12 +487,16 @@ class CLI:
     def main():
         args = CLI.init_args()
         print(args)
+        CLI.handle(args)
     
     @staticmethod
     def handle(args):
         
         if args.command == 'node':
             pass
+        elif args.command == 'server':
+            if args.action == 'start':
+                CLI.start()
 
     @staticmethod
     def start():
@@ -547,7 +551,7 @@ class CLI:
         #start services
 
         print('[INFO] Attempting to start iii sub processes...')
-        process_handler.start()
+        #process_handler.start()
         #processes.append(process_handler)
         time.sleep(4)
 

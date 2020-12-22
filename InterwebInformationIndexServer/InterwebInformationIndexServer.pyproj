@@ -16,7 +16,7 @@
     <Environment>
     </Environment>
     <InterpreterId>Global|PythonCore|3.8</InterpreterId>
-    <CommandLineArguments>status -n lol</CommandLineArguments>
+    <CommandLineArguments>server start </CommandLineArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>

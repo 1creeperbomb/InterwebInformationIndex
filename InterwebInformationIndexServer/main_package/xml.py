@@ -304,222 +304,6 @@ class XMLIndex:
 
         return service
 
-class XMLServiceDefinition:
-
-    @staticmethod
-    def parse_xml_string(xml_data, folder_directory):
-
-        folder_directory = folder_directory + '/'
-
-        schema_dir= folder_directory + '.iii/iii.xsd'
-        
-        with open(schema_dir, 'r') as schema_file:
-            schema_raw = et.XML(schema_file.read())
-            schema_f = et.XMLSchema(schema_raw)
-
-        parser = et.XMLParser(schema = schema_f, remove_comments=True, remove_blank_text=True)
-
-        try:
-            iii_root = et.fromstring(xml_data, parser)
-        except:
-            print('Schema validation failed!')
-            return False
-
-        #read db files and dir definitions and check if files exist as defined
-        variable_files = []
-
-        for child in iii_root:
-
-
-            if child.tag == 'dbfs':
-                
-                files = child
-
-                for file in files:
-                    directory = folder_directory + file.text
-
-                    exists = os.path.isfile(directory)
-
-                    if exists:
-                        variable_files.append(directory)
-                    else:
-                        return False
-
-            elif child.tag == 'dbdrs':
-                db_dir = child
-
-                for dir in db_dir:
-                    directory =  folder_directory +  dir.text
-
-                    exists = os.path.isdir(directory)
-
-                    if exists:
-                        variable_files.append(directory)
-                    else:
-                        return False
-
-        return variable_files
-
-    @staticmethod
-    def check_service(peer_address, service_address, service_name):
-        #/root/peer[address[text()="4O5y6PUBZD6Kziz2eWo3n1TNHVTfT7x6eKwLPPUdVls="]]/services/service[uaddress[text()="O/iFe/g2ENRQfye0u0dmPd+cMUq7LoRfqmXnJt74X84="] and uaddress[@name="woot"]]/...
-
-        #lol try reading this Xpath 
-        xpath = '/root/peer[address[text()=\"' + peer_address + '\"]]/services/service[uaddress[text()=\"' + service_address + '\"] and uaddress[@name=\"' + service_name + '\"]]'
-        #looking back on it, I should have just made these nice and long Xpath expressions instead of a get_xpath function
-
-        element = XMLIndex.get_data(xpath)
-        
-        if element == None:
-            return False
-
-        return True
-
-    @staticmethod
-    def verify_service(service_address, service_name, service_dir):
-        #/root/master[address[text()="WzJmdiSCSxk5dnT6P65UhDyNdjBnBy5E3fDxigWOHCs="]]/services/service[desc[@name = "woot"]]/data/files
-
-
-        xpath = '/root/master[address[text()=\"' + service_address + '\"]]/services/service[desc[@name = \"' + service_name + '\"]]/data/files'
-
-        #print(xpath)
-
-        files = XMLIndex.get_data(xpath)
-        service_dir = service_dir.replace('services/', '')
-        glob_path = 'services\\' + service_dir + '\\**\\*'
-
-        root_directory_raw = glob.glob(glob_path, recursive=True)
-        root_directory = []
-
-        #convert glob directories into OS friendly directories 
-
-        for path in root_directory_raw:
-            new_path = os.path.relpath(os.path.realpath(path))
-            root_directory.append(new_path)
-
-        #verify files
-        remaining_p_files = root_directory
-        remaining_i_files = files
-
-        for file in files:
-            if file.attrib['type'] == 'static':
-                file_hash = file.text
-                file_name = file.attrib['rdir']
-
-                for p_file in root_directory:
-
-                    if os.path.isfile(p_file):
-
-                        p_hash = Cryptographer.generate_hash(message=None, filepath=p_file)
-
-                        if file_hash == p_hash and file_name == p_file:
-                            remaining_p_files.remove(p_file)
-                            remaining_i_files.remove(file)
-                    else:
-
-                        if file_name == p_file:
-                            remaining_p_files.remove(p_file)
-                            remaining_i_files.remove(file)
-
-
-            elif file.attrib['type'] == 'variable':
-                file_name = file.attrib['rdir']
-
-                for p_file in root_directory:
-                    
-                    if file_name == p_file:
-                        remaining_p_files.remove(p_file)
-                        remaining_i_files.remove(file)
-
-        if len(remaining_i_files) != 0 or len(remainingremaining_p_files) != 0:
-            return False
-
-        #(Double check) Verify service version hash
-        version_hash = Cryptographer.generate_hash(et.tostring(files).decode('utf8'))
-
-        iii_version = xpath = '/root/master[address[text()=\"' + service_address + '\"]]/services/service[desc[@name = \"' + service_name + '\"]]/@version'
-
-        if version_hash != iii_version[0]:
-            return False
-
-        return True
-
-    @staticmethod
-    def get_service_files(directory):
-        directory = directory.replace('services/', '')
-        glob_path = 'services\\' + directory + '\\**\\*'
-        start_path = 'services/' + directory
-
-        root_directory_raw = glob.glob(glob_path, recursive=True)
-
-        #convert glob directories into OS friendly directories 
-
-        root_directory = []
-        for path in root_directory_raw:
-            new_path = os.path.relpath(os.path.realpath(path))
-            root_directory.append(new_path)
-
-        files = et.Element('files')
-
-        #get all variable files
-        iii_xml_dir = start_path + '/.iii/iii.xml'
-        with open(iii_xml_dir, 'r') as xml_file:
-            db_data = xml_file.read() #maybe improve to read larger files in the future?
-
-        variable_files_raw = XMLServiceDefinition.parse_xml_string(db_data, start_path)
-
-        if variable_files_raw == False:
-
-            print('[WARN] The service you have created has files that do not match with the iii.xml record')
-            raise Exception('Invalid service folder')
-
-        #normailzie paths in variable files list
-
-        variable_files = []
-        for file in variable_files_raw:
-            file = os.path.normpath(file)
-            variable_files.append(file)
-
-        for p_file in root_directory:
-            
-            p_file = os.path.normpath(p_file)
-            print(p_file)
-
-            if p_file in variable_files:
-                new_iii_path = os.path.relpath(p_file, start=start_path)
-                file = et.SubElement(files, 'file', rdir=new_iii_path, type='variable')
-                file.text = '0'
-
-            elif os.path.isfile(p_file):
-                p_hash = Cryptographer.generate_hash(message=None, filepath=p_file)
-                new_iii_path = os.path.relpath(p_file, start=start_path)
-                file = et.SubElement(files, 'file', rdir=new_iii_path, type='static')
-                file.text = p_hash
-            elif os.path.isdir(p_file):
-                new_iii_path = os.path.relpath(p_file, start=start_path)
-                file = et.SubElement(files, 'file', rdir=new_iii_path, type='static')
-                file.text = '0'
-
-        return files
-
-    @staticmethod
-    def create_new_service(files, name, desc):
-
-        version_hash = Cryptographer.generate_hash(et.tostring(files).decode('utf8'))
-
-        service = et.Element('service', version=version_hash, counter='0')
-        description = et.SubElement(service, 'desc', name=name)
-        description.text = desc
-
-        data = et.SubElement(service, 'data')
-
-        data.append(files)
-
-        tags = et.SubElement(service, 'tags')
-
-        return service
-
-
 class XMLService:
 
     @staticmethod
@@ -579,7 +363,7 @@ class XMLService:
 
         folder = os.path.join(dir, '.iii')
         os.mkdir(folder)
-        copyfile('debug/iii2.xsd', os.path.join(folder, 'iii.xsd')); #change and replace iii.xsd with iii2.xsd later
+        copyfile('iii.xsd', os.path.join(folder, 'iii.xsd'));
 
 
         with open(os.path.join(dir, '.iii', 'iii.xsd'), 'r') as schema_file:
@@ -602,7 +386,7 @@ class XMLService:
     def load_definition(dir):
         iii_dir = dir + '/.iii'
         iii_xml_dir = dir + '/.iii/iii.xml'
-        iii_schema_dir = dir + 'debug/iii2.xsd'
+        iii_schema_dir = dir + 'iii.xsd'
 
         try:
             #try opening definition and verify against schema
@@ -780,6 +564,18 @@ class XMLService:
         if len(file_list) != 0:
             print('[ERROR] Files in service do not match service definition')
             return False
+
+    @static_files
+    def verify_location(address, s_address, s_name):
+
+        xpath = '/root/peer[address[text()=\"' + address + '\"]]/services/service[uaddress[@text()=\"' + s_address + '\"] and uaddress[name = \"' + name + '\"]]'
+
+        element = XMLIndex.get_data(xpath)
+        
+        if element == None:
+            return False
+
+        return True
 
 
 

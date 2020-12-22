@@ -2,7 +2,7 @@
 import os
 from os import name as os_name
 import subprocess
-from main_package.xml import XMLServiceDefinition, XMLService
+from main_package.xml import XMLService
 from main_package.cryptographer import Cryptographer
 from lxml import etree as et
 import time
@@ -14,6 +14,8 @@ class ServiceHandler:
 
         #global handler_status
         #handler_status = True
+        global my_address
+        my_address = address
         
         global services
         services = []
@@ -59,29 +61,26 @@ class ServiceHandler:
 
         for service_dir in services_dir:
             if os.path.isdir(service_dir):
-                #attempt to load the service
+                rel_service_path = os.path.join('services', service_dir)
+
+
+                #load service from definition
+
+                definition = XMLService.load_definition(rel_service_path)
+
+                if defnition == False:
+                    print('[WARN] The service located at ' + service_dir + ' failed to load its definition')
+                    break
+
+                #Create service object and auto verify everything else
                 try:
-                    rel_service_path = 'services/' + service_dir
-                    service = Service(rel_service_path)
+                    service = Service(definition)
+                except Exception as e:
+                    print('[WARN] Service at ' + service_dir + ' failed to load:')
+                    print(e)
+                    break
 
-                    #verify that service is in peer node
-                    service_pass = True
-
-                    if XMLServiceDefinition.check_service(address, service.address, service.name) == False:
-                        #raise Exception('Service is not in peer node')
-                        print('[WARN] The service in the folder \"' + service.directory + '\" was not found in your peer node. III will not start it!')
-                        service_pass = False
-
-                    #verify service files match master node
-                    if XMLServiceDefinition.verify_service(service.address, service.name, service.iii_dir) == False:
-                        #raise Exception('Service files do not match master node')
-                        print('[WARN] The service in the folder \"' + service.directory + '\" does not match with the master node. III will not start it!')
-                        service_pass = False
-
-                    if service_pass:
-                        services.append(service)
-                except:
-                    print('[WARN] The service located in ' + service_dir + ' failed to load!')
+                    services.append(service)
             else:
                 print('[INFO] A file was found in the \'services\' directory. (Typically there should only be service folders)')
 
@@ -130,30 +129,24 @@ class ServiceHandler:
         return new_dir
         
     @staticmethod
-    def add_new_service(directory, address):
-        #the address input is a debug
+    def add_new_service(dir):
+        #load service from definition
 
+        definition = XMLService.load_definition(dir)
+
+        if defnition == False:
+            print('[WARN] The service located at ' + service_dir + ' failed to load its definition')
+            return
+
+        #Create service object and auto verify everything else
         try:
-            service = Service(directory)
+            service = Service(definition)
+        except Exception as e:
+            print('[WARN] Service at ' + service_dir + ' failed to load:')
+            print(e)
+            return
 
-            #verify that service is in peer node
-            service_pass = True
-
-            if XMLServiceDefinition.check_service(address, service.address, service.name) == False:
-                #raise Exception('Service is not in peer node')
-                print('[WARN] The service in the folder \"' + service.directory + '\" was not found in your peer node. III will not start it!')
-                service_pass = False
-
-            #verify service files match master node
-            if XMLServiceDefinition.verify_service(service.address, service.name, service.iii_dir) == False:
-                #raise Exception('Service files do not match master node')
-                print('[WARN] The service in the folder \"' + service.directory + '\" does not match with the master node. III will not start it!')
-                service_pass = False
-
-            if service_pass:
-                services.append(service)
-        except:
-            print('[WARN] The service located in ' + directory + ' failed to load!')
+            services.append(service)
 
     @staticmethod
     def delete_service(directory, name=None):
@@ -223,144 +216,11 @@ class ServiceHandler:
 
         return service_list
 
-
-        
+    @staticmethod
+    def parse_uaddress(uaddres):
+        return uaddres.split('.', 1)
 
 class Service:
-
-   def __init__(self, directory, uaddress=None, new_service = False, name=None, desc=None):
-       
-       self.buffer = []
-       self.status = False;
-       self.display = False;
-
-       self.directory = directory
-       self.iii_dir = directory + '/.iii'
-       self.iii_xml_dir = directory + '/.iii/iii.xml'
-       self.iii_schema_dir = directory + '/.iii/iii.xsd'
-       self.iii_uaddress_dir = directory + '/.iii/uaddress.txt'
-       self.iii_start_dir_windows = directory + '/iiistart.bat'
-       self.iii_start_dir_posix = directory + '/iiistart.sh'
-           
-       #check if required files and diretcories exist
-       iii_exists = os.path.isdir(self.iii_dir)
-       iii_xml_exists = os.path.isfile(self.iii_xml_dir)
-       iii_schema_exists = os.path.isfile(self.iii_schema_dir)
-       iii_uaddress_exists = os.path.isfile(self.iii_uaddress_dir)
-       iii_start_windows_exists = os.path.isfile(self.iii_start_dir_windows)
-       iii_start_posix_exists = os.path.isfile(self.iii_start_dir_posix)
-
-       if (iii_exists and iii_xml_exists and iii_schema_exists):
-           if (iii_start_windows_exists and iii_start_posix_exists):
-               self.os_type = 'all'
-           elif (iii_start_posix_exists or iii_start_windows_exists):
-               if iii_start_posix_exists:
-
-                   if os_name == 'nt':
-                       print('[ERROR] No POSIX start file found (you are running on a GNU/Linux or Unix machine)')
-                       raise Exception('No POSIX start file found')
-
-                   self.os_type = 'posix'
-               elif iii_start_windows_exists:
-
-                   if os_name != 'nt':
-                       print('[ERROR] No Windows start file found (you are running on a Windows machine)')
-                       raise Exception('No Windows start file found')
-
-                   self.os_type = 'nt'
-           else:
-               print('[ERROR] Service directory does not contain any start files!')
-               raise Exception('Service directory does not contain any start files')
-       else:
-           print('[ERROR] Service directory does not contain proper defining files (check .iii folder)')
-           raise Exception('Service directory does not conatin proper defining files')
-
-       #check data if new service
-       if new_service == True:
-           self.new_service(directory, name, desc)
-       else:
-           try:
-                temp_xml_data=XMLServiceDefinition.get_service_files(directory)
-                self.service_version = Cryptographer.generate_hash(et.tostring(temp_xml_data).decode('utf8'))
-           except:
-                print('[WARN] The service III tried to initilize has errors!')
-                raise Exception('Service files incorretcly configured')
- 
-
-       #parse iii.xml to ensure it passes schema and that all db files and directories defined exist
-       with open(self.iii_xml_dir, 'r') as xml_file:
-           xml_string = xml_file.read()
-
-       self.variable_files = XMLServiceDefinition.parse_xml_string(xml_string, self.directory)
-
-       if self.variable_files == False:
-           print('[ERROR] Service definitions do not correlate to files (check iii.xml)')
-           raise Exception('Service definitions do not correlate to files')
-
-       #check if uaddress file needs to be created
-       if iii_uaddress_exists:
-           pass
-       else:
-           with open(self.iii_uaddress_dir, 'w') as uaddress_file:
-               uaddress_file.write(uaddress)
-               uaddress_file.close()
-
-       #initialize address and name variables from uaddress
-       with open(self.iii_uaddress_dir, 'r') as uaddress_file:
-            uaddress_text = uaddress_file.read()
-            uaddress_split = uaddress_text.split('.', 1)
-
-            #add a thing to verify address follows correct format
-
-            if len(uaddress_split) != 2:
-                print('[ERROR] Service uaddress file is malformed!')
-                raise Exception('Uaddress file is malformed')
-            else:
-                self.address = uaddress_split[0]
-                self.name = uaddress_split[1]
-                self.uaddress = uaddress_text
-
-       #set start file based on current os
-       if os_name == 'nt':
-           self.iii_service_start_path = os.path.abspath(self.iii_start_dir_windows)
-       else:
-            self.iii_service_start_path = os.path.abspath(self.iii_start_dir_posix)
-   
-   def new_service(self, directory, name, desc):
-
-       try:
-           xml_data_object=XMLServiceDefinition.get_service_files(directory)
-       except:
-           print('[WARN] The service you tried to initilize has errors (check iii.xml)!')
-           raise Exception('New service files incorretcly configured')
-
-       self.service_version = Cryptographer.generate_hash(et.tostring(xml_data_object).decode('utf8'))
-       self.service_xml_object = XMLServiceDefinition.create_new_service(xml_data_object, name, desc)
-
-   def start_service(self):
-       self.process = subprocess.Popen([self.iii_service_start_path], shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-       self.status = True;
-
-       while(self.status):
-           line = test_process.stdout.readline().decode('utf8')
-           
-           if self.display:
-               print(line)
-           else:
-               self.buffer.append(line)
-
-           if len(self.buffer) > 500:
-               self.buffer.pop(0)
-
-   def stop_service(self):
-       self.status = False;
-       self.process.kill()
-
-   def restart_service(self): #Was this really neccesarry? Yes. Yes it was. Did I spell necessary incorrectly? Yes. Yes I did. Am I wasting time making useless comments? No! Of course not!
-       self.stop_service()
-       self.start_service()
-
-class Service2:
 
    def __init__(self, data):
        #assumption data has been succesfully initilized and loaded from local definition first
@@ -389,10 +249,12 @@ class Service2:
            elif tag[0] == 'resource':
                self.type = tag[0]
 
+       #verify existence in peer node
+       XMLService.verify_location(my_address, self.address, self.name)
+
        #check/verify against index 
        if XMLService.verify_definition(self.dir, self.version, self.counter, self.name, self.address) == False:
-           print['[WARN] Sevrice does not match index definition (is there an update?)']
-           raise Exception('Index mismatch')
+           raise Exception('[WARN] Sevrice does not match index definition (is there an update?)')
 
        #verify start files if required
        if self.type == 'application':
