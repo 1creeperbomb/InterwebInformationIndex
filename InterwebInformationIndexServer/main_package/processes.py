@@ -10,47 +10,29 @@ import time
 
 class ProcessHandler:
 
-    socket_server = multiprocessing.Process(target=SocketServer.main)
-    connection_handler = multiprocessing.Process(target=ConnectionHandler.main)
-    service_handler = multiprocessing.Process(target=ServiceHandler.main)
-    ftp_server = multiprocessing.Process(target=FTPService.main)
-
-    processes = []
-    inactive_processes = []
-    shutdown = False;
-
     @staticmethod
-    def main():
+    def main(address):
         
-        ProcessHandler.inactive_processes = [ProcessHandler.socket_server, ProcessHandler.connection_handler, ProcessHandler.service_handler, ProcessHandler.ftp_server]
+        socket_server = multiprocessing.Process(target=SocketServer.main)
+        #onnection_handler = multiprocessing.Process(target=ConnectionHandler.main)
+        #service_handler = multiprocessing.Process(target=ServiceHandler.main, args=(address,))
+        #ftp_server = multiprocessing.Process(target=FTPService.main)
 
-        for process in ProcessHandler.inactive_processes:
-            print(process)
+        global processes
+        processes = [socket_server,] #connection_handler, service_handler, ftp_server
+        shutdown = False
 
-            if (ProcessHandler.start_process(process)):
-                ProcessHandler.proccess.add(process)
-                ProcessHandler.inactive_processes.remove(process)
-            else:
-                print('[ERROR] Process ' + str(process) + ' failed to start!')
+        for process in processes:
+            ProcessHandler.start_process(process)
 
-        if (len(ProcessHandler.inactive_processes)):
-            print('[WARN] iii process(es) failed to start! iii functionality may be diminished or this may lead to a crash!')
-        else:
-            print('[OK] All sub processes successfully started!')
-
-        start = time.time()
-
-        while (ProcessHandler.shutdown != True):
-            time_elapsed = time.time() - start
-
-            if time_elapsed % 5:
-                for process in ProcessHandler.processes:
-
-                    if (not process.is_alive()):
-
-                        print['[ERROR] Process ' + str(process) + ' has stopped! Attempting to restart...']
-
-                        print('[INFO] Process restart status: ' + str(ProcessHandler.restart_process(process)))
+        while shutdown == False:
+            #time.sleep(10)
+            print('status')
+            print(len(processes))
+            print(socket_server.is_alive)
+            for process in processes:
+                print(process + ' : ' + process.is_alive)
+            
 
         #shutdown
         ProcessHandler.shutdown()
@@ -59,7 +41,7 @@ class ProcessHandler:
     @staticmethod
     def start_process(process):
         process.start()
-        time.sleep(5) #wait 5 seconds for process to spawns
+        #time.sleep(5) #wait 5 seconds for process to spawns
         return process.is_alive()
 
     @staticmethod

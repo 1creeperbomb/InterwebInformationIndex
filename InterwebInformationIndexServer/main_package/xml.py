@@ -561,7 +561,7 @@ class XMLService:
             print('[ERROR] Files in service do not match service definition')
             return False
 
-    @static_files
+    @staticmethod
     def verify_location(address, s_address, s_name):
 
         xpath = '/root/peer[address[text()=\"' + address + '\"]]/services/service[uaddress[@text()=\"' + s_address + '\"] and uaddress[name = \"' + name + '\"]]'

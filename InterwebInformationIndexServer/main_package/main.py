@@ -502,7 +502,6 @@ class CLI:
     def start():
         
         global process_handler
-        process_handler =  multiprocessing.Process(target=ProcessHandler.main)
 
         global processes
         processes = []
@@ -551,7 +550,8 @@ class CLI:
         #start services
 
         print('[INFO] Attempting to start iii sub processes...')
-        #process_handler.start()
+        process_handler =  multiprocessing.Process(target=ProcessHandler.main, args=(crypto_main.get_public_key(),))
+        process_handler.start()
         #processes.append(process_handler)
         time.sleep(4)
 
