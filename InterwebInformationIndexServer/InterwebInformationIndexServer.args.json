@@ -1,0 +1,10 @@
+{
+  "FileVersion": 2,
+  "Id": "115eb6da-aa5b-4957-964f-531b7704658d",
+  "Items": [
+    {
+      "Id": "93732ef9-5aac-4a22-a2e3-733852ec0a5b",
+      "Command": "server start "
+    }
+  ]
+}

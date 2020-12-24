@@ -10,12 +10,13 @@ import logging
 #consider using multithreaded or multiprocess server based on speed
 
 class FTPService:
-
-    port = 5002 #default is 5002
-    read_limit = 52428800 #50 mbps
-    write_limit = 52428800
     
-    def main(self):
+    def main():
+
+        port = 5002 #default is 5002
+        read_limit = 52428800 #50 mbps
+        write_limit = 52428800
+
         # Instantiate a dummy authorizer for managing 'virtual' users
         authorizer = DummyAuthorizer()
 
@@ -30,8 +31,8 @@ class FTPService:
         handler.banner = "iii ftp server ready."
 
         dtp_handler = ThrottledDTPHandler
-        dtp_handler.read_limit = self.read_limit  # 30 Kb/sec (30 * 1024)
-        dtp_handler.write_limit = self.write_limit  # 30 Kb/sec (30 * 1024)
+        dtp_handler.read_limit = read_limit  # 30 Kb/sec (30 * 1024)
+        dtp_handler.write_limit = write_limit  # 30 Kb/sec (30 * 1024)
 
         handler.dtp_handler = dtp_handler
 
@@ -41,10 +42,11 @@ class FTPService:
         #handler.passive_ports = range(60000, 65535)
 
         # Instantiate FTP server class and listen on 0.0.0.0:2121
-        address = ('127.0.0.1', self.port) #local address is debug, change to epmty and enable masquerade settings later
+        address = ('127.0.0.1', port) #local address is debug, change to empty and enable masquerade settings later
 
         try:
             server = FTPServer(address, handler)
+            print('[OK] FTP Server started')
         except:
             print('[WARN] FTP Service failed to start. Port ' + str(self.port) + ' for iii FTP server is already in use!')
             return

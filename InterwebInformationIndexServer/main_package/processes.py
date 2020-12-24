@@ -14,34 +14,40 @@ class ProcessHandler:
     def main(address):
         
         socket_server = multiprocessing.Process(target=SocketServer.main)
-        #onnection_handler = multiprocessing.Process(target=ConnectionHandler.main)
+        #connection_handler = multiprocessing.Process(target=ConnectionHandler.main)
         #service_handler = multiprocessing.Process(target=ServiceHandler.main, args=(address,))
-        #ftp_server = multiprocessing.Process(target=FTPService.main)
+        ftp_server = multiprocessing.Process(target=FTPService.main)
 
-        global processes
-        processes = [socket_server,] #connection_handler, service_handler, ftp_server
+        #global processes
+        processes = [socket_server, ftp_server] #connection_handler, service_handler,
         shutdown = False
 
         for process in processes:
             ProcessHandler.start_process(process)
 
         while shutdown == False:
-            #time.sleep(10)
+            time.sleep(10)
             print('status')
-            print(len(processes))
-            print(socket_server.is_alive)
-            for process in processes:
-                print(process + ' : ' + process.is_alive)
-            
+            for prco in processes:
+                print(proc.is_alive)
+            #print(socket_server.is_alive)
+            #print(connection_handler.is_alive)
+            #print(service_handler.is_alive)
+            #print(ftp_server.is_alive)
 
         #shutdown
         ProcessHandler.shutdown()
 
+    @staticmethod
+    def get_status():
+        for proc in processes:
+            stat += proc + ' : ' + proc.is_alive
+        return stat
 
     @staticmethod
     def start_process(process):
         process.start()
-        #time.sleep(5) #wait 5 seconds for process to spawns
+        time.sleep(3) #wait 3 seconds for process to spawns
         return process.is_alive()
 
     @staticmethod
