@@ -5,6 +5,10 @@
     {
       "Id": "93732ef9-5aac-4a22-a2e3-733852ec0a5b",
       "Command": "server start "
+    },
+    {
+      "Id": "1bd13663-606f-4166-9ff3-be3f5d452f6e",
+      "Command": "server stop"
     }
   ]
 }

@@ -2,41 +2,35 @@
 
 from main_package.network import SocketServer
 from main_package.network import ConnectionHandler
-from main_package.services import ServiceHandler
 from main_package.ftp import FTPService
 
 import multiprocessing
 import time
+import sys
 
 class ProcessHandler:
 
     @staticmethod
     def main(address):
-        
         socket_server = multiprocessing.Process(target=SocketServer.main)
         #connection_handler = multiprocessing.Process(target=ConnectionHandler.main)
-        #service_handler = multiprocessing.Process(target=ServiceHandler.main, args=(address,))
         ftp_server = multiprocessing.Process(target=FTPService.main)
 
-        #global processes
-        processes = [socket_server, ftp_server] #connection_handler, service_handler,
+        global processes
+        processes = [socket_server, ftp_server] #connection_handler
         shutdown = False
 
         for process in processes:
             ProcessHandler.start_process(process)
 
         while shutdown == False:
-            time.sleep(10)
+            time.sleep(10)  #debug
             print('status')
-            for prco in processes:
+            for proc in processes:
                 print(proc.is_alive)
-            #print(socket_server.is_alive)
-            #print(connection_handler.is_alive)
-            #print(service_handler.is_alive)
-            #print(ftp_server.is_alive)
 
         #shutdown
-        ProcessHandler.shutdown()
+        ProcessHandler.shutdown_all()
 
     @staticmethod
     def get_status():
@@ -61,12 +55,16 @@ class ProcessHandler:
         return start_process(process)
 
     @staticmethod
-    def shutdown():
-
-        if ProcessHandler.processes == None:
+    def shutdown_all():
+        if processes == None:
             pass
         else:
-            for process in ProcessHandler.processes:
+            for process in processes:
                 process.terminate()
                 process.join()
 
+
+
+#start
+if __name__ == '__main__':
+    ProcessHandler.main(sys.argv[1])

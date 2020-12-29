@@ -28,31 +28,7 @@ class ServiceHandler:
 
         #start all services
         for service in services:
-            service.start_service()
-
-        #poll for status every interval
-        while True:
-            for service in services:
-                raw_status = service.process.poll()
-
-                if (raw_status == 1):
-                    name = service.name
-                    uaddress = service.uaddress
-                    print('[WARN] Service ' + name + ' at uaddress ' + uaddress + ' exited with code 1 (error), III will attempt to restart it')
-                    service.restart_service()
-
-                    time.sleep(5)
-                    raw_status = service.process.poll()
-
-                    if (raw_status == 1 or raw_status == 0):
-                        print('[WARN] Service ' + name + ' at uaddress ' + uaddress + ' exited with code ' + raw_status + ' (error), III failed to restart it')
-                    else:
-                        print('[INFO] Service ' + name + ' at uaddress ' + uaddress + ' was successfully restarted')
-
-                elif (raw_status == 0):
-                    print('[INFO] Service ' + name + ' at uaddress ' + uaddress + ' exited with code 0 (normal), III will not restart it')
-
-                time.sleep(15)
+            service.start_service()        
     
     @staticmethod
     def load_all():
@@ -286,3 +262,33 @@ class Service:
        self.stop_service()
        self.start_service()
 
+
+
+
+
+#old poller
+'''
+#poll for status every interval
+        while True:
+            for service in services:
+                raw_status = service.process.poll()
+
+                if (raw_status == 1):
+                    name = service.name
+                    uaddress = service.uaddress
+                    print('[WARN] Service ' + name + ' at uaddress ' + uaddress + ' exited with code 1 (error), III will attempt to restart it')
+                    service.restart_service()
+
+                    time.sleep(5)
+                    raw_status = service.process.poll()
+
+                    if (raw_status == 1 or raw_status == 0):
+                        print('[WARN] Service ' + name + ' at uaddress ' + uaddress + ' exited with code ' + raw_status + ' (error), III failed to restart it')
+                    else:
+                        print('[INFO] Service ' + name + ' at uaddress ' + uaddress + ' was successfully restarted')
+
+                elif (raw_status == 0):
+                    print('[INFO] Service ' + name + ' at uaddress ' + uaddress + ' exited with code 0 (normal), III will not restart it')
+
+                time.sleep(15)
+'''

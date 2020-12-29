@@ -9,10 +9,13 @@ from main_package.xml import XMLIndex
 from main_package.processes import ProcessHandler
 
 import multiprocessing
+import subprocess
 import time
 import shutil
 import os.path
 from os import system, name as os_name
+import os
+import signal
 from getpass import getpass
 import argparse
 import re
@@ -497,14 +500,21 @@ class CLI:
         elif args.command == 'server':
             if args.action == 'start':
                 CLI.start()
+            elif args.action == 'stop':
+                CLI.stop()
+            elif args.action == 'restart':
+                CLI.stop()
+                CLI.start()
+                
 
     @staticmethod
     def start():
         
-        global process_handler
+        if os.path.exists('temp/server.pid'):
+            print('The III server is already running')
+            return
 
-        global processes
-        processes = []
+        #global process_handler
 
         print('Starting the Interweb Information Index Server (III)!')
         print('-----------------------------------------------------')
@@ -528,7 +538,7 @@ class CLI:
                 first_time_setup()
             elif start_setup == 'n':
                 print('You chose no')
-                shutdown(None)
+                exit()
 
         password = getpass('Please enter your password to start: ')
 
@@ -538,7 +548,7 @@ class CLI:
             print('Succesfully decrypted!')
         except:
             print('Failed to decrypt!')
-            shutdown(None)
+            exit()
 
         global crypto_main
         crypto_main = Cryptographer(private_key, False)
@@ -550,10 +560,28 @@ class CLI:
         #start services
 
         print('[INFO] Attempting to start iii sub processes...')
-        process_handler =  multiprocessing.Process(target=ProcessHandler.main, args=(crypto_main.get_public_key(),))
-        process_handler.start()
-        #processes.append(process_handler)
-        time.sleep(4)
+        process_handler = subprocess.Popen(['python', os.path.abspath('main_package/processes.py'), crypto_main.get_public_key()], creationflags=subprocess.CREATE_NEW_CONSOLE)
+
+        time.sleep(20)
+
+        with open('temp/server.pid', 'x') as pid_file:
+            pid_file.write(str(process_handler.pid))
+            pid_file.close()
+
+    @staticmethod
+    def stop():
+        try:
+            with open('temp/server.pid', 'r') as pid_file:
+                pid = pid_file.read()
+                pid_file.close()
+
+            os.remove('temp/server.pid')
+
+            os.kill(int(pid), signal.SIGTERM)
+
+            print('The III server has been stopped')
+        except:
+            print('The III server is already stopped (or you deleted the pid file?)')
 
     @staticmethod
     def init_args():
@@ -698,6 +726,15 @@ class CLI:
                 return req
 
         return False
+
+    @staticmethod
+    def shutdown():
+        #ProcessHandler.shutdown = True
+        #ProcessHandler.shutdown_all()
+        #process_handler.terminate()
+        #process_handler.join()
+        process_handler.kill()
+        exit()
         
 
 

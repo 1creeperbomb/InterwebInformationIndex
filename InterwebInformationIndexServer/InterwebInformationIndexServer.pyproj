@@ -16,7 +16,7 @@
     <Environment>
     </Environment>
     <InterpreterId>Global|PythonCore|3.8</InterpreterId>
-    <CommandLineArguments>server start </CommandLineArguments>
+    <CommandLineArguments>server stop</CommandLineArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -79,6 +79,7 @@
     <Folder Include="iii_logs\" />
     <Folder Include="ftp_temp\" />
     <Folder Include="debug\" />
+    <Folder Include="temp\" />
     <Folder Include="services\" />
     <Folder Include="services\service.temp\" />
     <Folder Include="services\service.1\" />
