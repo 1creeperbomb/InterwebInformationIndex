@@ -495,9 +495,7 @@ class CLI:
     @staticmethod
     def handle(args):
         
-        if args.command == 'node':
-            pass
-        elif args.command == 'server':
+        if args.command == 'server':
             if args.action == 'start':
                 CLI.start()
             elif args.action == 'stop':
@@ -505,6 +503,11 @@ class CLI:
             elif args.action == 'restart':
                 CLI.stop()
                 CLI.start()
+        elif args.command == 'node':
+            if args.action == 'add':
+                XMLIndex.create_node(args.type, crypto_main, args.name, args.description)
+            elif args.action == 'edit':
+                XMLIndex.modify_node(args.type, crypto_main, args.name, args.description)
                 
 
     @staticmethod
