@@ -508,7 +508,10 @@ class CLI:
                 XMLIndex.create_node(args.type, crypto_main, args.name, args.description)
             elif args.action == 'edit':
                 XMLIndex.modify_node(args.type, crypto_main, args.name, args.description)
-                
+            #Didn't implement delete for node because too lazy lol
+        elif args.command == 'service':
+            pass
+
 
     @staticmethod
     def start():
@@ -670,6 +673,12 @@ class CLI:
         parser_service_def = subparsers.add_parser('service-def', help='Generate a service defnition for a directory')
 
         parser_service_def.add_argument(
+            'action',
+            choices=['generate', 'update'],
+            help='Choose whether to generate a definition or update the hash'
+            )
+
+        parser_service_def.add_argument(
             'dir',
             help='Directory of service'
             )
@@ -753,6 +762,7 @@ class CLI:
 #           :peer
 #               :name, description, ip, port
 #   service-def
+#       :generate, update
 #       :directory 
 #   service
 #       :add, delete
