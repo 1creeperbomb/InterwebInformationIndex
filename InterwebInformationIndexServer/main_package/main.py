@@ -494,7 +494,11 @@ class CLI:
     
     @staticmethod
     def handle(args):
+        running = False
         
+        if os.path.exists('temp/server.pid'):
+            running = True
+
         if args.command == 'server':
             if args.action == 'start':
                 CLI.start()
@@ -504,6 +508,11 @@ class CLI:
                 CLI.stop()
                 CLI.start()
         elif args.command == 'node':
+            
+            if not running:
+                print('The III server is not running')
+                return
+
             if args.action == 'add':
                 XMLIndex.create_node(args.type, crypto_main, args.name, args.description)
             elif args.action == 'edit':
