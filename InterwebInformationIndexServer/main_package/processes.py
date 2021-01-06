@@ -12,9 +12,9 @@ class ProcessHandler:
 
     @staticmethod
     def main(address):
-        socket_server = multiprocessing.Process(target=SocketServer.main)
+        socket_server = multiprocessing.Process(target=SocketServer.main, name='III-server')
         #connection_handler = multiprocessing.Process(target=ConnectionHandler.main)
-        ftp_server = multiprocessing.Process(target=FTPService.main)
+        ftp_server = multiprocessing.Process(target=FTPService.main, name='III-ftp')
 
         global processes
         processes = [socket_server, ftp_server] #connection_handler

@@ -20,6 +20,7 @@ from getpass import getpass
 import argparse
 import re
 import sys
+import psutil
 
 class Main:
 
@@ -486,18 +487,33 @@ class CLI:
 
     buffer = []
 
+    #main
     @staticmethod
     def main():
         args = CLI.init_args()
-        print(args)
+        print(args) #debug
+        global status
+        status = CLI.check_status
         CLI.handle(args)
     
+    #handlers
+    @staticmethod
+    def check_status():
+
+        with open('temp/server.pid', 'r') as pid_file:
+            pid = int(pid_file.read())
+            
+            if psutil.pid_exists(pid):
+                main_proc = psutil.Process(pid)
+                if len(main_proc.children()) != 2:
+                    return False
+                else:
+                    return True
+            else:
+                return False
+
     @staticmethod
     def handle(args):
-        running = False
-        
-        if os.path.exists('temp/server.pid'):
-            running = True
 
         if args.command == 'server':
             if args.action == 'start':
@@ -509,7 +525,7 @@ class CLI:
                 CLI.start()
         elif args.command == 'node':
             
-            if not running:
+            if not status:
                 print('The III server is not running')
                 return
 
@@ -521,11 +537,10 @@ class CLI:
         elif args.command == 'service':
             pass
 
-
     @staticmethod
     def start():
-        
-        if os.path.exists('temp/server.pid'):
+
+        if status == True:
             print('The III server is already running')
             return
 
@@ -575,11 +590,14 @@ class CLI:
         #start services
 
         print('[INFO] Attempting to start iii sub processes...')
-        process_handler = subprocess.Popen(['python', os.path.abspath('main_package/processes.py'), crypto_main.get_public_key()], creationflags=subprocess.CREATE_NEW_CONSOLE)
+        process_handler = multiprocessing.Process(target=ProcessHandler.main, name='III-processor', args=(crypto_main.get_public_key(),))
+        process_handler.daemon = True
+        process_handler.start()
+        #process_handler = subprocess.Popen(['python', os.path.abspath('main_package/processes.py'), crypto_main.get_public_key()], creationflags=subprocess.CREATE_NEW_CONSOLE)
 
-        time.sleep(20)
+        process_handler.join(20)
 
-        with open('temp/server.pid', 'x') as pid_file:
+        with open('temp/server.pid', 'w') as pid_file:
             pid_file.write(str(process_handler.pid))
             pid_file.close()
 
@@ -710,6 +728,8 @@ class CLI:
         args = parser.parse_args()
         return args
 
+
+    #CLI filters
     @staticmethod
     def port_length(port):
         p = int(port)
@@ -748,6 +768,7 @@ class CLI:
 
         return False
 
+    #shutdown method?
     @staticmethod
     def shutdown():
         #ProcessHandler.shutdown = True
@@ -786,3 +807,6 @@ class CLI:
 #
 #
 #
+
+
+#Change process handler to start III sub processes asa daemons eliminating the need for a process handler

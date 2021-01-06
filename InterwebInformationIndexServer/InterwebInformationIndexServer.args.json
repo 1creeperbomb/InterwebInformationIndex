@@ -3,12 +3,22 @@
   "Id": "115eb6da-aa5b-4957-964f-531b7704658d",
   "Items": [
     {
-      "Id": "93732ef9-5aac-4a22-a2e3-733852ec0a5b",
-      "Command": "server start "
-    },
-    {
-      "Id": "1bd13663-606f-4166-9ff3-be3f5d452f6e",
-      "Command": "server stop"
+      "Id": "b5bec1f1-473e-41a0-87ca-6164a91024f9",
+      "Command": "server",
+      "Items": [
+        {
+          "Id": "d057ee61-0aae-4a6d-9bcf-48444fc2018e",
+          "Command": "server"
+        },
+        {
+          "Id": "25e11bc4-61e0-41e6-bc92-deecfa6c5716",
+          "Command": "start"
+        },
+        {
+          "Id": "2152b499-e8a8-427e-94a8-968acfca7b26",
+          "Command": "stop"
+        }
+      ]
     }
   ]
 }
