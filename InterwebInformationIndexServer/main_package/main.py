@@ -21,6 +21,9 @@ import argparse
 import re
 import sys
 import psutil
+import shlex
+
+status = False
 
 class Main:
 
@@ -487,17 +490,24 @@ class Main2:
 
     @staticmethod
     def main():
-        args = CLI.init_args()
-        print(args) #debug
-        Main2.handle(args)
+        #args = CLI.init_args()
+        #print(args) #debug
+        #Main2.handle(args)
+        global status
 
-        status = True
+        Main2.start()
+
         while status == True:
-            argument = input()
+            argument = input('>>')
+            Main2.handle(Main2.init_args(argument))
+
+        Main2.stop()
+        exit()
 
     @staticmethod
     def start():
 
+        global status
         if status == True:
             print('The III server is already running')
             return
@@ -548,43 +558,164 @@ class Main2:
         #start services
 
         print('[INFO] Attempting to start iii sub processes...')
-        #process_handler = multiprocessing.Process(target=ProcessHandler.main, name='III-processor', args=(crypto_main.get_public_key(),))
+        global process_handler
+        process_handler = multiprocessing.Process(target=ProcessHandler.main, name='III-processor')
         #process_handler.daemon = True
-        #process_handler.start()
-        process_handler = subprocess.Popen(['python', os.path.abspath('main_package/processes.py'),], creationflags=subprocess.CREATE_NEW_CONSOLE) #new console for debug
+        process_handler.start()
+        #process_handler = subprocess.Popen(['python', os.path.abspath('main_package/processes.py'),], creationflags=subprocess.CREATE_NEW_CONSOLE) #new console for debug
 
         #process_handler.join(20)
 
-        with open('temp/server.pid', 'w') as pid_file:
-            pid_file.write(str(process_handler.pid))
-            pid_file.close()
+        status = True
+
+        #old
+        #with open('temp/server.pid', 'w') as pid_file:
+        #    pid_file.write(str(process_handler.pid))
+        #    pid_file.close()
 
     @staticmethod
     def stop():
         try:
-            with open('temp/server.pid', 'r') as pid_file:
-                pid = pid_file.read()
-                pid_file.close()
+            #with open('temp/server.pid', 'r') as pid_file:
+            #    pid = pid_file.read()
+            #    pid_file.close()
 
-            os.remove('temp/server.pid')
+            #os.remove('temp/server.pid')
 
-            os.kill(int(pid), signal.SIGTERM)
+            #os.kill(int(pid), signal.SIGTERM)
+            print('Stopping...')
+            process_handler.shutdown = True
+            time.sleep(5)
+            #exit()
 
             print('The III server has been stopped')
         except:
             print('The III server is already stopped (or you deleted the pid file?)')
 
     @staticmethod
+    def init_args(arg_string):
+        #global parser
+        parser = argparse.ArgumentParser(prog='Interweb Information Index', description='Framework for using iii services and resources')
+        subparsers = parser.add_subparsers(help='sub-command help', dest="command")
+        
+        #args
+        
+        #node
+        parser_node = subparsers.add_parser('node', help='Allows you to add, edit, and delete iii nodes')
+
+        parser_node.add_argument(
+            "action",
+            choices=['add', 'edit', 'delete'],
+            help="Choose node action - add, edit, or delete"
+            )
+        parser_node.add_argument(
+            "type",
+            choices=['master', 'peer'],
+            help="Choose node type"
+            )
+        parser_node.add_argument(
+            "-name",
+            required=CLI.required_arg([['add'],['delete']]),
+            type=CLI.max_length(40),
+            help="Node name"
+            )
+        parser_node.add_argument(
+            "-description",
+            required=CLI.required_arg([['add']]),
+            type=CLI.max_length(1000),
+            help="Node description"
+            )
+        parser_node.add_argument(
+            "-ip",
+            required=CLI.required_arg([['add', 'peer']]),
+            #default='0.0.0.0',
+            type=CLI.regex_match(r'((1?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.){3}(1?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])'),
+            help="Node name"
+            )
+        parser_node.add_argument(
+            "-port",
+            required=CLI.required_arg([['add', 'peer']]),
+            #default='5001',
+            type=CLI.port_length,
+            help="Node name"
+            )
+
+        #server
+        parser_server = subparsers.add_parser('server', help='Allows you to start, stop, restart, or check status of the iii server')
+
+        parser_server.add_argument(
+            "action",
+            choices=['start', 'stop', 'restart', 'status'],
+            help="Choose action"
+            )
+
+        #service
+        parser_service = subparsers.add_parser('service', help='Handle all service functions such as adding or starting')
+        #action = parser_service.add_mutually_exclusive_group(required=True)
+        pointer = parser_service.add_mutually_exclusive_group(required=True)
+
+        pointer.add_argument(
+            '-uaddress',
+            help='Choose a uaddress of a service to work with'
+            )
+        pointer.add_argument(
+            '-dir',
+            help='Choose a directory of a service to work with'
+            )
+        pointer.add_argument(
+            '-name',
+            help='Choose a name of a service to work with'
+            )
+
+        parser_service.add_argument(
+            'action',
+            choices=['add','update','delete','start','stop','restart','status',],
+            help='Choose an action for a service'
+            )
+
+        #service-def
+        parser_service_def = subparsers.add_parser('service-def', help='Generate a service defnition for a directory')
+
+        parser_service_def.add_argument(
+            'action',
+            choices=['generate', 'update'],
+            help='Choose whether to generate a definition or update the hash'
+            )
+
+        parser_service_def.add_argument(
+            'dir',
+            help='Directory of service'
+            )
+        
+        #status
+        parser_status = subparsers.add_parser('status', help='Get status of a service, shows all if none is specified')
+        pointer_status = parser_status.add_mutually_exclusive_group()
+
+        pointer_status.add_argument(
+            '-uaddress',
+            help='Choose a uaddress of a service to work with'
+            )
+        pointer_status.add_argument(
+            '-name',
+            help='Choose a name of a service to work with'
+            )
+
+
+        #parse args
+        args = parser.parse_args(shlex.split(arg_string))
+        return args
+
+    @staticmethod
     def handle(args):
 
         if args.command == 'server':
             if args.action == 'start':
-                CLI.start()
+                Main2.start()
             elif args.action == 'stop':
-                CLI.stop()
+                status = False
             elif args.action == 'restart':
-                CLI.stop()
-                CLI.start()
+                Main2.stop()
+                Main2.start()
         elif args.command == 'node':
             
             if not status:

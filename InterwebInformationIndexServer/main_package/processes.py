@@ -10,6 +10,8 @@ import sys
 
 class ProcessHandler:
 
+    shutdown = False
+
     @staticmethod
     def main():
         socket_server = multiprocessing.Process(target=SocketServer.main, name='III-server', daemon=True)
@@ -18,12 +20,11 @@ class ProcessHandler:
 
         global processes
         processes = [socket_server, ftp_server] #connection_handler
-        shutdown = False
 
         for process in processes:
             ProcessHandler.start_process(process)
 
-        while shutdown == False:
+        while ProcessHandler.shutdown == False:
             time.sleep(10)  #debug
             print('status')
             for proc in processes:

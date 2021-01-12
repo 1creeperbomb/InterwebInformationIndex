@@ -16,7 +16,8 @@
     <Environment>
     </Environment>
     <InterpreterId>Global|PythonCore|3.8</InterpreterId>
-    <CommandLineArguments>node add master -n "my test master node" -d "my test master node's description:. :D."</CommandLineArguments>
+    <CommandLineArguments>
+    </CommandLineArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>

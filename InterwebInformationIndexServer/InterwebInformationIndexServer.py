@@ -1,9 +1,9 @@
 #oh yeahhhhhh - test 
 
-from main_package.main import Main, CLI
+from main_package.main import Main, CLI, Main2
 
 def main():
-    CLI.main()
+    Main2.main()
 
 '''
 from main_package.cryptographer import Cryptographer
