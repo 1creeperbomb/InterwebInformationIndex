@@ -483,6 +483,122 @@ class Main:
             except Exception as e:
                 print('Failed to delete %s. Reason: %s' % (file_path, e))
 
+class Main2:
+
+    @staticmethod
+    def main():
+        args = CLI.init_args()
+        print(args) #debug
+        Main2.handle(args)
+
+        status = True
+        while status == True:
+            argument = input()
+
+    @staticmethod
+    def start():
+
+        if status == True:
+            print('The III server is already running')
+            return
+
+        #global process_handler
+
+        print('Starting the Interweb Information Index Server (III)!')
+        print('-----------------------------------------------------')
+        print('Created by Ismaeel Mian (1creeperbomb)')
+        print('-----------------------------------------------------')
+        print('Check out/contribute the the project on github at https://github.com/1creeperbomb/InterwebInformationIndex')
+        print('----------------------------------------------------------------------------------------------------------')
+
+        #check if private key file exists.
+        if os.path.isfile('keystore/private.key'):
+            print('Private key found! Starting normal operation!')
+        else:
+            print('No private key files was found. If you are importing a key, make sure the file is named \"private.key\" and is located directly in the \"keystore\" folder')
+            start_setup = filter_input(input('Would you like to setup a new keypair? (Y/N): '), 'y/n')
+
+            while filter_input(start_setup, 'y/n') == False:
+                print('Please enter a valid choice')
+                start_setup == input('Would you like to setup a new keypair? (Y/N): ')
+
+            if start_setup == 'y':
+                first_time_setup()
+            elif start_setup == 'n':
+                print('You chose no')
+                exit()
+
+        password = getpass('Please enter your password to start: ')
+
+        try:
+            print('Attempting to decrypt...')
+            private_key = Cryptographer.read_key(password)
+            print('Succesfully decrypted!')
+        except:
+            print('Failed to decrypt!')
+            exit()
+
+        global crypto_main
+        crypto_main = Cryptographer(private_key, False)
+        password = None
+        private_key = None
+    
+        print('-----------------------------------------------------')
+
+        #start services
+
+        print('[INFO] Attempting to start iii sub processes...')
+        #process_handler = multiprocessing.Process(target=ProcessHandler.main, name='III-processor', args=(crypto_main.get_public_key(),))
+        #process_handler.daemon = True
+        #process_handler.start()
+        process_handler = subprocess.Popen(['python', os.path.abspath('main_package/processes.py'),], creationflags=subprocess.CREATE_NEW_CONSOLE) #new console for debug
+
+        #process_handler.join(20)
+
+        with open('temp/server.pid', 'w') as pid_file:
+            pid_file.write(str(process_handler.pid))
+            pid_file.close()
+
+    @staticmethod
+    def stop():
+        try:
+            with open('temp/server.pid', 'r') as pid_file:
+                pid = pid_file.read()
+                pid_file.close()
+
+            os.remove('temp/server.pid')
+
+            os.kill(int(pid), signal.SIGTERM)
+
+            print('The III server has been stopped')
+        except:
+            print('The III server is already stopped (or you deleted the pid file?)')
+
+    @staticmethod
+    def handle(args):
+
+        if args.command == 'server':
+            if args.action == 'start':
+                CLI.start()
+            elif args.action == 'stop':
+                CLI.stop()
+            elif args.action == 'restart':
+                CLI.stop()
+                CLI.start()
+        elif args.command == 'node':
+            
+            if not status:
+                print('The III server is not running')
+                return
+
+            if args.action == 'add':
+                XMLIndex.create_node(args.type, crypto_main, args.name, args.description)
+            elif args.action == 'edit':
+                XMLIndex.modify_node(args.type, crypto_main, args.name, args.description)
+            #Didn't implement delete for node because too lazy lol
+        elif args.command == 'service':
+            pass
+
 class CLI:
 
     buffer = []
@@ -493,7 +609,7 @@ class CLI:
         args = CLI.init_args()
         print(args) #debug
         global status
-        status = CLI.check_status
+        status = CLI.check_status()
         CLI.handle(args)
     
     #handlers
@@ -503,9 +619,10 @@ class CLI:
         with open('temp/server.pid', 'r') as pid_file:
             pid = int(pid_file.read())
             
-            if psutil.pid_exists(pid):
+            if psutil.pid_exists(pid):                
                 main_proc = psutil.Process(pid)
-                if len(main_proc.children()) != 2:
+                #print(main_proc.children())
+                if len(main_proc.children()) != 3: #conhost (shell) is included when running in debug
                     return False
                 else:
                     return True
@@ -590,12 +707,12 @@ class CLI:
         #start services
 
         print('[INFO] Attempting to start iii sub processes...')
-        process_handler = multiprocessing.Process(target=ProcessHandler.main, name='III-processor', args=(crypto_main.get_public_key(),))
-        process_handler.daemon = True
-        process_handler.start()
-        #process_handler = subprocess.Popen(['python', os.path.abspath('main_package/processes.py'), crypto_main.get_public_key()], creationflags=subprocess.CREATE_NEW_CONSOLE)
+        #process_handler = multiprocessing.Process(target=ProcessHandler.main, name='III-processor', args=(crypto_main.get_public_key(),))
+        #process_handler.daemon = True
+        #process_handler.start()
+        process_handler = subprocess.Popen(['python', os.path.abspath('main_package/processes.py'),], creationflags=subprocess.CREATE_NEW_CONSOLE) #new console for debug
 
-        process_handler.join(20)
+        #process_handler.join(20)
 
         with open('temp/server.pid', 'w') as pid_file:
             pid_file.write(str(process_handler.pid))
@@ -618,6 +735,7 @@ class CLI:
 
     @staticmethod
     def init_args():
+        global parser
         parser = argparse.ArgumentParser(prog='Interweb Information Index', description='Framework for using iii services and resources')
         subparsers = parser.add_subparsers(help='sub-command help', dest="command")
         
@@ -777,6 +895,8 @@ class CLI:
         #process_handler.join()
         process_handler.kill()
         exit()
+
+
         
 
 

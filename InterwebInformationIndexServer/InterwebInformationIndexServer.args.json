@@ -3,6 +3,42 @@
   "Id": "115eb6da-aa5b-4957-964f-531b7704658d",
   "Items": [
     {
+      "Id": "399654bc-d234-4037-b57b-716b8fe1d96b",
+      "Command": "node",
+      "Items": [
+        {
+          "Id": "5fd58cb0-14c2-480f-bb37-23235f8f566e",
+          "Command": "node"
+        },
+        {
+          "Id": "e81a270b-54fa-4ba9-8b99-6a109045452b",
+          "Command": "add"
+        },
+        {
+          "Id": "5fcbb09c-3500-47ec-89df-659cb2343230",
+          "Command": "edit"
+        },
+        {
+          "Id": "fbf32308-9fcf-479d-b69f-4eea84085e30",
+          "Command": "test master node",
+          "Items": [
+            {
+              "Id": "775fc82c-8e75-4490-9555-a779c4f48712",
+              "Command": "master"
+            },
+            {
+              "Id": "333ac776-86f7-47ff-a05e-57b1b556d7c4",
+              "Command": "-n \"my test master node\""
+            },
+            {
+              "Id": "74cff722-cc2d-4b31-ad8e-782ca86d16d1",
+              "Command": "-d \"my test master node's description:. :D.\""
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Id": "b5bec1f1-473e-41a0-87ca-6164a91024f9",
       "Command": "server",
       "Items": [

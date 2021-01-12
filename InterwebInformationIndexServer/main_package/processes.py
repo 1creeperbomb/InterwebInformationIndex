@@ -11,10 +11,10 @@ import sys
 class ProcessHandler:
 
     @staticmethod
-    def main(address):
-        socket_server = multiprocessing.Process(target=SocketServer.main, name='III-server')
+    def main():
+        socket_server = multiprocessing.Process(target=SocketServer.main, name='III-server', daemon=True)
         #connection_handler = multiprocessing.Process(target=ConnectionHandler.main)
-        ftp_server = multiprocessing.Process(target=FTPService.main, name='III-ftp')
+        ftp_server = multiprocessing.Process(target=FTPService.main, name='III-ftp', daemon=True)
 
         global processes
         processes = [socket_server, ftp_server] #connection_handler
@@ -63,8 +63,13 @@ class ProcessHandler:
                 process.terminate()
                 process.join()
 
+class Processes:
+
+    def __init__(self):
+        socket_server = multiprocessing.Process(target=SocketServer.main, name='III-server')
+        ftp_server = multiprocessing.Process(target=FTPService.main, name='III-ftp')
 
 
 #start
 if __name__ == '__main__':
-    ProcessHandler.main(sys.argv[1])
+    ProcessHandler.main()
